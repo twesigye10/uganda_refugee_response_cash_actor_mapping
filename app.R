@@ -25,19 +25,22 @@ df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.
                             Month %in% c("Apr", "May", "Jun")~paste0("Q2_20",Year),
                             Month %in% c("Jul", "Aug", "Sep")~paste0("Q3_20",Year),
                             Month %in% c("Oct", "Nov", "Dec")~paste0("Q4_20",Year)
-                            
-        ),
-        Quarter = fct_relevel(Quarter, c("Q1_2019,Q2_2019"))
-
+        )
     ) %>% 
     arrange(desc(Year),desc(Quarter))
 
+df_by_district_cash_data <- df_data %>% 
+    select(Location_District, Total_amount_of_cash_transfers) %>% 
+    group_by(Location_District) %>% 
+    summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
+
 
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2018.shp", crs=32636 ) %>%
-    st_transform( "+init=epsg:4326")
+    st_transform( "+init=epsg:4326") %>% 
+    left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE)
 
 
-
+df_shape
 
 # Define UI for application
 ui <- fluidPage(
@@ -132,7 +135,8 @@ server <- function(input, output) {
                 total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
             ) %>% 
             ggplot(
-                aes(x = total_amount_of_cash_by_quarter, y =  Quarter
+                aes(x = total_amount_of_cash_by_quarter,
+                    y =  fct_relevel(Quarter, c("Q1_2019","Q2_2019","Q3_2019","Q4_2019","Q1_2020","Q2_2020","Q3_2020","Q4_2020")) 
                 )
             )+
             geom_bar(stat = "identity", fill = "blue", show.legend = FALSE) +

@@ -14,6 +14,7 @@ library(tidyverse)
 library(leaflet)
 library(plotly)
 
+
 # data
 # this is the development branch
 df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv") %>% 
@@ -24,7 +25,10 @@ df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.
                             Month %in% c("Apr", "May", "Jun")~paste0("Q2_20",Year),
                             Month %in% c("Jul", "Aug", "Sep")~paste0("Q3_20",Year),
                             Month %in% c("Oct", "Nov", "Dec")~paste0("Q4_20",Year)
-        )
+                            
+        ),
+        Quarter = fct_relevel(Quarter, c("Q1_2019,Q2_2019"))
+
     ) %>% 
     arrange(desc(Year),desc(Quarter))
 

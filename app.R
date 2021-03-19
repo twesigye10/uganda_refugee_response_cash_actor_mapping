@@ -211,11 +211,18 @@ server <- function(input, output) {
         proxy %>% 
             clearControls() %>% 
             addPolygons(
-                stroke = FALSE,
+                color = "white",
                 fillColor = ~pal(cash_transfers_by_district),
                 fillOpacity = 0.9,
-                weight = 1,
-                label = ~DNAME2018
+                weight = 2,
+                opacity = 1,
+                label = ~DNAME2018,
+                dashArray = "3",
+                highlight = highlightOptions(weight = 5,
+                                             color = "#666",
+                                             dashArray = "",
+                                             fillOpacity = 0.7,
+                                             bringToFront = TRUE)
             )
         
     })

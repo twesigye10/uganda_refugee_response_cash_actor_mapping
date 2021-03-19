@@ -194,7 +194,7 @@ server <- function(input, output) {
     # contents on the map that do not change
     output$map  <-  renderLeaflet({
         leaflet() %>% 
-            addTiles() %>% 
+            addProviderTiles(providers$Esri.WorldGrayCanvas) %>% 
             setView(lng = 32.2903, 1.3733, zoom = 6)
     })
     

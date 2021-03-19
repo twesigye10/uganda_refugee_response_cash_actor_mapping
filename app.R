@@ -37,7 +37,8 @@ df_by_district_cash_data <- df_data %>%
 
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2018.shp", crs=32636 ) %>%
     st_transform( "+init=epsg:4326") %>% 
-    left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE)
+    left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) %>% 
+    filter(!is.na(cash_transfers_by_district))
 
 
 df_shape
@@ -197,6 +198,11 @@ server <- function(input, output) {
             setView(lng = 32.2903, 1.3733, zoom = 6)
     })
     
+    # Create a continuous palette function
+    pal <- colorNumeric(
+        palette = "Reds",
+        domain = df_shape$cash_transfers_by_district)
+    
     # handle changes on the map data through proxy
     observe({
         proxy = leafletProxy("map", data = filter_shape_data()) %>% 
@@ -205,8 +211,9 @@ server <- function(input, output) {
         proxy %>% 
             clearControls() %>% 
             addPolygons(
-                fillColor = "blue",
-                fillOpacity = 0.5,
+                stroke = FALSE,
+                fillColor = ~pal(cash_transfers_by_district),
+                fillOpacity = 0.9,
                 weight = 1,
                 label = ~DNAME2018
             )

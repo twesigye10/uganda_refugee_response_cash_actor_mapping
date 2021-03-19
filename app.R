@@ -36,7 +36,7 @@ df_by_district_cash_data <- df_data %>%
 
 
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2018.shp", crs=32636 ) %>%
-    st_transform( "+init=epsg:4326") %>% 
+    st_transform( crs = 4326) %>% 
     left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) %>% 
     filter(!is.na(cash_transfers_by_district))
 

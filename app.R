@@ -79,7 +79,7 @@ ui <- fluidPage(
                         choices = c("All", unique(as.character(df_data$Quarter))),
                         selected = "All"
             ),
-            plotOutput("plotcashquarter")
+            highchartOutput("plotcashquarter")
             
         ),
         # end side panel
@@ -152,25 +152,18 @@ server <- function(input, output) {
     
     
     # cash quarter
-    output$plotcashquarter <-  renderPlot({
+    output$plotcashquarter <-  renderHighchart({
         
         filter_cash_data() %>% 
             group_by(Year, Quarter ) %>% 
             summarise(
                 total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
             ) %>% 
-            ggplot(
-                aes(x = Quarter,
-                    y =  total_amount_of_cash_by_quarter,
-                    group = Year,
-                    color = Year
-                )
-            )+
-            geom_line() +
-            labs( title = "Total Cash over Quarters",
-                  x= "Quarter",
-                  y= "Total Cash" )+
-            theme_bw() 
+            hchart(type = "line",
+                   hcaes(x = Quarter, group = Year, y = total_amount_of_cash_by_quarter, color = Year)) %>%  
+            hc_title( text = "Total Cash over Quarters", margin = 5, align = "left" )%>% 
+            hc_xAxis( title = list(text = "Quarter") ) %>% 
+            hc_yAxis(title = list(text = "Total Cash")) 
         
     })
     

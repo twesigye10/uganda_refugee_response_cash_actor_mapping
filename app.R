@@ -21,11 +21,12 @@ df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.
     rename_all(~str_replace_all(., "\\s+", "_")) %>% 
     separate(Select_Month, c("Month", "Year"), "-", remove= FALSE, extra = "drop") %>% 
     mutate(
-        Quarter = case_when(Month %in% c("Jan", "Feb", "Mar")~paste0("Q1_20",Year),
-                            Month %in% c("Apr", "May", "Jun")~paste0("Q2_20",Year),
-                            Month %in% c("Jul", "Aug", "Sep")~paste0("Q3_20",Year),
-                            Month %in% c("Oct", "Nov", "Dec")~paste0("Q4_20",Year)
-        )
+        Quarter = case_when(Month %in% c("Jan", "Feb", "Mar")~"Q1",
+                            Month %in% c("Apr", "May", "Jun")~"Q2",
+                            Month %in% c("Jul", "Aug", "Sep")~"Q3",
+                            Month %in% c("Oct", "Nov", "Dec")~"Q4"
+        ),
+        Year = paste0("20",Year)
     ) %>% 
     arrange(desc(Year),desc(Quarter))
 
@@ -131,19 +132,21 @@ server <- function(input, output) {
     output$plotcashquarter <-  renderPlot({
         
         filter_cash_data() %>% 
-            group_by(Quarter ) %>% 
+            group_by(Year, Quarter ) %>% 
             summarise(
                 total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
             ) %>% 
             ggplot(
-                aes(x = total_amount_of_cash_by_quarter,
-                    y =  fct_relevel(Quarter, c("Q1_2019","Q2_2019","Q3_2019","Q4_2019","Q1_2020","Q2_2020","Q3_2020","Q4_2020")) 
+                aes(x = Quarter,
+                    y =  total_amount_of_cash_by_quarter,
+                    group = Year,
+                    color = Year
                 )
             )+
-            geom_bar(stat = "identity", fill = "blue", show.legend = FALSE) +
-            labs( title = "Total Cash by Quarter",
-                  x= "Total Cash",
-                  y= "Quarter" )+
+            geom_line() +
+            labs( title = "Total Cash over Quarters",
+                  x= "Quarter",
+                  y= "Total Cash" )+
             theme_bw() 
         
     })

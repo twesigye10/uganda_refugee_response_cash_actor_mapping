@@ -14,7 +14,8 @@ library(tidyverse)
 library(leaflet)
 library(plotly)
 library(bslib)
-
+library(ggreach)
+library(highcharter)
 
 # data
 # this is the development branch

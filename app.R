@@ -97,7 +97,7 @@ ui <- fluidPage(
                        )
                 ),
                 column(width = 6,
-                       plotOutput("plotcashpartner")
+                       highchartOutput("plotcashpartner")
                 )
             )
             
@@ -184,45 +184,26 @@ server <- function(input, output) {
                 percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
             ) %>% 
             hchart(type = "bar",
-                   hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism))
-        
-        # filter_cash_data() %>% 
-        #     group_by(Select_Delivery_Mechanism ) %>% 
-        #     summarise(
-        #         count_by_delivery_mechanism = n(),
-        #         percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
-        #     ) %>% 
-        #     ggplot(
-        #         aes(x = percentage_by_delivery_mechanism, y = reorder(Select_Delivery_Mechanism, percentage_by_delivery_mechanism)
-        #         )
-        #     )+
-        #     geom_bar(stat = "identity", fill = "blue", show.legend = FALSE) +
-        #     labs( title = "Percentage of Assistance by Delivery Mechanism",
-        #           x= "% Assistance by Delivery Mechanism",
-        #           y= "Delivery Mechanism" )+
-        #     theme_bw()
+                   hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism)) %>%  
+            hc_title( text = "Percentage of Assistance by Delivery Mechanism", margin = 5, align = "left" )%>% 
+            hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
+            hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
         
     })
     
     # cash transfer by partner
-    output$plotcashpartner <-  renderPlot({
+    output$plotcashpartner <-  renderHighchart({
         
         filter_cash_data() %>% 
             group_by(Partner_Name ) %>% 
             summarise(
                 total_cash_by_parter = sum(Total_amount_of_cash_transfers, na.rm = T)
             ) %>% 
-            ggplot(
-                aes(x = total_cash_by_parter, y = reorder(Partner_Name, total_cash_by_parter) )
-            )+
-            geom_bar(stat = "identity", fill = "blue",  show.legend = FALSE) +
-            labs(
-                title = "Total cash Transfers by Partner",
-                x= "Total cash Transfers",
-                y= "Partner"
-            )+
-            theme_bw()
-        
+            hchart(type = "bar",
+                   hcaes(x = reorder(Partner_Name, total_cash_by_parter), y = total_cash_by_parter)) %>% 
+            hc_title( text = "Total cash Transfers by Partner", margin = 5, align = "left" )%>% 
+            hc_xAxis( title = list(text = "Partner") ) %>% 
+            hc_yAxis(title = list(text = "Total cash Transfers") ) 
     })
     
     # contents on the map that do not change

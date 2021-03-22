@@ -14,6 +14,7 @@ library(tidyverse)
 library(leaflet)
 library(plotly)
 library(bslib)
+library(highcharter)
 
 
 # data

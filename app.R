@@ -13,6 +13,7 @@ library(sf)
 library(tidyverse)
 library(leaflet)
 library(plotly)
+library(bslib)
 
 
 # data
@@ -37,19 +38,24 @@ df_by_district_cash_data <- df_data %>%
 
 
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2018.shp", crs=32636 ) %>%
-    st_transform( "+init=epsg:4326") %>% 
+    st_transform( crs = 4326) %>% 
     left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) %>% 
     filter(!is.na(cash_transfers_by_district))
 
 
-df_shape
 
+reach_theme <- bs_theme(
+    bg = ggreach::reach_cols("lightgrey"), 
+    fg = ggreach::reach_cols("medred"),
+    primary = ggreach::reach_cols("medbeige"),
+    base_font = "Arial"
+)
 # Define UI for application
 ui <- fluidPage(
     # theme
     # theme = bslib::bs_theme(bootswatch = "darkly"),
-    theme = bslib::bs_theme(bootswatch = "cyborg"),
-    
+    # theme = bslib::bs_theme(bootswatch = "cyborg"),
+    theme= reach_theme,
     # Application title
     titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP) 2020-2021", style = "color:#3474A7")),
     
@@ -81,7 +87,7 @@ ui <- fluidPage(
             fluidRow(
                 column(width = 6,
                        # Select Delivery Mechanism
-                       plotOutput("plotdeliverymechanism",
+                       highchartOutput("plotdeliverymechanism",
                        )
                 ),
                 column(width = 6,
@@ -153,23 +159,31 @@ server <- function(input, output) {
     
     
     # delivery mechanism
-    output$plotdeliverymechanism <-  renderPlot({
-        
+    output$plotdeliverymechanism <-  renderHighchart ({
         filter_cash_data() %>% 
             group_by(Select_Delivery_Mechanism ) %>% 
             summarise(
                 count_by_delivery_mechanism = n(),
                 percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
             ) %>% 
-            ggplot(
-                aes(x = percentage_by_delivery_mechanism, y = reorder(Select_Delivery_Mechanism, percentage_by_delivery_mechanism)
-                )
-            )+
-            geom_bar(stat = "identity", fill = "blue", show.legend = FALSE) +
-            labs( title = "Percentage of Assistance by Delivery Mechanism",
-                  x= "% Assistance by Delivery Mechanism",
-                  y= "Delivery Mechanism" )+
-            theme_bw()
+            hchart(type = "bar",
+                   hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism))
+        
+        # filter_cash_data() %>% 
+        #     group_by(Select_Delivery_Mechanism ) %>% 
+        #     summarise(
+        #         count_by_delivery_mechanism = n(),
+        #         percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
+        #     ) %>% 
+        #     ggplot(
+        #         aes(x = percentage_by_delivery_mechanism, y = reorder(Select_Delivery_Mechanism, percentage_by_delivery_mechanism)
+        #         )
+        #     )+
+        #     geom_bar(stat = "identity", fill = "blue", show.legend = FALSE) +
+        #     labs( title = "Percentage of Assistance by Delivery Mechanism",
+        #           x= "% Assistance by Delivery Mechanism",
+        #           y= "Delivery Mechanism" )+
+        #     theme_bw()
         
     })
     

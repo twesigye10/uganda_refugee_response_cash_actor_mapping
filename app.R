@@ -69,6 +69,11 @@ ui <- fluidPage(
                         choices = c("All", unique(as.character(df_data$Location_District))),
                         selected = "All"
             ),
+            selectInput("yearperiod", 
+                        "Select Year", 
+                        choices = c("All", unique(as.character(df_data$Year))),
+                        selected = "All"
+            ),
             selectInput("quarterperiod", 
                         "Select Quarter", 
                         choices = c("All", unique(as.character(df_data$Quarter))),
@@ -118,19 +123,30 @@ server <- function(input, output) {
     
     # filter cash data
     filter_cash_data <- reactive({
-        # defaultly display all data from all districts and all quarters
-        if (input$district == "All" & input$quarterperiod == "All"){
+        # defaultly display all data from all districts, years and all quarters
+        if (input$district == "All" & input$yearperiod == "All" & input$quarterperiod == "All"){
             df_data
-        }else if(input$district == "All" & input$quarterperiod != "All"){
-            df_data %>% 
+        }else if(input$district == "All" & input$yearperiod == "All"& input$quarterperiod != "All"){
+            df_data %>%
                 filter(Quarter == input$quarterperiod )
-        }else if(input$district != "All" & input$quarterperiod == "All"){
-            df_data %>% 
-                filter(Location_District == input$district)
+        }else if(input$district == "All" & input$yearperiod != "All"& input$quarterperiod != "All"){
+            df_data %>%
+                filter(Year == input$yearperiod , Quarter == input$quarterperiod )
+        }else if(input$district == "All" & input$yearperiod != "All"& input$quarterperiod == "All"){
+            df_data %>%
+                filter(Year == input$yearperiod )
+        }else if(input$district != "All" & input$yearperiod == "All"& input$quarterperiod == "All"){
+            df_data %>%
+                filter(Location_District == input$district )
+        }else if(input$district != "All" & input$yearperiod == "All"& input$quarterperiod != "All"){
+            df_data %>%
+                filter(Location_District == input$district,  Quarter == input$quarterperiod)
+        }else if(input$district != "All" & input$yearperiod != "All"& input$quarterperiod == "All"){
+            df_data %>%
+                filter(Location_District == input$district,  Year == input$yearperiod)
         } else{
-            df_data %>% 
-                filter(Location_District == input$district 
-                       & Quarter == input$quarterperiod )
+            df_data %>%
+                filter(Location_District == input$district,  Year == input$yearperiod, Quarter == input$quarterperiod )
         }
     })
     

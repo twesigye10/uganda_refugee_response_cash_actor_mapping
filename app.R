@@ -20,17 +20,24 @@ library(highcharter)
 # data
 # this is the development branch
 df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv") %>% 
-    rename_all(~str_replace_all(., "\\s+", "_")) %>% 
+    rename_all(~str_replace_all(., "\\s+|\\(|\\)", "_")) %>% 
     separate(Select_Month, c("Month", "Year"), "-", remove= FALSE, extra = "drop") %>% 
     mutate(
         Quarter = case_when(Month %in% c("Jan", "Feb", "Mar")~"Q1",
                             Month %in% c("Apr", "May", "Jun")~"Q2",
                             Month %in% c("Jul", "Aug", "Sep")~"Q3",
-                            Month %in% c("Oct", "Nov", "Dec")~"Q4"
-        ),
+                            Month %in% c("Oct", "Nov", "Dec")~"Q4"  ),
         Year = paste0("20",Year)
     ) %>% 
+    rowwise() %>%
+    mutate(
+        i.hh_receiving_any_form_of_cash = sum(Households_receiving_cash_assistance_for_basic_needs, Households_receiving_voucher_assistance_for_basic_needs, na.rm = T),
+        # i.psn_hh_receiving_any_form_of_cash = sum(c_across(PSN_households_receiving_cash_assistance_for_basic_needs_(total):PSN_households_receiving_voucher_assistance_for_basic_needs_(Woman_at_risk)), na.rm = T)
+    ) %>% 
+    ungroup() %>% 
     arrange(desc(Year),desc(Quarter))
+
+df_data
 
 df_by_district_cash_data <- df_data %>% 
     select(Location_District, Total_amount_of_cash_transfers) %>% 
@@ -58,8 +65,9 @@ ui <- fluidPage(
     # theme = bslib::bs_theme(bootswatch = "cyborg"),
     theme= reach_theme,
     # Application title
-    titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP) 2020-2021", style = "color:#3474A7")),
-    
+    titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP) 2020-2021", style = "color:#3474A7"), windowTitle = "Cash Based Interventions"),
+    p( "The response seeks to explore opportunities to transition from in-kind to cash-based assistance. The injection of cash, through unconditional multi-purpose, and conditional cash-based interventions will have 
+multiplier effects on food security, social cohesion, reduction of aid dependency, and productive engagement of the youth, among others. The established reference Minimum Expenditure Basket (MEB) tool will ultimately support the cost efficiency and cost effectiveness, and pave the way for coherent multi-purpose cash programming and delivery. Partners continue efforts to establish a common platform for cash transfers. The information is collected through the Activity Info platform." ),
     # Sidebar
     sidebarLayout(
         # side panel

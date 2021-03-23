@@ -16,6 +16,7 @@ library(plotly)
 library(bslib)
 library(ggreach)
 library(highcharter)
+library(billboarder)
 
 # data
 # this is the development branch
@@ -74,27 +75,23 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
                         selected = "All"
             ),
             fluidRow(
-                
                 column(width = 6,
                        selectInput("yearperiod", 
                                    "Select Year", 
                                    choices = c("All", unique(as.character(df_data$Year))),
                                    selected = "All"
-                       )
-                ),
+                                   )
+                       ),
                 column(width = 6,
                        selectInput("quarterperiod", 
                                    "Select Quarter", 
                                    choices = c("All", unique(as.character(df_data$Quarter))),
                                    selected = "All"
+                                   )
                        )
-                )
-                
-                
-            )
-            ,
+            ),
+            billboarderOutput("hhreceivingcash" ),
             highchartOutput("plotcashquarter")
-            
         ),
         # end side panel
         
@@ -107,15 +104,13 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
             fluidRow(
                 column(width = 6,
                        # Select Delivery Mechanism
-                       highchartOutput("plotdeliverymechanism",
-                       )
-                ),
+                       highchartOutput("plotdeliverymechanism", )
+                       ),
                 column(width = 6,
                        highchartOutput("plotcashpartner")
-                )
+                       )
             )
-            
-            
+
         )
         # end main panel
         
@@ -162,6 +157,21 @@ server <- function(input, output) {
             df_data %>%
                 filter(Location_District == input$district,  Year == input$yearperiod, Quarter == input$quarterperiod )
         }
+    })
+    
+    
+    # household receive cash
+    output$hhreceivingcash <-  renderBillboarder({
+        
+        df_billb_data <- filter_cash_data() %>% 
+            group_by(Select_Beneficiary_Type ) %>% 
+            summarise(
+                count_hh_receive_cash_assistance = sum(i.hh_receiving_any_form_of_cash, na.rm = T)
+            ) 
+
+            billboarder(data = df_billb_data) %>%
+            bb_donutchart() %>%  
+            bb_donut(title = "HH receiving cash-based assist", width = 70) 
     })
     
     

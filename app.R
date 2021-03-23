@@ -170,8 +170,10 @@ server <- function(input, output) {
             ) 
 
             billboarder(data = df_billb_data) %>%
-            bb_donutchart() %>%  
-            bb_donut(title = "HH receiving cash-based assist", width = 70) 
+                bb_donutchart() %>% 
+                bb_legend(position = 'right') %>%
+                bb_donut(title = "HH receiving cash-based assist", width = 70) %>% 
+                bb_color(palette = c('#E58606','#5D69B1','#52BCA3','#99C945','#CC61B0'))
     })
     
     
@@ -261,7 +263,14 @@ server <- function(input, output) {
                                              dashArray = "",
                                              fillOpacity = 0.7,
                                              bringToFront = TRUE)
-            )
+                ) %>% 
+            addLegend(position ="bottomright", 
+                      pal = pal, 
+                      values = ~cash_transfers_by_district,
+                      title = "Total cash",
+                      labFormat = labelFormat(prefix = "UGX"),
+                      opacity  = 1
+                      )
         
     })
     

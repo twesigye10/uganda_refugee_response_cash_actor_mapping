@@ -172,7 +172,7 @@ server <- function(input, output) {
             billboarder(data = df_billb_data) %>%
                 bb_donutchart() %>% 
                 bb_legend(position = 'right') %>%
-                bb_donut(title = "HH receiving cash-based assist", width = 70) %>% 
+                bb_donut(title = "HH receiving cash \nfor Basic Needs", width = 70) %>% 
                 bb_color(palette = c('#E58606','#5D69B1','#52BCA3','#99C945','#CC61B0'))
     })
     
@@ -187,7 +187,7 @@ server <- function(input, output) {
             ) %>% 
             hchart(type = "line",
                    hcaes(x = Quarter, group = Year, y = total_amount_of_cash_by_quarter, color = Year)) %>%  
-            hc_title( text = "Total Cash over Quarters", margin = 5, align = "left" )%>% 
+            hc_title( text = "Total Cash Distributed", margin = 5, align = "left" )%>% 
             hc_xAxis( title = list(text = "Quarter") ) %>% 
             hc_yAxis(title = list(text = "Total Cash")) 
         

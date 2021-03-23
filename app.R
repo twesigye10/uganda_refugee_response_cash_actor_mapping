@@ -202,6 +202,7 @@ server <- function(input, output) {
                 count_by_delivery_mechanism = n(),
                 percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
             ) %>% 
+            arrange(-percentage_by_delivery_mechanism) %>% 
             hchart(type = "bar",
                    hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism)) %>%  
             hc_title( text = "Percentage of Assistance by Delivery Mechanism", margin = 5, align = "left" )%>% 
@@ -218,8 +219,9 @@ server <- function(input, output) {
             summarise(
                 total_cash_by_parter = sum(Total_amount_of_cash_transfers, na.rm = T)
             ) %>% 
+            arrange(-total_cash_by_parter) %>%
             hchart(type = "bar",
-                   hcaes(x = reorder(Partner_Name, total_cash_by_parter), y = total_cash_by_parter)) %>% 
+                   hcaes(x = Partner_Name, y = total_cash_by_parter)) %>% 
             hc_title( text = "Total cash Transfers by Partner", margin = 5, align = "left" )%>% 
             hc_xAxis( title = list(text = "Partner") ) %>% 
             hc_yAxis(title = list(text = "Total cash Transfers") ) 

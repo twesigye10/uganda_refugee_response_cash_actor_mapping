@@ -32,24 +32,20 @@ df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.
     rowwise() %>%
     mutate(
         i.hh_receiving_any_form_of_cash = sum(Households_receiving_cash_assistance_for_basic_needs, Households_receiving_voucher_assistance_for_basic_needs, na.rm = T),
-        # i.psn_hh_receiving_any_form_of_cash = sum(c_across(PSN_households_receiving_cash_assistance_for_basic_needs_(total):PSN_households_receiving_voucher_assistance_for_basic_needs_(Woman_at_risk)), na.rm = T)
+        i.psn_hh_receiving_any_form_of_cash = sum(c_across(PSN_households_receiving_cash_assistance_for_basic_needs__total_:PSN_households_receiving_voucher_assistance_for_basic_needs__Woman_at_risk_), na.rm = T)
     ) %>% 
     ungroup() %>% 
     arrange(desc(Year),desc(Quarter))
-
-df_data
 
 df_by_district_cash_data <- df_data %>% 
     select(Location_District, Total_amount_of_cash_transfers) %>% 
     group_by(Location_District) %>% 
     summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
 
-
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2018.shp", crs=32636 ) %>%
     st_transform( crs = 4326) %>% 
     left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) %>% 
     filter(!is.na(cash_transfers_by_district))
-
 
 
 reach_theme <- bs_theme(
@@ -77,16 +73,26 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
                         choices = c("All", unique(as.character(df_data$Location_District))),
                         selected = "All"
             ),
-            selectInput("yearperiod", 
-                        "Select Year", 
-                        choices = c("All", unique(as.character(df_data$Year))),
-                        selected = "All"
-            ),
-            selectInput("quarterperiod", 
-                        "Select Quarter", 
-                        choices = c("All", unique(as.character(df_data$Quarter))),
-                        selected = "All"
-            ),
+            fluidRow(
+                
+                column(width = 6,
+                       selectInput("yearperiod", 
+                                   "Select Year", 
+                                   choices = c("All", unique(as.character(df_data$Year))),
+                                   selected = "All"
+                       )
+                ),
+                column(width = 6,
+                       selectInput("quarterperiod", 
+                                   "Select Quarter", 
+                                   choices = c("All", unique(as.character(df_data$Quarter))),
+                                   selected = "All"
+                       )
+                )
+                
+                
+            )
+            ,
             highchartOutput("plotcashquarter")
             
         ),

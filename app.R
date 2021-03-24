@@ -11,6 +11,7 @@
 library(shiny)
 library(sf)
 library(tidyverse)
+library(lubridate)
 library(leaflet)
 library(bslib)
 library(ggreach)
@@ -27,6 +28,7 @@ df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.
                             Month %in% c("Apr", "May", "Jun")~"Q2",
                             Month %in% c("Jul", "Aug", "Sep")~"Q3",
                             Month %in% c("Oct", "Nov", "Dec")~"Q4"  ),
+        Date = my(Select_Month),
         Year = paste0("20",Year)
     ) %>% 
     rowwise() %>%
@@ -132,29 +134,17 @@ server <- function(input, output) {
     # filter cash data
     filter_cash_data <- reactive({
         # defaultly display all data from all districts, years and all quarters
-        if (input$district == "All" & input$yearperiod == "All" & input$quarterperiod == "All"){
+        if (input$yearperiod == "All" & input$quarterperiod == "All"){
             df_data
-        }else if(input$district == "All" & input$yearperiod == "All"& input$quarterperiod != "All"){
-            df_data %>%
+        }else if(input$yearperiod == "All" & input$quarterperiod != "All"){
+            df_data %>% 
                 filter(Quarter == input$quarterperiod )
-        }else if(input$district == "All" & input$yearperiod != "All"& input$quarterperiod != "All"){
-            df_data %>%
-                filter(Year == input$yearperiod , Quarter == input$quarterperiod )
-        }else if(input$district == "All" & input$yearperiod != "All"& input$quarterperiod == "All"){
-            df_data %>%
-                filter(Year == input$yearperiod )
-        }else if(input$district != "All" & input$yearperiod == "All"& input$quarterperiod == "All"){
-            df_data %>%
-                filter(Location_District == input$district )
-        }else if(input$district != "All" & input$yearperiod == "All"& input$quarterperiod != "All"){
-            df_data %>%
-                filter(Location_District == input$district,  Quarter == input$quarterperiod)
-        }else if(input$district != "All" & input$yearperiod != "All"& input$quarterperiod == "All"){
-            df_data %>%
-                filter(Location_District == input$district,  Year == input$yearperiod)
+        }else if(input$yearperiod != "All" & input$quarterperiod == "All"){
+            df_data %>% 
+                filter(Year == input$yearperiod)
         } else{
-            df_data %>%
-                filter(Location_District == input$district,  Year == input$yearperiod, Quarter == input$quarterperiod )
+            df_data %>% 
+                filter(Year == input$yearperiod, Quarter == input$quarterperiod )
         }
     })
     
@@ -180,12 +170,13 @@ server <- function(input, output) {
     output$plotcashquarter <-  renderHighchart({
         
         filter_cash_data() %>% 
-            group_by(Year, Quarter ) %>% 
+            group_by(Year, Quarter, Select_Month, Date ) %>%
             summarise(
                 total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
-            ) %>% 
+            ) %>%
+            arrange(Date) %>% 
             hchart(type = "line",
-                   hcaes(x = Quarter, group = Year, y = total_amount_of_cash_by_quarter, color = Year)) %>%  
+                   hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
             hc_title( text = "Total Cash Distributed", margin = 5, align = "left" )%>% 
             hc_xAxis( title = list(text = "Quarter") ) %>% 
             hc_yAxis(title = list(text = "Total Cash")) 

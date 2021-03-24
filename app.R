@@ -139,9 +139,15 @@ server <- function(input, output) {
         palette = "Reds",
         domain = df_shape$cash_transfers_by_district)
     # label districts in the map
-    labels <- ~sprintf(
+    labels_v1 <- ~sprintf(
         "<strong>%s</strong><br/>Cash Transfers : %g ",
         DNAME2018, cash_transfers_by_district
+    ) %>% 
+        lapply(htmltools::HTML)
+    
+    labels_district <- ~sprintf(
+        "<strong>%s</strong>",
+        DNAME2018
     ) %>% 
         lapply(htmltools::HTML)
     
@@ -168,7 +174,8 @@ server <- function(input, output) {
                 fillOpacity = 0.9,
                 weight = 2,
                 opacity = 1,
-                label = labels,
+                label = labels_district,
+                labelOptions = labelOptions(noHide = T, textOnly = TRUE),
                 layerId = ~DNAME2018,
                 dashArray = "3",
                 highlight = highlightOptions(weight = 5,

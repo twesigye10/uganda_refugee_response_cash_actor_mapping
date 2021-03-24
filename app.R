@@ -39,15 +39,9 @@ df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.
     ungroup() %>% 
     arrange(desc(Year),desc(Quarter))
 
-df_by_district_cash_data <- df_data %>% 
-    select(Location_District, Total_amount_of_cash_transfers) %>% 
-    group_by(Location_District) %>% 
-    summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
 
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2018.shp", crs=32636 ) %>%
-    st_transform( crs = 4326) %>% 
-    left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) %>% 
-    filter(!is.na(cash_transfers_by_district))
+    st_transform( crs = 4326)
 
 
 reach_theme <- bs_theme(
@@ -70,11 +64,6 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
     sidebarLayout(
         # side panel
         sidebarPanel(
-            selectInput("district", 
-                        "Select District", 
-                        choices = c("All", unique(as.character(df_data$Location_District))),
-                        selected = "All"
-            ),
             fluidRow(
                 column(width = 6,
                        selectInput("yearperiod", 
@@ -120,17 +109,7 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 
 # Define server logic required
 server <- function(input, output) {
-    # filter data
-    filter_shape_data  <-  reactive({
-        # defaultly display all data from all districts
-        if (input$district == "All" ){
-            df_shape
-        } else{
-            df_shape %>% 
-                filter( DNAME2018 == input$district )
-        }
-    })
-    
+
     # filter cash data
     filter_cash_data <- reactive({
         # defaultly display all data from all districts, years and all quarters
@@ -147,8 +126,7 @@ server <- function(input, output) {
                 filter(Year == input$yearperiod, Quarter == input$quarterperiod )
         }
     })
-    
-    
+
     # contents on the map that do not change
     output$map  <-  renderLeaflet({
         leaflet() %>% 
@@ -160,7 +138,7 @@ server <- function(input, output) {
     pal <- colorNumeric(
         palette = "Reds",
         domain = df_shape$cash_transfers_by_district)
-    
+    # label districts in the map
     labels <- ~sprintf(
         "<strong>%s</strong><br/>Cash Transfers : %g ",
         DNAME2018, cash_transfers_by_district
@@ -169,6 +147,16 @@ server <- function(input, output) {
     
     # handle changes on the map data through proxy
     observe({
+        # UI selectors to filter shape data
+        df_by_district_cash_data <- filter_cash_data() %>% 
+            select(Location_District, Total_amount_of_cash_transfers) %>% 
+            group_by(Location_District) %>% 
+            summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
+        df_shape <- df_shape%>% 
+            left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) %>% 
+            filter(!is.na(cash_transfers_by_district))
+        
+        # construct the dynamic map
         proxy = leafletProxy("map", data = df_shape) %>% 
             clearShapes()
         

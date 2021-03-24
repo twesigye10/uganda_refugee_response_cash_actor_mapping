@@ -149,74 +149,6 @@ server <- function(input, output) {
     })
     
     
-    # household receive cash
-    output$hhreceivingcash <-  renderBillboarder({
-        
-        df_billb_data <- filter_cash_data() %>% 
-            group_by(Select_Beneficiary_Type ) %>% 
-            summarise(
-                count_hh_receive_cash_assistance = sum(i.hh_receiving_any_form_of_cash, na.rm = T)
-            ) 
-
-            billboarder(data = df_billb_data) %>%
-                bb_donutchart() %>% 
-                bb_legend(position = 'right') %>%
-                bb_donut(title = "% of HH receiving cash \nfor Basic Needs\n by Beneficiary Type", width = 70) %>% 
-                bb_color(palette = c('#E58606','#5D69B1','#52BCA3','#99C945','#CC61B0'))
-    })
-    
-    
-    # cash quarter
-    output$plotcashquarter <-  renderHighchart({
-        
-        filter_cash_data() %>% 
-            group_by(Year, Quarter, Select_Month, Date ) %>%
-            summarise(
-                total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
-            ) %>%
-            arrange(Date) %>% 
-            hchart(type = "line",
-                   hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
-            hc_title( text = "Total Cash Distributed", margin = 5, align = "left" )%>% 
-            hc_xAxis( title = list(text = "Quarter") ) %>% 
-            hc_yAxis(title = list(text = "Total Cash")) 
-        
-    })
-    
-    
-    # delivery mechanism
-    output$plotdeliverymechanism <-  renderHighchart ({
-        filter_cash_data() %>% 
-            group_by(Select_Delivery_Mechanism ) %>% 
-            summarise(
-                count_by_delivery_mechanism = n(),
-                percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
-            ) %>% 
-            arrange(-percentage_by_delivery_mechanism) %>% 
-            hchart(type = "bar",
-                   hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism)) %>%  
-            hc_title( text = "Percentage of Assistance by Delivery Mechanism", margin = 5, align = "left" )%>% 
-            hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
-            hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
-        
-    })
-    
-    # cash transfer by partner
-    output$plotcashpartner <-  renderHighchart({
-        
-        filter_cash_data() %>% 
-            group_by(Partner_Name ) %>% 
-            summarise(
-                total_cash_by_parter = sum(Total_amount_of_cash_transfers, na.rm = T)
-            ) %>% 
-            arrange(-total_cash_by_parter) %>%
-            hchart(type = "bar",
-                   hcaes(x = Partner_Name, y = total_cash_by_parter)) %>% 
-            hc_title( text = "Total cash Transfers by Partner", margin = 5, align = "left" )%>% 
-            hc_xAxis( title = list(text = "Partner") ) %>% 
-            hc_yAxis(title = list(text = "Total cash Transfers") ) 
-    })
-    
     # contents on the map that do not change
     output$map  <-  renderLeaflet({
         leaflet() %>% 
@@ -237,7 +169,7 @@ server <- function(input, output) {
     
     # handle changes on the map data through proxy
     observe({
-        proxy = leafletProxy("map", data = filter_shape_data()) %>% 
+        proxy = leafletProxy("map", data = df_shape) %>% 
             clearShapes()
         
         proxy %>% 
@@ -264,6 +196,88 @@ server <- function(input, output) {
                       labFormat = labelFormat(prefix = "UGX"),
                       opacity  = 1
                       )
+        
+    })
+    
+    # charts listen to map click
+    observe({
+        click = input$map_shape_click
+        click_district <- click$id
+        
+        if(is.null(click))
+            filter_cash_data_based_on_map <- filter_cash_data()
+        else
+            filter_cash_data_based_on_map <- filter_cash_data() %>% 
+            filter(Location_District ==  click_district)
+        
+        # household receive cash
+        output$hhreceivingcash <-  renderBillboarder({
+            
+            df_billb_data <- filter_cash_data_based_on_map %>% 
+                group_by(Select_Beneficiary_Type ) %>% 
+                summarise(
+                    count_hh_receive_cash_assistance = sum(i.hh_receiving_any_form_of_cash, na.rm = T)
+                ) 
+            
+            billboarder(data = df_billb_data) %>%
+                bb_donutchart() %>% 
+                bb_legend(position = 'right') %>%
+                bb_donut(title = "% of HH receiving cash \nfor Basic Needs\n by Beneficiary Type", width = 70) %>% 
+                bb_color(palette = c('#E58606','#5D69B1','#52BCA3','#99C945','#CC61B0'))
+        })
+        
+        # cash quarter
+        output$plotcashquarter <-  renderHighchart({
+            filter_cash_data_based_on_map %>%
+                # filter(Location_District ==  click_district) %>% 
+                group_by(Year, Quarter, Select_Month, Date ) %>%
+                summarise(
+                    total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
+                ) %>%
+                arrange(Date) %>% 
+                hchart(type = "line",
+                       hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
+                hc_title( text = "Total Cash Distributed", margin = 5, align = "left" )%>% 
+                hc_xAxis( title = list(text = "Quarter") ) %>% 
+                hc_yAxis(title = list(text = "Total Cash")) 
+            
+        })
+        
+        # delivery mechanism
+        output$plotdeliverymechanism <-  renderHighchart ({
+            filter_cash_data_based_on_map %>% 
+                group_by(Select_Delivery_Mechanism ) %>% 
+                summarise(
+                    count_by_delivery_mechanism = n(),
+                    percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
+                ) %>% 
+                arrange(-percentage_by_delivery_mechanism) %>% 
+                hchart(type = "bar",
+                       hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism)) %>%  
+                hc_title( text = "Percentage of Assistance by Delivery Mechanism", margin = 5, align = "left" )%>% 
+                hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
+                hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
+            
+        })
+        
+        # cash transfer by partner
+        output$plotcashpartner <-  renderHighchart({
+            
+            filter_cash_data_based_on_map %>% 
+                group_by(Partner_Name ) %>% 
+                summarise(
+                    total_cash_by_parter = sum(Total_amount_of_cash_transfers, na.rm = T)
+                ) %>% 
+                arrange(-total_cash_by_parter) %>%
+                hchart(type = "bar",
+                       hcaes(x = Partner_Name, y = total_cash_by_parter)) %>% 
+                hc_title( text = "Total cash Transfers by Partner", margin = 5, align = "left" )%>% 
+                hc_xAxis( title = list(text = "Partner") ) %>% 
+                hc_yAxis(title = list(text = "Total cash Transfers") ) 
+        })
+        
+        
+    
         
     })
     

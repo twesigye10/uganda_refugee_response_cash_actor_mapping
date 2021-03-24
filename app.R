@@ -12,7 +12,6 @@ library(shiny)
 library(sf)
 library(tidyverse)
 library(leaflet)
-library(plotly)
 library(bslib)
 library(ggreach)
 library(highcharter)
@@ -259,6 +258,7 @@ server <- function(input, output) {
                 weight = 2,
                 opacity = 1,
                 label = labels,
+                layerId = ~DNAME2018,
                 dashArray = "3",
                 highlight = highlightOptions(weight = 5,
                                              color = "#666",

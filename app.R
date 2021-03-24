@@ -14,21 +14,28 @@ library(tidyverse)
 library(leaflet)
 library(plotly)
 library(bslib)
+library(ggreach)
 library(highcharter)
-
+library(billboarder)
 
 # data
 # this is the development branch
 df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv") %>% 
-    rename_all(~str_replace_all(., "\\s+", "_")) %>% 
+    rename_all(~str_replace_all(., "\\s+|\\(|\\)", "_")) %>% 
     separate(Select_Month, c("Month", "Year"), "-", remove= FALSE, extra = "drop") %>% 
     mutate(
-        Quarter = case_when(Month %in% c("Jan", "Feb", "Mar")~paste0("Q1_20",Year),
-                            Month %in% c("Apr", "May", "Jun")~paste0("Q2_20",Year),
-                            Month %in% c("Jul", "Aug", "Sep")~paste0("Q3_20",Year),
-                            Month %in% c("Oct", "Nov", "Dec")~paste0("Q4_20",Year)
-        )
+        Quarter = case_when(Month %in% c("Jan", "Feb", "Mar")~"Q1",
+                            Month %in% c("Apr", "May", "Jun")~"Q2",
+                            Month %in% c("Jul", "Aug", "Sep")~"Q3",
+                            Month %in% c("Oct", "Nov", "Dec")~"Q4"  ),
+        Year = paste0("20",Year)
     ) %>% 
+    rowwise() %>%
+    mutate(
+        i.hh_receiving_any_form_of_cash = sum(Households_receiving_cash_assistance_for_basic_needs, Households_receiving_voucher_assistance_for_basic_needs, na.rm = T),
+        i.psn_hh_receiving_any_form_of_cash = sum(c_across(PSN_households_receiving_cash_assistance_for_basic_needs__total_:PSN_households_receiving_voucher_assistance_for_basic_needs__Woman_at_risk_), na.rm = T)
+    ) %>% 
+    ungroup() %>% 
     arrange(desc(Year),desc(Quarter))
 
 df_by_district_cash_data <- df_data %>% 
@@ -36,12 +43,10 @@ df_by_district_cash_data <- df_data %>%
     group_by(Location_District) %>% 
     summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
 
-
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2018.shp", crs=32636 ) %>%
     st_transform( crs = 4326) %>% 
     left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) %>% 
     filter(!is.na(cash_transfers_by_district))
-
 
 
 reach_theme <- bs_theme(
@@ -57,8 +62,9 @@ ui <- fluidPage(
     # theme = bslib::bs_theme(bootswatch = "cyborg"),
     theme= reach_theme,
     # Application title
-    titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP) 2020-2021", style = "color:#3474A7")),
-    
+    titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP) 2020-2021", style = "color:#3474A7"), windowTitle = "Cash Based Interventions"),
+    p( "The response seeks to explore opportunities to transition from in-kind to cash-based assistance. The injection of cash, through unconditional multi-purpose, and conditional cash-based interventions will have 
+multiplier effects on food security, social cohesion, reduction of aid dependency, and productive engagement of the youth, among others. The established reference Minimum Expenditure Basket (MEB) tool will ultimately support the cost efficiency and cost effectiveness, and pave the way for coherent multi-purpose cash programming and delivery. Partners continue efforts to establish a common platform for cash transfers. The information is collected through the Activity Info platform." ),
     # Sidebar
     sidebarLayout(
         # side panel
@@ -68,13 +74,24 @@ ui <- fluidPage(
                         choices = c("All", unique(as.character(df_data$Location_District))),
                         selected = "All"
             ),
-            selectInput("quarterperiod", 
-                        "Select Quarter", 
-                        choices = c("All", unique(as.character(df_data$Quarter))),
-                        selected = "All"
+            fluidRow(
+                column(width = 6,
+                       selectInput("yearperiod", 
+                                   "Select Year", 
+                                   choices = c("All", unique(as.character(df_data$Year))),
+                                   selected = "All"
+                                   )
+                       ),
+                column(width = 6,
+                       selectInput("quarterperiod", 
+                                   "Select Quarter", 
+                                   choices = c("All", unique(as.character(df_data$Quarter))),
+                                   selected = "All"
+                                   )
+                       )
             ),
-            plotOutput("plotcashquarter")
-            
+            billboarderOutput("hhreceivingcash" ),
+            highchartOutput("plotcashquarter")
         ),
         # end side panel
         
@@ -87,15 +104,13 @@ ui <- fluidPage(
             fluidRow(
                 column(width = 6,
                        # Select Delivery Mechanism
-                       highchartOutput("plotdeliverymechanism",
-                       )
-                ),
+                       highchartOutput("plotdeliverymechanism", )
+                       ),
                 column(width = 6,
-                       plotOutput("plotcashpartner")
-                )
+                       highchartOutput("plotcashpartner")
+                       )
             )
-            
-            
+
         )
         # end main panel
         
@@ -117,41 +132,64 @@ server <- function(input, output) {
     
     # filter cash data
     filter_cash_data <- reactive({
-        # defaultly display all data from all districts and all quarters
-        if (input$district == "All" & input$quarterperiod == "All"){
+        # defaultly display all data from all districts, years and all quarters
+        if (input$district == "All" & input$yearperiod == "All" & input$quarterperiod == "All"){
             df_data
-        }else if(input$district == "All" & input$quarterperiod != "All"){
-            df_data %>% 
+        }else if(input$district == "All" & input$yearperiod == "All"& input$quarterperiod != "All"){
+            df_data %>%
                 filter(Quarter == input$quarterperiod )
-        }else if(input$district != "All" & input$quarterperiod == "All"){
-            df_data %>% 
-                filter(Location_District == input$district)
+        }else if(input$district == "All" & input$yearperiod != "All"& input$quarterperiod != "All"){
+            df_data %>%
+                filter(Year == input$yearperiod , Quarter == input$quarterperiod )
+        }else if(input$district == "All" & input$yearperiod != "All"& input$quarterperiod == "All"){
+            df_data %>%
+                filter(Year == input$yearperiod )
+        }else if(input$district != "All" & input$yearperiod == "All"& input$quarterperiod == "All"){
+            df_data %>%
+                filter(Location_District == input$district )
+        }else if(input$district != "All" & input$yearperiod == "All"& input$quarterperiod != "All"){
+            df_data %>%
+                filter(Location_District == input$district,  Quarter == input$quarterperiod)
+        }else if(input$district != "All" & input$yearperiod != "All"& input$quarterperiod == "All"){
+            df_data %>%
+                filter(Location_District == input$district,  Year == input$yearperiod)
         } else{
-            df_data %>% 
-                filter(Location_District == input$district 
-                       & Quarter == input$quarterperiod )
+            df_data %>%
+                filter(Location_District == input$district,  Year == input$yearperiod, Quarter == input$quarterperiod )
         }
     })
     
     
+    # household receive cash
+    output$hhreceivingcash <-  renderBillboarder({
+        
+        df_billb_data <- filter_cash_data() %>% 
+            group_by(Select_Beneficiary_Type ) %>% 
+            summarise(
+                count_hh_receive_cash_assistance = sum(i.hh_receiving_any_form_of_cash, na.rm = T)
+            ) 
+
+            billboarder(data = df_billb_data) %>%
+                bb_donutchart() %>% 
+                bb_legend(position = 'right') %>%
+                bb_donut(title = "% of HH receiving cash \nfor Basic Needs\n by Beneficiary Type", width = 70) %>% 
+                bb_color(palette = c('#E58606','#5D69B1','#52BCA3','#99C945','#CC61B0'))
+    })
+    
+    
     # cash quarter
-    output$plotcashquarter <-  renderPlot({
+    output$plotcashquarter <-  renderHighchart({
         
         filter_cash_data() %>% 
-            group_by(Quarter ) %>% 
+            group_by(Year, Quarter ) %>% 
             summarise(
                 total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
             ) %>% 
-            ggplot(
-                aes(x = total_amount_of_cash_by_quarter,
-                    y =  fct_relevel(Quarter, c("Q1_2019","Q2_2019","Q3_2019","Q4_2019","Q1_2020","Q2_2020","Q3_2020","Q4_2020")) 
-                )
-            )+
-            geom_bar(stat = "identity", fill = "blue", show.legend = FALSE) +
-            labs( title = "Total Cash by Quarter",
-                  x= "Total Cash",
-                  y= "Quarter" )+
-            theme_bw() 
+            hchart(type = "line",
+                   hcaes(x = Quarter, group = Year, y = total_amount_of_cash_by_quarter, color = Year)) %>%  
+            hc_title( text = "Total Cash Distributed", margin = 5, align = "left" )%>% 
+            hc_xAxis( title = list(text = "Quarter") ) %>% 
+            hc_yAxis(title = list(text = "Total Cash")) 
         
     })
     
@@ -164,53 +202,36 @@ server <- function(input, output) {
                 count_by_delivery_mechanism = n(),
                 percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
             ) %>% 
+            arrange(-percentage_by_delivery_mechanism) %>% 
             hchart(type = "bar",
-                   hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism))
-        
-        # filter_cash_data() %>% 
-        #     group_by(Select_Delivery_Mechanism ) %>% 
-        #     summarise(
-        #         count_by_delivery_mechanism = n(),
-        #         percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
-        #     ) %>% 
-        #     ggplot(
-        #         aes(x = percentage_by_delivery_mechanism, y = reorder(Select_Delivery_Mechanism, percentage_by_delivery_mechanism)
-        #         )
-        #     )+
-        #     geom_bar(stat = "identity", fill = "blue", show.legend = FALSE) +
-        #     labs( title = "Percentage of Assistance by Delivery Mechanism",
-        #           x= "% Assistance by Delivery Mechanism",
-        #           y= "Delivery Mechanism" )+
-        #     theme_bw()
+                   hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism)) %>%  
+            hc_title( text = "Percentage of Assistance by Delivery Mechanism", margin = 5, align = "left" )%>% 
+            hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
+            hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
         
     })
     
     # cash transfer by partner
-    output$plotcashpartner <-  renderPlot({
+    output$plotcashpartner <-  renderHighchart({
         
         filter_cash_data() %>% 
             group_by(Partner_Name ) %>% 
             summarise(
                 total_cash_by_parter = sum(Total_amount_of_cash_transfers, na.rm = T)
             ) %>% 
-            ggplot(
-                aes(x = total_cash_by_parter, y = reorder(Partner_Name, total_cash_by_parter) )
-            )+
-            geom_bar(stat = "identity", fill = "blue",  show.legend = FALSE) +
-            labs(
-                title = "Total cash Transfers by Partner",
-                x= "Total cash Transfers",
-                y= "Partner"
-            )+
-            theme_bw()
-        
+            arrange(-total_cash_by_parter) %>%
+            hchart(type = "bar",
+                   hcaes(x = Partner_Name, y = total_cash_by_parter)) %>% 
+            hc_title( text = "Total cash Transfers by Partner", margin = 5, align = "left" )%>% 
+            hc_xAxis( title = list(text = "Partner") ) %>% 
+            hc_yAxis(title = list(text = "Total cash Transfers") ) 
     })
     
     # contents on the map that do not change
     output$map  <-  renderLeaflet({
         leaflet() %>% 
             addProviderTiles(providers$Esri.WorldGrayCanvas) %>% 
-            setView(lng = 32.2903, 1.3733, zoom = 6)
+            setView(lng = 32.2903, 1.3733, zoom = 7)
     })
     
     # Create a continuous palette function
@@ -244,7 +265,14 @@ server <- function(input, output) {
                                              dashArray = "",
                                              fillOpacity = 0.7,
                                              bringToFront = TRUE)
-            )
+                ) %>% 
+            addLegend(position ="bottomright", 
+                      pal = pal, 
+                      values = ~cash_transfers_by_district,
+                      title = "Total cash",
+                      labFormat = labelFormat(prefix = "UGX"),
+                      opacity  = 1
+                      )
         
     })
     

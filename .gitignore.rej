@@ -1,0 +1,5 @@
+diff a/.gitignore b/.gitignore	(rejected hunks)
+@@ -4,2 +4,3 @@
+ .Ruserdata
++.test
+ data/*

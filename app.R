@@ -17,10 +17,11 @@ library(bslib)
 library(ggreach)
 library(highcharter)
 library(billboarder)
-library(htmltools)
-library(htmlwidgets)
 
-# data
+
+
+# Data --------------------------------------------------------------------
+
 # this is the development branch
 df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv") %>% 
     rename_all(~str_replace_all(., "\\s+|\\(|\\)", "_")) %>% 
@@ -76,20 +77,18 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
                                    choices = c("All", unique(as.character(df_data$Year))),
                                    selected = "All"
                        )
-                ),
-                # column(width = 6,
-                #        selectInput("quarterperiod", 
-                #                    "Select Quarter", 
-                #                    choices = c("All", unique(as.character(df_data$Quarter))),
-                #                    selected = "All"
-                #                    )
-                #        ),
-                actionButton("mapreset", "Reset Map")
+                ) ,
+                column(width = 6,
+                       actionButton("mapreset", "Reset Map"),
+                       textOutput("selecteddistrict")
+                       ),
+                
             ),
             billboarderOutput("hhreceivingcash" ),
             highchartOutput("plotcashquarter")
         ),
         # end side panel
+        
         
         # main panel
         mainPanel(
@@ -217,7 +216,13 @@ server <- function(input, output) {
                 hc_yAxis(title = list(text = "Total cash Transfers") ) 
         })
     }
-
+    
+    # handle text
+    text_selected_district <- function(input_text){
+        output$selecteddistrict <- renderText({
+            paste("Selected District: ", input_text)
+        })
+    }
 # Map ---------------------------------------------------------------------
 
     # contents on the map that do not change
@@ -315,6 +320,10 @@ server <- function(input, output) {
         draw_chart_assistance_deliverymechanism(filter_cash_data_based_on_map)
         draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
         
+        if(!is.null(click)){
+            text_selected_district(click_district)
+        }
+        
         
     })
     
@@ -329,6 +338,8 @@ server <- function(input, output) {
         draw_chart_total_Cash_distributed(filter_cash_data_based_on_map)
         draw_chart_assistance_deliverymechanism(filter_cash_data_based_on_map)
         draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
+        
+        text_selected_district("All")
     })
     
     

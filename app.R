@@ -161,12 +161,15 @@ server <- function(input, output) {
             select(Location_District, Total_amount_of_cash_transfers) %>% 
             group_by(Location_District) %>% 
             summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
-        df_shape <- df_shape%>% 
+        df_shape_data <- df_shape%>% 
             left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) %>% 
             filter(!is.na(cash_transfers_by_district))
         
+        df_shape_others <- df_shape%>% 
+            anti_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) 
+        
         # construct the dynamic map
-        proxy = leafletProxy("map", data = df_shape) %>% 
+        proxy = leafletProxy("map", data = df_shape_data) %>% 
             clearShapes()
         
         proxy %>% 
@@ -197,8 +200,22 @@ server <- function(input, output) {
                       ) %>% 
             addLayersControl(
                 baseGroups = c("Basemap"),
-                overlayGroups = c("Data"),
+                overlayGroups = c("Data", "Other districts"),
                 options = layersControlOptions(collapsed = FALSE)
+            )
+        
+        # construct the dynamic map
+        proxy_other_districts = leafletProxy("map", data = df_shape_others)
+        
+        proxy_other_districts%>% 
+            clearControls() %>% 
+            addPolygons(
+                color = "white",
+                fillColor = "gray",
+                fillOpacity = 0.3,
+                weight = 1,
+                opacity = 1,
+                group="Other districts"
             )
         
     })

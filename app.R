@@ -130,7 +130,7 @@ server <- function(input, output) {
     # contents on the map that do not change
     output$map  <-  renderLeaflet({
         leaflet() %>% 
-            addProviderTiles(providers$Esri.WorldGrayCanvas, options = providerTileOptions(minZoom = 5, maxZoom = 10)) %>% 
+            addProviderTiles(providers$Esri.WorldGrayCanvas, options = providerTileOptions(minZoom = 5, maxZoom = 10), group="Basemap") %>% 
             setView(lng = 32.2903, 1.3733, zoom = 7)
     })
     
@@ -182,7 +182,8 @@ server <- function(input, output) {
                                              color = "#666",
                                              dashArray = "",
                                              fillOpacity = 0.7,
-                                             bringToFront = TRUE)
+                                             bringToFront = TRUE),
+                group="Data"
                 ) %>% 
             addLegend(position ="bottomright", 
                       pal = pal, 
@@ -190,7 +191,12 @@ server <- function(input, output) {
                       title = "Total cash",
                       labFormat = labelFormat(prefix = "UGX"),
                       opacity  = 1
-                      )
+                      ) %>% 
+            addLayersControl(
+                baseGroups = c("Basemap"),
+                overlayGroups = c("Data"),
+                options = layersControlOptions(collapsed = FALSE)
+            )
         
     })
     

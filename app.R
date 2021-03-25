@@ -17,6 +17,8 @@ library(bslib)
 library(ggreach)
 library(highcharter)
 library(billboarder)
+library(htmltools)
+library(htmlwidgets)
 
 # data
 # this is the development branch
@@ -134,7 +136,10 @@ server <- function(input, output) {
                              options = providerTileOptions(minZoom = 5, maxZoom = 10), 
                              group="Basemap") %>% 
             setView(lng = 32.2903, 1.3733, zoom = 7) %>% 
-            addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE)
+            addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
+            addEasyButton(easyButton(
+                icon="fa-globe", title="Home",
+                onClick=JS("function(btn, map){ map.setZoom(7); }")))
     })
     
     # Create a continuous palette function
@@ -197,26 +202,7 @@ server <- function(input, output) {
                       title = "Total cash",
                       labFormat = labelFormat(prefix = "UGX"),
                       opacity  = 1
-                      ) %>% 
-            addLayersControl(
-                baseGroups = c("Basemap"),
-                overlayGroups = c("Data", "Other districts"),
-                options = layersControlOptions(collapsed = FALSE)
-            )
-        
-        # construct the dynamic map
-        proxy_other_districts = leafletProxy("map", data = df_shape_others)
-        
-        proxy_other_districts%>% 
-            clearControls() %>% 
-            addPolygons(
-                color = "white",
-                fillColor = "gray",
-                fillOpacity = 0.3,
-                weight = 1,
-                opacity = 1,
-                group="Other districts"
-            )
+                      )
         
     })
     

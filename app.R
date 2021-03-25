@@ -130,8 +130,11 @@ server <- function(input, output) {
     # contents on the map that do not change
     output$map  <-  renderLeaflet({
         leaflet() %>% 
-            addProviderTiles(providers$Esri.WorldGrayCanvas, options = providerTileOptions(minZoom = 5, maxZoom = 10), group="Basemap") %>% 
-            setView(lng = 32.2903, 1.3733, zoom = 7)
+            addProviderTiles(providers$Esri.WorldGrayCanvas, 
+                             options = providerTileOptions(minZoom = 5, maxZoom = 10), 
+                             group="Basemap") %>% 
+            setView(lng = 32.2903, 1.3733, zoom = 7) %>% 
+            addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE)
     })
     
     # Create a continuous palette function

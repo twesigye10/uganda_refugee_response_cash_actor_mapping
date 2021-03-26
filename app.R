@@ -126,7 +126,8 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 
 
 server <- function(input, output, session) {
-
+    # default_click <- reactiveValues(clickedShape = NULL)
+    
     # filter cash data
     filter_cash_data <- function(input_df){
         # defaultly display all data from all districts, years and all quarters
@@ -329,6 +330,12 @@ server <- function(input, output, session) {
         
         # add polygon shapes to the map
         creating_map(df_shape_data)
+        
+        # create all the charts
+        draw_chart_receiving_cash(df_by_district_cash_data)
+        draw_chart_total_Cash_distributed(df_by_district_cash_data)
+        draw_chart_assistance_deliverymechanism(df_by_district_cash_data)
+        draw_chart_cash_transfers_by_partner(df_by_district_cash_data)
         
     })
     

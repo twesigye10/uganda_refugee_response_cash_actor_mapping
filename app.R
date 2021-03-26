@@ -338,7 +338,7 @@ server <- function(input, output, session) {
             filter_original_cash_data <- filter_cash_data_by_district(df_data, click_district)
             available_year_choices <- unique(as.character(filter_original_cash_data$Year))
             if (input$yearperiod %in% available_year_choices){
-                print(paste("Current selected year is:",input$yearperiod, " And available choices: ", available_year_choices ))
+                # print(paste("District", click_district, "Current selected year is:",input$yearperiod, " And available choices: ", available_year_choices ))
                 updateSelectInput(session, "yearperiod", 
                                   label = "Select Year", 
                                   choices = c("All", available_year_choices),

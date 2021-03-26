@@ -126,7 +126,6 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 
 
 server <- function(input, output, session) {
-    # default_click <- reactiveValues(clickedShape = NULL)
     
     # filter cash data
     filter_cash_data <- function(input_df){

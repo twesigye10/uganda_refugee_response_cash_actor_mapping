@@ -326,7 +326,15 @@ server <- function(input, output, session) {
         
         if(!is.null(click)){
             text_selected_district(click_district)
+            
+            # update year selection
+            updateSelectInput(session, "yearperiod", 
+                              label = "Select Year", 
+                              choices = c("All", unique(as.character(filter_cash_data_based_on_map$Year))),
+                              selected = "All"
+            )
         }
+        
         
         
     })

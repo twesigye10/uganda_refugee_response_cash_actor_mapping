@@ -123,27 +123,34 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 server <- function(input, output, session) {
     
     # filter cash data
-    filter_cash_data <- reactive({
+    filter_cash_data <- function(input_df){
         # defaultly display all data from all districts, years and all quarters
         # if (input$yearperiod == "All" & input$quarterperiod == "All"){
-        #     df_data
+        #     input_df
         # }else if(input$yearperiod == "All" & input$quarterperiod != "All"){
-        #     df_data %>% 
+        #     input_df %>% 
         #         filter(Quarter == input$quarterperiod )
         # }else if(input$yearperiod != "All" & input$quarterperiod == "All"){
-        #     df_data %>% 
+        #     input_df %>% 
         #         filter(Year == input$yearperiod)
         # } else{
-        #     df_data %>% 
+        #     input_df %>% 
         #         filter(Year == input$yearperiod, Quarter == input$quarterperiod )
         # }
         if (input$yearperiod == "All" ){
-            df_data
+            input_df
         } else{
-            df_data %>% 
+            input_df %>% 
                 filter(Year == input$yearperiod )
         }
-    })
+        
+    }
+    
+    # filter cash data by district
+    filter_cash_data_by_district <- function(input_df, input_district_click){
+            input_df %>% 
+                filter(Location_District == input_district_click )
+    }
     
     # Charting functions ------------------------------------------------------
     
@@ -262,7 +269,7 @@ server <- function(input, output, session) {
     # handle changes on the map data through proxy
     observe({
         # UI selectors to filter shape data
-        df_by_district_cash_data <- filter_cash_data() %>% 
+        df_by_district_cash_data <- filter_cash_data(df_data) %>% 
             select(Location_District, Total_amount_of_cash_transfers) %>% 
             group_by(Location_District) %>% 
             summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
@@ -313,9 +320,9 @@ server <- function(input, output, session) {
         click_district <- click$id
         
         if(is.null(click))
-            filter_cash_data_based_on_map <- filter_cash_data()
+            filter_cash_data_based_on_map <- filter_cash_data(df_data)
         else
-            filter_cash_data_based_on_map <- filter_cash_data() %>% 
+            filter_cash_data_based_on_map <- filter_cash_data(df_data) %>% 
             filter(Location_District ==  click_district)
         
         # create all the charts
@@ -328,11 +335,22 @@ server <- function(input, output, session) {
             text_selected_district(click_district)
             
             # update year selection
-            updateSelectInput(session, "yearperiod", 
-                              label = "Select Year", 
-                              choices = c("All", unique(as.character(filter_cash_data_based_on_map$Year))),
-                              selected = "All"
-            )
+            filter_original_cash_data <- filter_cash_data_by_district(df_data, click_district)
+            available_year_choices <- unique(as.character(filter_original_cash_data$Year))
+            if (input$yearperiod %in% available_year_choices){
+                print(paste("Current selected year is:",input$yearperiod, " And available choices: ", available_year_choices ))
+                updateSelectInput(session, "yearperiod", 
+                                  label = "Select Year", 
+                                  choices = c("All", available_year_choices),
+                                  selected = input$yearperiod
+                )
+            }else{
+                updateSelectInput(session, "yearperiod", 
+                                  label = "Select Year", 
+                                  choices = c("All", available_year_choices),
+                                  selected = "All"
+                )
+            }
         }
         
         
@@ -346,7 +364,7 @@ server <- function(input, output, session) {
     observeEvent(input$mapreset, {
         
         if (!is.null(input$mapreset)){
-            filter_cash_data_based_on_map <- filter_cash_data()
+            filter_cash_data_based_on_map <- filter_cash_data(df_data)
             # create all the charts
             draw_chart_receiving_cash(filter_cash_data_based_on_map)
             draw_chart_total_Cash_distributed(filter_cash_data_based_on_map)

@@ -376,7 +376,7 @@ server <- function(input, output, session) {
             draw_chart_assistance_deliverymechanism(filter_cash_data_based_on_map)
             draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
             # update button
-            # updateActionButton(session, "mapreset", "Reset Map")
+            updateActionButton(session, "mapreset", "Reset Map")
             # update text
             text_selected_district("All")
             # update year selection

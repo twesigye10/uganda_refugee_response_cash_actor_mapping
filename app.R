@@ -75,14 +75,21 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
         # side panel
         sidebarPanel(
             fluidRow(
-                column(width = 6,
+                column(width = 4,
                        selectInput("yearperiod", 
                                    "Select Year", 
                                    choices = c("All", unique(as.character(df_data$Year))),
                                    selected = "All"
                        )
                 ) ,
-                column(width = 6,
+                column(width = 4,
+                       selectInput("quarterperiod", 
+                                   "Select Quarter", 
+                                   choices = c("All"),
+                                   selected = "All"
+                       ),
+                ),
+                column(width = 4,
                        actionButton("mapreset", "Reset Map"),
                        textOutput("selecteddistrict")
                 ),
@@ -125,24 +132,24 @@ server <- function(input, output, session) {
     # filter cash data
     filter_cash_data <- reactive({
         # defaultly display all data from all districts, years and all quarters
-        # if (input$yearperiod == "All" & input$quarterperiod == "All"){
+        if (input$yearperiod == "All" & input$quarterperiod == "All"){
+            df_data
+        }else if(input$yearperiod == "All" & input$quarterperiod != "All"){
+            df_data %>%
+                filter(Quarter == input$quarterperiod )
+        }else if(input$yearperiod != "All" & input$quarterperiod == "All"){
+            df_data %>%
+                filter(Year == input$yearperiod)
+        } else{
+            df_data %>%
+                filter(Year == input$yearperiod, Quarter == input$quarterperiod )
+        }
+        # if (input$yearperiod == "All" ){
         #     df_data
-        # }else if(input$yearperiod == "All" & input$quarterperiod != "All"){
-        #     df_data %>% 
-        #         filter(Quarter == input$quarterperiod )
-        # }else if(input$yearperiod != "All" & input$quarterperiod == "All"){
-        #     df_data %>% 
-        #         filter(Year == input$yearperiod)
         # } else{
         #     df_data %>% 
-        #         filter(Year == input$yearperiod, Quarter == input$quarterperiod )
+        #         filter(Year == input$yearperiod )
         # }
-        if (input$yearperiod == "All" ){
-            df_data
-        } else{
-            df_data %>% 
-                filter(Year == input$yearperiod )
-        }
     })
     
     # Charting functions ------------------------------------------------------
@@ -331,6 +338,28 @@ server <- function(input, output, session) {
             updateSelectInput(session, "yearperiod", 
                               label = "Select Year", 
                               choices = c("All", unique(as.character(filter_cash_data_based_on_map$Year))),
+                              selected = "All"
+            )
+            
+            if(input$yearperiod != "All"){
+                selected_year <- input$yearperiod
+                filter_cash_data_quarter <- filter_cash_data_based_on_map %>% 
+                    filter(Year == selected_year)
+                
+                # update quarter selection
+                updateSelectInput(session, "quarterperiod", 
+                                  label = "Select Quarter", 
+                                  choices = c("All", unique(as.character(filter_cash_data_quarter$Quarter))),
+                                  selected = "All"
+                )
+                
+            }
+            
+        }else{
+            # update quarter selection
+            updateSelectInput(session, "quarterperiod", 
+                              label = "Select Quarter", 
+                              choices = c("All"),
                               selected = "All"
             )
         }

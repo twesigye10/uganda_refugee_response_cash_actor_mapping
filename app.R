@@ -335,11 +335,20 @@ server <- function(input, output, session) {
             text_selected_district(click_district)
             
             # update year selection
-            updateSelectInput(session, "yearperiod", 
-                              label = "Select Year", 
-                              choices = c("All", unique(as.character(filter_cash_data_based_on_map$Year))),
-                              selected = "All"
-            )
+            available_year_choices <- unique(as.character(filter_cash_data_based_on_map$Year))
+            if (input$yearperiod %in% available_year_choices){
+                updateSelectInput(session, "yearperiod", 
+                                  label = "Select Year", 
+                                  choices = c("All", available_year_choices),
+                                  selected = input$yearperiod
+                )
+            }else{
+                updateSelectInput(session, "yearperiod", 
+                                  label = "Select Year", 
+                                  choices = c("All", available_year_choices),
+                                  selected = "All"
+                )}
+            
             
             if(input$yearperiod != "All"){
                 selected_year <- input$yearperiod
@@ -347,21 +356,25 @@ server <- function(input, output, session) {
                     filter(Year == selected_year)
                 
                 # update quarter selection
-                updateSelectInput(session, "quarterperiod", 
-                                  label = "Select Quarter", 
-                                  choices = c("All", unique(as.character(filter_cash_data_quarter$Quarter))),
-                                  selected = "All"
-                )
+                available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+                if(input$quarterperiod %in% available_quarter_choices){
+                    updateSelectInput(session, "quarterperiod", 
+                                      label = "Select Quarter", 
+                                      choices = c("All", available_quarter_choices),
+                                      selected = input$quarterperiod
+                    )
+                }else{
+                    updateSelectInput(session, "quarterperiod", 
+                                      label = "Select Quarter", 
+                                      choices = c("All", available_quarter_choices),
+                                      selected = "All"
+                    )
+                }
+                
                 
             }
             
-        }else{
-            # update quarter selection
-            updateSelectInput(session, "quarterperiod", 
-                              label = "Select Quarter", 
-                              choices = c("All"),
-                              selected = "All"
-            )
+            
         }
         
         
@@ -391,6 +404,13 @@ server <- function(input, output, session) {
                               choices = c("All", unique(as.character(df_data$Year))),
                               selected = "All"
             )
+            # update Quarter selection
+            updateSelectInput(session, "quarterperiod", 
+                              label = "Select Quarter", 
+                              choices = c("All"),
+                              selected = "All"
+            )
+            
         }
     })
     

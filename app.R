@@ -55,9 +55,6 @@ df_shape_data <- df_shape%>%
 
 districts_assessed<-df_shape_data %>% 
     filter(!is.na(Partner_Name)) %>% pull(DNAME2018) %>% unique()
-# choosing non joining features. functionality not used in this project
-df_shape_others <- df_shape%>% 
-    anti_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE)
 
 reach_theme <- bs_theme(
     bg = ggreach::reach_cols("lightgrey"), 
@@ -156,8 +153,8 @@ server <- function(input, output, session) {
     
     # filter cash data by district
     filter_cash_data_by_district <- function(input_df, input_district_click){
-            input_df %>% 
-                filter(Location_District == input_district_click )
+        input_df %>% 
+            filter(Location_District == input_district_click )
     }
     
     # Charting functions ------------------------------------------------------
@@ -240,6 +237,7 @@ server <- function(input, output, session) {
         })
     }
     
+    # function for adding polgons to map
     creating_map <- function(input_data){
         # Create a continuous palette function
         pal <- colorNumeric(
@@ -290,6 +288,22 @@ server <- function(input, output, session) {
             )
     }
     
+    # default polgons data
+    df_shape_default <- function(input_shape_data, input_cash_data){
+        # UI selectors to filter shape data
+        df_by_district_cash_data <- input_cash_data %>% 
+            select(Location_District, Total_amount_of_cash_transfers) %>% 
+            group_by(Location_District) %>% 
+            summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
+        
+        df_shape_data <- input_shape_data%>% 
+            left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE)
+        return(
+            df_shape_data
+        )
+    }
+    
+    
     # Map ---------------------------------------------------------------------
     
     # contents on the map that do not change
@@ -309,13 +323,9 @@ server <- function(input, output, session) {
     # handle changes on the map data through proxy
     observe({
         # UI selectors to filter shape data
-        df_by_district_cash_data <- filter_cash_data(df_data) %>% 
-            select(Location_District, Total_amount_of_cash_transfers) %>% 
-            group_by(Location_District) %>% 
-            summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
-        
-        df_shape_data <- df_shape%>% 
-            left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) 
+        df_by_district_cash_data <- filter_cash_data(df_data) 
+
+        df_shape_data <- df_shape_default(df_shape, df_by_district_cash_data)
         
         # add polygon shapes to the map
         creating_map(df_shape_data)
@@ -333,9 +343,9 @@ server <- function(input, output, session) {
         }
         else if((!click_district %in% districts_assessed)){
             filter_cash_data_based_on_map <- filter_cash_data(df_data)
-            }else{
+        }else{
             filter_cash_data_based_on_map <- filter_cash_data(df_data) %>% 
-            filter(Location_District ==  click_district)}
+                filter(Location_District ==  click_district)}
         
         # create all the charts
         draw_chart_receiving_cash(filter_cash_data_based_on_map)
@@ -392,6 +402,8 @@ server <- function(input, output, session) {
                               choices = c("All", unique(as.character(df_data$Year))),
                               selected = "All"
             )
+            
+            
         }
     })
     

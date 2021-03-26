@@ -50,6 +50,11 @@ df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2018.shp", crs=32636 ) %>%
     st_transform( crs = 4326)
 
+df_shape_data <- df_shape%>% 
+    left_join(df_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) 
+
+districts_assessed<-df_shape_data %>% 
+    filter(!is.na(Partner_Name)) %>% pull(DNAME2018) %>% unique()
 
 reach_theme <- bs_theme(
     bg = ggreach::reach_cols("lightgrey"), 
@@ -176,7 +181,6 @@ server <- function(input, output, session) {
     draw_chart_total_Cash_distributed <- function(input_data){
         output$plotcashquarter <-  renderHighchart({
             input_data %>%
-                # filter(Location_District ==  click_district) %>% 
                 group_by(Year, Quarter, Select_Month, Date ) %>%
                 summarise(
                     total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
@@ -187,7 +191,6 @@ server <- function(input, output, session) {
                 hc_title( text = "Total Cash Distributed", margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Quarter") ) %>% 
                 hc_yAxis(title = list(text = "Total Cash")) 
-            
         })
     }
     
@@ -206,7 +209,6 @@ server <- function(input, output, session) {
                 hc_title( text = "Percentage of Assistance by Delivery Mechanism", margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
                 hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
-            
         })
     }
     
@@ -273,9 +275,9 @@ server <- function(input, output, session) {
             select(Location_District, Total_amount_of_cash_transfers) %>% 
             group_by(Location_District) %>% 
             summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
+        
         df_shape_data <- df_shape%>% 
-            left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) %>% 
-            filter(!is.na(cash_transfers_by_district))
+            left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) 
         
         df_shape_others <- df_shape%>% 
             anti_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) 
@@ -319,11 +321,14 @@ server <- function(input, output, session) {
         click = input$map_shape_click
         click_district <- click$id
         
-        if(is.null(click))
+        if(is.null(click)){
             filter_cash_data_based_on_map <- filter_cash_data(df_data)
-        else
+        }
+        else if((!click_district %in% districts_assessed)){
+            filter_cash_data_based_on_map <- filter_cash_data(df_data)
+            }else{
             filter_cash_data_based_on_map <- filter_cash_data(df_data) %>% 
-            filter(Location_District ==  click_district)
+            filter(Location_District ==  click_district)}
         
         # create all the charts
         draw_chart_receiving_cash(filter_cash_data_based_on_map)
@@ -371,7 +376,7 @@ server <- function(input, output, session) {
             draw_chart_assistance_deliverymechanism(filter_cash_data_based_on_map)
             draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
             # update button
-            updateActionButton(session, "mapreset", "Reset Map")
+            # updateActionButton(session, "mapreset", "Reset Map")
             # update text
             text_selected_district("All")
             # update year selection

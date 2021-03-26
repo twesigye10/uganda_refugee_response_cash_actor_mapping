@@ -85,7 +85,7 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
                 column(width = 6,
                        actionButton("mapreset", "Reset Map"),
                        textOutput("selecteddistrict")
-                       ),
+                ),
                 
             ),
             billboarderOutput("hhreceivingcash" ),
@@ -120,7 +120,7 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 # Define server logic required --------------------------------------------
 
 
-server <- function(input, output) {
+server <- function(input, output, session) {
     
     # filter cash data
     filter_cash_data <- reactive({
@@ -144,9 +144,9 @@ server <- function(input, output) {
                 filter(Year == input$yearperiod )
         }
     })
-
-# Charting functions ------------------------------------------------------
-
+    
+    # Charting functions ------------------------------------------------------
+    
     # household receive cash
     draw_chart_receiving_cash <- function( input_data ){
         output$hhreceivingcash <-  renderBillboarder({
@@ -227,8 +227,8 @@ server <- function(input, output) {
             paste("Selected District: ", input_text)
         })
     }
-# Map ---------------------------------------------------------------------
-
+    # Map ---------------------------------------------------------------------
+    
     # contents on the map that do not change
     output$map  <-  renderLeaflet({
         leaflet() %>% 
@@ -306,7 +306,7 @@ server <- function(input, output) {
         
     })
     
-# Charts listen to map click ----------------------------------------------
+    # Charts listen to map click ----------------------------------------------
     
     observe({
         click = input$map_shape_click
@@ -331,19 +331,30 @@ server <- function(input, output) {
         
     })
     
-
-# Map reset button --------------------------------------------------------
-
+    
+    # Map reset button --------------------------------------------------------
+    
     
     observeEvent(input$mapreset, {
-        filter_cash_data_based_on_map <- filter_cash_data()
-        # create all the charts
-        draw_chart_receiving_cash(filter_cash_data_based_on_map)
-        draw_chart_total_Cash_distributed(filter_cash_data_based_on_map)
-        draw_chart_assistance_deliverymechanism(filter_cash_data_based_on_map)
-        draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
         
-        text_selected_district("All")
+        if (!is.null(input$mapreset)){
+            filter_cash_data_based_on_map <- filter_cash_data()
+            # create all the charts
+            draw_chart_receiving_cash(filter_cash_data_based_on_map)
+            draw_chart_total_Cash_distributed(filter_cash_data_based_on_map)
+            draw_chart_assistance_deliverymechanism(filter_cash_data_based_on_map)
+            draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
+            # update button
+            updateActionButton(session, "mapreset", "Reset Map")
+            # update text
+            text_selected_district("All")
+            # update year selection
+            updateSelectInput(session, "yearperiod", 
+                              label = "Select Year", 
+                              choices = c("All", unique(as.character(df_data$Year))),
+                              selected = "All"
+            )
+        }
     })
     
     

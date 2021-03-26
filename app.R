@@ -55,6 +55,9 @@ df_shape_data <- df_shape%>%
 
 districts_assessed<-df_shape_data %>% 
     filter(!is.na(Partner_Name)) %>% pull(DNAME2018) %>% unique()
+# choosing non joining features. functionality not used in this project
+df_shape_others <- df_shape%>% 
+    anti_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE)
 
 reach_theme <- bs_theme(
     bg = ggreach::reach_cols("lightgrey"), 
@@ -236,54 +239,27 @@ server <- function(input, output, session) {
             paste("Selected District: ", input_text)
         })
     }
-    # Map ---------------------------------------------------------------------
     
-    # contents on the map that do not change
-    output$map  <-  renderLeaflet({
-        leaflet() %>% 
-            addProviderTiles(providers$Esri.WorldGrayCanvas, 
-                             options = providerTileOptions(minZoom = 5, maxZoom = 10), 
-                             group="Basemap") %>% 
-            setView(lng = 32.2903, 1.3733, zoom = 7) %>% 
-            addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
-            addEasyButton(easyButton(
-                icon="fa-globe", title="Home",
-                onClick=JS("function(btn, map){ map.setZoom(7) }")))
-    })
-    
-    # Create a continuous palette function
-    pal <- colorNumeric(
-        palette = "Reds",
-        domain = df_shape$cash_transfers_by_district)
-    # label districts in the map
-    labels_v1 <- ~sprintf(
-        "<strong>%s</strong><br/>Cash Transfers : %g ",
-        DNAME2018, cash_transfers_by_district
-    ) %>% 
-        lapply(htmltools::HTML)
-    
-    labels_district <- ~sprintf(
-        "<strong>%s</strong>",
-        DNAME2018
-    ) %>% 
-        lapply(htmltools::HTML)
-    
-    # handle changes on the map data through proxy
-    observe({
-        # UI selectors to filter shape data
-        df_by_district_cash_data <- filter_cash_data(df_data) %>% 
-            select(Location_District, Total_amount_of_cash_transfers) %>% 
-            group_by(Location_District) %>% 
-            summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
+    creating_map <- function(input_data){
+        # Create a continuous palette function
+        pal <- colorNumeric(
+            palette = "Reds",
+            domain = input_data$cash_transfers_by_district)
+        # label districts in the map
+        labels_v1 <- ~sprintf(
+            "<strong>%s</strong><br/>Cash Transfers : %g ",
+            DNAME2018, cash_transfers_by_district
+        ) %>% 
+            lapply(htmltools::HTML)
         
-        df_shape_data <- df_shape%>% 
-            left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) 
-        
-        df_shape_others <- df_shape%>% 
-            anti_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) 
+        labels_district <- ~sprintf(
+            "<strong>%s</strong>",
+            DNAME2018
+        ) %>% 
+            lapply(htmltools::HTML)
         
         # construct the dynamic map
-        proxy = leafletProxy("map", data = df_shape_data) %>% 
+        proxy = leafletProxy("map", data = input_data) %>% 
             clearShapes()
         
         proxy %>% 
@@ -312,6 +288,37 @@ server <- function(input, output, session) {
                       labFormat = labelFormat(prefix = "USD "),
                       opacity  = 1
             )
+    }
+    
+    # Map ---------------------------------------------------------------------
+    
+    # contents on the map that do not change
+    output$map  <-  renderLeaflet({
+        leaflet() %>% 
+            addProviderTiles(providers$Esri.WorldGrayCanvas, 
+                             options = providerTileOptions(minZoom = 5, maxZoom = 10), 
+                             group="Basemap") %>% 
+            setView(lng = 32.2903, 1.3733, zoom = 7) %>% 
+            addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
+            addEasyButton(easyButton(
+                icon="fa-globe", title="Home",
+                onClick=JS("function(btn, map){ map.setZoom(7) }")))
+    })
+    
+    
+    # handle changes on the map data through proxy
+    observe({
+        # UI selectors to filter shape data
+        df_by_district_cash_data <- filter_cash_data(df_data) %>% 
+            select(Location_District, Total_amount_of_cash_transfers) %>% 
+            group_by(Location_District) %>% 
+            summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
+        
+        df_shape_data <- df_shape%>% 
+            left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) 
+        
+        # add polygon shapes to the map
+        creating_map(df_shape_data)
         
     })
     

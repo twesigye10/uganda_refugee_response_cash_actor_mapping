@@ -22,11 +22,15 @@ library(billboarder)
 
 # Data --------------------------------------------------------------------
 
+# currency conversion
+currency_conversion_factor <- 3650
+
 # this is the development branch
 df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv") %>% 
     rename_all(~str_replace_all(., "\\s+|\\(|\\)", "_")) %>% 
     separate(Select_Month, c("Month", "Year"), "-", remove= FALSE, extra = "drop") %>% 
     mutate(
+        Total_amount_of_cash_transfers = ifelse(!is.na(Total_amount_of_cash_transfers), (Total_amount_of_cash_transfers/currency_conversion_factor), Total_amount_of_cash_transfers) ,
         Quarter = case_when(Month %in% c("Jan", "Feb", "Mar")~"Q1",
                             Month %in% c("Apr", "May", "Jun")~"Q2",
                             Month %in% c("Jul", "Aug", "Sep")~"Q3",
@@ -296,7 +300,7 @@ server <- function(input, output) {
                       pal = pal, 
                       values = ~cash_transfers_by_district,
                       title = "Total cash",
-                      labFormat = labelFormat(prefix = "UGX"),
+                      labFormat = labelFormat(prefix = "USD "),
                       opacity  = 1
             )
         

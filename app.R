@@ -312,11 +312,11 @@ server <- function(input, output, session) {
             addProviderTiles(providers$Esri.WorldGrayCanvas, 
                              options = providerTileOptions(minZoom = 5, maxZoom = 10), 
                              group="Basemap") %>% 
-            setView(lng = 32.2903, 1.3733, zoom = 7) %>% 
+            setView(lng = 32.2903, lat= 1.3733, zoom = 7) %>% 
             addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
             addEasyButton(easyButton(
                 icon="fa-globe", title="Home",
-                onClick=JS("function(btn, map){ map.setZoom(7) }")))
+                onClick=JS("function(btn, map){ map.setView(new L.LatLng(1.3733,32.2903), 7) }")))
     })
     
     

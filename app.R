@@ -196,7 +196,7 @@ server <- function(input, output, session) {
                 hchart(type = "line",
                        hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
                 hc_title( text = "Total Cash Distributed", margin = 5, align = "left" )%>% 
-                hc_xAxis( title = list(text = "Quarter") ) %>% 
+                hc_xAxis( title = list(text = "Month") ) %>% 
                 hc_yAxis(title = list(text = "Total Cash")) 
         })
     }

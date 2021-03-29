@@ -300,7 +300,7 @@ server <- function(input, output, session) {
                       na.label = "Not Assessed"
             )%>% 
             addLayersControl(
-                baseGroups = c("Stamen Toner", "Esri Gray Canvas", "CartoDB Voyager"),
+                baseGroups = c("Esri Gray Canvas", "Stamen Toner", "CartoDB Voyager"),
                 overlayGroups = c("Districts Assessed"),
                 options = layersControlOptions(collapsed = FALSE)
             )

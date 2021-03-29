@@ -80,14 +80,21 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
         # side panel
         sidebarPanel(
             fluidRow(
-                column(width = 6,
+                column(width = 4,
                        selectInput("yearperiod", 
                                    "Select Year", 
                                    choices = c("All", unique(as.character(df_data$Year))),
                                    selected = "All"
                        )
-                ) ,
-                column(width = 6,
+                ),
+                column(width = 4,
+                       selectInput("quarterperiod", 
+                                   "Select Quarter", 
+                                   choices = c("All"),
+                                   selected = "All"
+                       )
+                ),
+                column(width = 4,
                        actionButton("mapreset", "Reset Map"),
                        textOutput("selecteddistrict")
                 ),
@@ -130,24 +137,24 @@ server <- function(input, output, session) {
     # filter cash data
     filter_cash_data <- function(input_df){
         # defaultly display all data from all districts, years and all quarters
-        # if (input$yearperiod == "All" & input$quarterperiod == "All"){
+        if (input$yearperiod == "All" & input$quarterperiod == "All"){
+            input_df
+        }else if(input$yearperiod == "All" & input$quarterperiod != "All"){
+            input_df %>%
+                filter(Quarter == input$quarterperiod )
+        }else if(input$yearperiod != "All" & input$quarterperiod == "All"){
+            input_df %>%
+                filter(Year == input$yearperiod)
+        } else{
+            input_df %>%
+                filter(Year == input$yearperiod, Quarter == input$quarterperiod )
+        }
+        # if (input$yearperiod == "All" ){
         #     input_df
-        # }else if(input$yearperiod == "All" & input$quarterperiod != "All"){
-        #     input_df %>% 
-        #         filter(Quarter == input$quarterperiod )
-        # }else if(input$yearperiod != "All" & input$quarterperiod == "All"){
-        #     input_df %>% 
-        #         filter(Year == input$yearperiod)
         # } else{
         #     input_df %>% 
-        #         filter(Year == input$yearperiod, Quarter == input$quarterperiod )
+        #         filter(Year == input$yearperiod )
         # }
-        if (input$yearperiod == "All" ){
-            input_df
-        } else{
-            input_df %>% 
-                filter(Year == input$yearperiod )
-        }
         
     }
     
@@ -330,7 +337,7 @@ server <- function(input, output, session) {
     observe({
         # UI selectors to filter shape data
         df_by_district_cash_data <- filter_cash_data(df_data) 
-
+        
         df_shape_data <- df_shape_default(df_shape, df_by_district_cash_data)
         
         # add polygon shapes to the map
@@ -341,6 +348,46 @@ server <- function(input, output, session) {
         draw_chart_total_Cash_distributed(df_by_district_cash_data)
         draw_chart_assistance_deliverymechanism(df_by_district_cash_data)
         draw_chart_cash_transfers_by_partner(df_by_district_cash_data)
+        
+    })
+    
+    # observe year change to update quarter
+    observe({
+        if(input$yearperiod != "All"){
+            selected_year <- input$yearperiod
+            click = input$map_shape_click
+            click_district <- click$id
+            
+            if (!is.null(click)){
+                filter_cash_data_quarter <- df_data %>% 
+                    filter(Year == selected_year, Location_District == click_district )
+            }else{
+                filter_cash_data_quarter <- df_data %>% 
+                    filter(Year == selected_year )
+            }
+            # update quarter selection
+            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+            if(input$quarterperiod %in% available_quarter_choices){
+                updateSelectInput(session, "quarterperiod", 
+                                  label = "Select Quarter", 
+                                  choices = c("All", available_quarter_choices),
+                                  selected = input$quarterperiod
+                )
+            }else{
+                updateSelectInput(session, "quarterperiod", 
+                                  label = "Select Quarter", 
+                                  choices = c("All", available_quarter_choices),
+                                  selected = "All"
+                )
+            }
+            
+        }else{
+            updateSelectInput(session, "quarterperiod", 
+                              label = "Select Quarter", 
+                              choices = c("All"),
+                              selected = "All"
+            )
+        }
         
     })
     
@@ -385,6 +432,31 @@ server <- function(input, output, session) {
                                   selected = "All"
                 )
             }
+            
+            
+            if(input$yearperiod != "All"){
+                selected_year <- input$yearperiod
+                filter_cash_data_quarter <- df_data %>% 
+                    filter(Year == selected_year, Location_District == click_district )
+                
+                # update quarter selection
+                available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+                if(input$quarterperiod %in% available_quarter_choices){
+                    updateSelectInput(session, "quarterperiod", 
+                                      label = "Select Quarter", 
+                                      choices = c("All", available_quarter_choices),
+                                      selected = input$quarterperiod
+                    )
+                }else{
+                    updateSelectInput(session, "quarterperiod", 
+                                      label = "Select Quarter", 
+                                      choices = c("All", available_quarter_choices),
+                                      selected = "All"
+                    )
+                }
+                
+                
+            }
         }
         
         
@@ -407,11 +479,18 @@ server <- function(input, output, session) {
             # update button
             updateActionButton(session, "mapreset", "Reset Map")
             # update text
-            text_selected_district("All")
+            text_selected_district("All", districts_assessed)
             # update year selection
             updateSelectInput(session, "yearperiod", 
                               label = "Select Year", 
                               choices = c("All", unique(as.character(df_data$Year))),
+                              selected = "All"
+            )
+            
+            # update Quarter selection
+            updateSelectInput(session, "quarterperiod", 
+                              label = "Select Quarter", 
+                              choices = c("All"),
                               selected = "All"
             )
             

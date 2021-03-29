@@ -298,6 +298,11 @@ server <- function(input, output, session) {
                       labFormat = labelFormat(prefix = "USD "),
                       opacity  = 1,
                       na.label = "Not Assessed"
+            )%>% 
+            addLayersControl(
+                baseGroups = c("Basemaps"),
+                overlayGroups = c("Data"),
+                options = layersControlOptions(collapsed = FALSE)
             )
     }
     
@@ -324,7 +329,7 @@ server <- function(input, output, session) {
         leaflet() %>% 
             addProviderTiles(providers$Esri.WorldGrayCanvas, 
                              options = providerTileOptions(minZoom = 5, maxZoom = 10), 
-                             group="Basemap") %>% 
+                             group="Basemaps") %>% 
             setView(lng = 32.2903, lat= 1.3733, zoom = 7) %>% 
             addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
             addEasyButton(easyButton(

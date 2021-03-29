@@ -289,7 +289,7 @@ server <- function(input, output, session) {
                                              dashArray = "",
                                              fillOpacity = 0.7,
                                              bringToFront = TRUE),
-                group="Data"
+                group="Districts Assessed"
             ) %>% 
             addLegend(position ="bottomright", 
                       pal = pal, 
@@ -300,8 +300,8 @@ server <- function(input, output, session) {
                       na.label = "Not Assessed"
             )%>% 
             addLayersControl(
-                baseGroups = c("Basemaps"),
-                overlayGroups = c("Data"),
+                baseGroups = c("Stamen Toner", "Esri Gray Canvas", "CartoDB Voyager"),
+                overlayGroups = c("Districts Assessed"),
                 options = layersControlOptions(collapsed = FALSE)
             )
     }
@@ -329,7 +329,13 @@ server <- function(input, output, session) {
         leaflet() %>% 
             addProviderTiles(providers$Esri.WorldGrayCanvas, 
                              options = providerTileOptions(minZoom = 5, maxZoom = 10), 
-                             group="Basemaps") %>% 
+                             group="Esri Gray Canvas") %>% 
+            addProviderTiles(providers$Stamen.Toner, 
+                             options = providerTileOptions(minZoom = 5, maxZoom = 10), 
+                             group="Stamen Toner") %>% 
+            addProviderTiles(providers$CartoDB.Voyager, 
+                             options = providerTileOptions(minZoom = 5, maxZoom = 10), 
+                             group="CartoDB Voyager") %>% 
             setView(lng = 32.2903, lat= 1.3733, zoom = 7) %>% 
             addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
             addEasyButton(easyButton(

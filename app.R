@@ -252,7 +252,7 @@ server <- function(input, output, session) {
         
         labels_district <- ~sprintf(
             "<strong>%s</strong>",
-            DNAME2018
+            ifelse(DNAME2018 %in% districts_assessed, DNAME2018, "" ) 
         ) %>% 
             lapply(htmltools::HTML)
         

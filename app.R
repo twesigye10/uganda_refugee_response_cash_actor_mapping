@@ -231,9 +231,14 @@ server <- function(input, output, session) {
     }
     
     # handle text
-    text_selected_district <- function(input_text){
+    text_selected_district <- function(input_text, input_assessed_districts){
         output$selecteddistrict <- renderText({
-            paste("Selected District: ", input_text)
+            if (input_text %in% input_assessed_districts){
+                paste("Selected District: ", input_text)
+            }else{
+                paste("Selected District: ", "All")
+            }
+            
         })
     }
     
@@ -360,7 +365,7 @@ server <- function(input, output, session) {
         draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
         
         if(!is.null(click)){
-            text_selected_district(click_district)
+            text_selected_district(click_district, districts_assessed)
             
             # update year selection
             filter_original_cash_data <- filter_cash_data_by_district(df_data, click_district)

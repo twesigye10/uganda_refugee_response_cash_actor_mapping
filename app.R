@@ -257,8 +257,8 @@ server <- function(input, output, session) {
             domain = input_data$cash_transfers_by_district)
         # label districts in the map
         labels_v1 <- ~sprintf(
-            "<strong>%s</strong><br/>Cash Transfers : %g ",
-            ADM2_EN, cash_transfers_by_district
+            "<strong>%s</strong><br/>Cash Transfers : %s ",
+            ADM2_EN, scales::dollar(cash_transfers_by_district)
         ) %>% 
             lapply(htmltools::HTML)
         
@@ -284,6 +284,8 @@ server <- function(input, output, session) {
                 opacity = 1,
                 label = labels_district,
                 labelOptions = labelOptions(noHide = T, textOnly = TRUE),
+                popup = labels_v1,
+                popupOptions = popupOptions(keepInView = FALSE, closeButton = TRUE),
                 layerId = ~ADM2_EN,
                 dashArray = "3",
                 highlight = highlightOptions(weight = 3,

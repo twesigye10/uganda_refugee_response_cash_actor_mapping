@@ -47,14 +47,14 @@ df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.
     arrange(desc(Year),desc(Quarter))
 
 
-df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2018.shp", crs=32636 ) %>%
-    st_transform( crs = 4326)
+df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2020.shp", crs=4326 ) %>% 
+    mutate(ADM2_EN = toupper(ADM2_EN))
 
 df_shape_data <- df_shape%>% 
-    left_join(df_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE) 
+    left_join(df_data, by = c("ADM2_EN"="Location_District")) 
 
 districts_assessed<-df_shape_data %>% 
-    filter(!is.na(Partner_Name)) %>% pull(DNAME2018) %>% unique()
+    filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
 
 reach_theme <- bs_theme(
     bg = ggreach::reach_cols("lightgrey"), 
@@ -258,13 +258,13 @@ server <- function(input, output, session) {
         # label districts in the map
         labels_v1 <- ~sprintf(
             "<strong>%s</strong><br/>Cash Transfers : %g ",
-            DNAME2018, cash_transfers_by_district
+            ADM2_EN, cash_transfers_by_district
         ) %>% 
             lapply(htmltools::HTML)
         
         labels_district <- ~sprintf(
             "<strong>%s</strong>",
-            ifelse(DNAME2018 %in% districts_assessed, DNAME2018, "" ) 
+            ifelse(ADM2_EN %in% districts_assessed, ADM2_EN, "" ) 
         ) %>% 
             lapply(htmltools::HTML)
         
@@ -282,7 +282,7 @@ server <- function(input, output, session) {
                 opacity = 1,
                 label = labels_district,
                 labelOptions = labelOptions(noHide = T, textOnly = TRUE),
-                layerId = ~DNAME2018,
+                layerId = ~ADM2_EN,
                 dashArray = "3",
                 highlight = highlightOptions(weight = 3,
                                              color = "#666",
@@ -315,7 +315,7 @@ server <- function(input, output, session) {
             summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
         
         df_shape_data <- input_shape_data%>% 
-            left_join(df_by_district_cash_data, by = c("DNAME2018"="Location_District"), ignore_case =TRUE)
+            left_join(df_by_district_cash_data, by = c("ADM2_EN"="Location_District"))
         return(
             df_shape_data
         )
@@ -326,7 +326,7 @@ server <- function(input, output, session) {
     
     # contents on the map that do not change
     output$map  <-  renderLeaflet({
-        leaflet() %>% 
+        leaflet(options = leafletOptions(zoomSnap = 0.25, zoomDelta=0.25)) %>% 
             addProviderTiles(providers$Esri.WorldGrayCanvas, 
                              options = providerTileOptions(minZoom = 5, maxZoom = 10), 
                              group="Esri Gray Canvas") %>% 
@@ -336,11 +336,11 @@ server <- function(input, output, session) {
             addProviderTiles(providers$CartoDB.Voyager, 
                              options = providerTileOptions(minZoom = 5, maxZoom = 10), 
                              group="CartoDB Voyager") %>% 
-            setView(lng = 32.2903, lat= 1.3733, zoom = 7) %>% 
+            setView(lng = 32.2903, lat= 1.3733, zoom = 6.5) %>% 
             addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
             addEasyButton(easyButton(
                 icon="fa-globe", title="Home",
-                onClick=JS("function(btn, map){ map.setView(new L.LatLng(1.3733,32.2903), 7) }")))
+                onClick=JS("function(btn, map){ map.setView(new L.LatLng(1.3733,32.2903), 6.5) }")))
     })
     
     

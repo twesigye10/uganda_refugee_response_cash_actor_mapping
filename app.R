@@ -254,7 +254,9 @@ server <- function(input, output, session) {
         # Create a continuous palette function
         pal <- colorNumeric(
             palette = "Reds",
-            domain = input_data$cash_transfers_by_district)
+            domain = input_data$cash_transfers_by_district,
+            na.color = "#b6b6b7"
+            )
         # label districts in the map
         labels_v1 <- ~sprintf(
             "<strong>%s</strong><br/>Cash Transfers : %s ",
@@ -279,7 +281,7 @@ server <- function(input, output, session) {
                 options = pathOptions(
                     clickable = ~ifelse(ADM2_EN %in% districts_assessed, TRUE, FALSE)),
                 fillColor = ~pal(cash_transfers_by_district),
-                fillOpacity = ~ifelse(is.na(cash_transfers_by_district), 0.4, 1),
+                fillOpacity = ~ifelse(is.na(cash_transfers_by_district), 0.7, 1),
                 weight = 1,
                 opacity = 1,
                 label = labels_district,

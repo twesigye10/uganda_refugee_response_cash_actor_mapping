@@ -46,6 +46,8 @@ df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.
     ungroup() %>% 
     arrange(desc(Year),desc(Quarter))
 
+beneficiary_types <- df_data %>% 
+    filter(!is.na(Select_Beneficiary_Type)) %>% pull(Select_Beneficiary_Type) %>% unique()
 
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2020.shp", crs=4326 ) %>% 
     mutate(ADM2_EN = toupper(ADM2_EN))
@@ -180,7 +182,9 @@ server <- function(input, output, session) {
                 bb_donutchart() %>% 
                 bb_legend(position = 'right') %>%
                 bb_donut(title = "% of HH receiving cash \nfor Basic Needs\n by Beneficiary Type", width = 70) %>% 
-                bb_color(palette = c('#E58606','#5D69B1','#52BCA3','#99C945','#CC61B0'))
+                bb_colors_manual(
+                    setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(beneficiary_types))
+                    )
         })
     }
     

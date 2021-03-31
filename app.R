@@ -25,7 +25,7 @@ library(glue)
 # currency conversion
 currency_conversion_factor <- 3650
 display_in_title <- " For All districts"
-# this is the development branch
+# add data
 df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv") %>% 
     rename_all(~str_replace_all(., "\\s+|\\(|\\)", "_")) %>% 
     separate(Select_Month, c("Month", "Year"), "-", remove= FALSE, extra = "drop") %>% 
@@ -246,7 +246,10 @@ server <- function(input, output, session) {
         output$selecteddistrict <- renderText({
             if (input_text %in% input_assessed_districts){
                 paste("Selected District: ", input_text)
-            }else{
+            }else if(str_length(input_text) < 1){
+                paste("")
+            }
+            else{
                 paste("Selected District: ", "All")
             }
             
@@ -502,7 +505,7 @@ server <- function(input, output, session) {
             # update button
             updateActionButton(session, "mapreset", "Reset Map")
             # update text
-            text_selected_district("All", districts_assessed)
+            text_selected_district("", districts_assessed)
             # update year selection
             updateSelectInput(session, "yearperiod", 
                               label = "Select Year", 

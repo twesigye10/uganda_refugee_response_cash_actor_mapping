@@ -17,14 +17,14 @@ library(bslib)
 library(ggreach)
 library(highcharter)
 library(billboarder)
-
+library(glue)
 
 
 # Data --------------------------------------------------------------------
 
 # currency conversion
 currency_conversion_factor <- 3650
-
+display_in_title <- " For All districts"
 # this is the development branch
 df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv") %>% 
     rename_all(~str_replace_all(., "\\s+|\\(|\\)", "_")) %>% 
@@ -199,7 +199,7 @@ server <- function(input, output, session) {
                 arrange(Date) %>% 
                 hchart(type = "line",
                        hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
-                hc_title( text = "Total Cash Distributed", margin = 5, align = "left" )%>% 
+                hc_title( text = glue("Total Cash Distributed{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Month") ) %>% 
                 hc_yAxis(title = list(text = "Total Cash")) 
         })
@@ -217,7 +217,7 @@ server <- function(input, output, session) {
                 arrange(-percentage_by_delivery_mechanism) %>% 
                 hchart(type = "bar",
                        hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism)) %>%  
-                hc_title( text = "Percentage of Assistance by Delivery Mechanism", margin = 5, align = "left" )%>% 
+                hc_title( text = glue("Percentage of Assistance by Delivery Mechanism{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
                 hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
         })
@@ -235,7 +235,7 @@ server <- function(input, output, session) {
                 arrange(-total_cash_by_parter) %>%
                 hchart(type = "bar",
                        hcaes(x = Partner_Name, y = total_cash_by_parter)) %>% 
-                hc_title( text = "Total cash Transfers by Partner", margin = 5, align = "left" )%>% 
+                hc_title( text = glue("Total cash Transfers by Partner{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Partner") ) %>% 
                 hc_yAxis(title = list(text = "Total cash Transfers") ) 
         })
@@ -417,6 +417,7 @@ server <- function(input, output, session) {
     observeEvent(input$map_shape_click,{
         click = input$map_shape_click
         click_district <- click$id
+        display_in_title <<- paste(" For ", click_district)
         
         if(is.null(click)){
             filter_cash_data_based_on_map <- filter_cash_data(df_data)
@@ -491,6 +492,7 @@ server <- function(input, output, session) {
     observeEvent(input$mapreset, {
         
         if (!is.null(input$mapreset)){
+            display_in_title <<- " For All districts"
             filter_cash_data_based_on_map <- filter_cash_data(df_data)
             # create all the charts
             draw_chart_receiving_cash(filter_cash_data_based_on_map)

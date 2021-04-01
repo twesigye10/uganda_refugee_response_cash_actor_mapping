@@ -131,13 +131,6 @@ server <- function(input, output, session) {
             input_df %>%
                 filter(Year == input$yearperiod, Quarter == input$quarterperiod )
         }
-        # if (input$yearperiod == "All" ){
-        #     input_df
-        # } else{
-        #     input_df %>% 
-        #         filter(Year == input$yearperiod )
-        # }
-        
     }
     
     # filter cash data by district
@@ -460,7 +453,6 @@ server <- function(input, output, session) {
                     )
                 }
                 
-                
             }
         }
         
@@ -499,10 +491,6 @@ server <- function(input, output, session) {
                               choices = c("All"),
                               selected = "All"
             )
-            
-            leafletProxy("mmap") %>%
-                clearShapes() %>% 
-                clearControls()
         }
         
     })

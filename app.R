@@ -266,7 +266,7 @@ server <- function(input, output, session) {
             addPolygons(
                 color = "white",
                 options = pathOptions(
-                    clickable = ~ifelse(ADM2_EN %in% districts_assessed, TRUE, FALSE)),
+                    clickable = ~ifelse(!is.na(cash_transfers_by_district), TRUE, FALSE)),
                 fillColor = ~pal(cash_transfers_by_district),
                 fillOpacity = ~ifelse(is.na(cash_transfers_by_district), 0.7, 1),
                 weight = 1,

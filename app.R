@@ -17,7 +17,7 @@ library(bslib)
 library(ggreach)
 library(highcharter)
 library(billboarder)
-
+library(glue)
 
 
 # Data --------------------------------------------------------------------
@@ -25,33 +25,15 @@ library(billboarder)
 # currency conversion
 currency_conversion_factor <- 3650
 
-# this is the development branch
-df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv") %>% 
-    rename_all(~str_replace_all(., "\\s+|\\(|\\)", "_")) %>% 
-    separate(Select_Month, c("Month", "Year"), "-", remove= FALSE, extra = "drop") %>% 
-    mutate(
-        Total_amount_of_cash_transfers = ifelse(!is.na(Total_amount_of_cash_transfers), (Total_amount_of_cash_transfers/currency_conversion_factor), Total_amount_of_cash_transfers) ,
-        Quarter = case_when(Month %in% c("Jan", "Feb", "Mar")~"Q1",
-                            Month %in% c("Apr", "May", "Jun")~"Q2",
-                            Month %in% c("Jul", "Aug", "Sep")~"Q3",
-                            Month %in% c("Oct", "Nov", "Dec")~"Q4"  ),
-        Date = my(Select_Month),
-        Year = paste0("20",Year)
-    ) %>% 
-    rowwise() %>%
-    mutate(
-        i.hh_receiving_any_form_of_cash = sum(Households_receiving_cash_assistance_for_basic_needs, Households_receiving_voucher_assistance_for_basic_needs, na.rm = T),
-        i.psn_hh_receiving_any_form_of_cash = sum(c_across(PSN_households_receiving_cash_assistance_for_basic_needs__total_:PSN_households_receiving_voucher_assistance_for_basic_needs__Woman_at_risk_), na.rm = T)
-    ) %>% 
-    ungroup() %>% 
-    arrange(desc(Year),desc(Quarter))
+display_in_title <- " For All districts"
+# add data
+dat<-read_rds(file = "data/data.rds")
+df_data<- dat$df_data
+df_shape<- dat$df_shape
+df_shape_data<- dat$df_shape_data
 
-
-df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2020.shp", crs=4326 ) %>% 
-    mutate(ADM2_EN = toupper(ADM2_EN))
-
-df_shape_data <- df_shape%>% 
-    left_join(df_data, by = c("ADM2_EN"="Location_District")) 
+beneficiary_types <- df_data %>% 
+    filter(!is.na(Select_Beneficiary_Type)) %>% pull(Select_Beneficiary_Type) %>% unique()
 
 districts_assessed<-df_shape_data %>% 
     filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
@@ -149,13 +131,6 @@ server <- function(input, output, session) {
             input_df %>%
                 filter(Year == input$yearperiod, Quarter == input$quarterperiod )
         }
-        # if (input$yearperiod == "All" ){
-        #     input_df
-        # } else{
-        #     input_df %>% 
-        #         filter(Year == input$yearperiod )
-        # }
-        
     }
     
     # filter cash data by district
@@ -180,7 +155,9 @@ server <- function(input, output, session) {
                 bb_donutchart() %>% 
                 bb_legend(position = 'right') %>%
                 bb_donut(title = "% of HH receiving cash \nfor Basic Needs\n by Beneficiary Type", width = 70) %>% 
-                bb_color(palette = c('#E58606','#5D69B1','#52BCA3','#99C945','#CC61B0'))
+                bb_colors_manual(
+                    setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(beneficiary_types))
+                    )
         })
     }
     
@@ -195,7 +172,7 @@ server <- function(input, output, session) {
                 arrange(Date) %>% 
                 hchart(type = "line",
                        hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
-                hc_title( text = "Total Cash Distributed", margin = 5, align = "left" )%>% 
+                hc_title( text = glue("Total Cash Distributed{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Month") ) %>% 
                 hc_yAxis(title = list(text = "Total Cash")) 
         })
@@ -213,7 +190,7 @@ server <- function(input, output, session) {
                 arrange(-percentage_by_delivery_mechanism) %>% 
                 hchart(type = "bar",
                        hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism)) %>%  
-                hc_title( text = "Percentage of Assistance by Delivery Mechanism", margin = 5, align = "left" )%>% 
+                hc_title( text = glue("Percentage of Assistance by Delivery Mechanism{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
                 hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
         })
@@ -231,7 +208,7 @@ server <- function(input, output, session) {
                 arrange(-total_cash_by_parter) %>%
                 hchart(type = "bar",
                        hcaes(x = Partner_Name, y = total_cash_by_parter)) %>% 
-                hc_title( text = "Total cash Transfers by Partner", margin = 5, align = "left" )%>% 
+                hc_title( text = glue("Total cash Transfers by Partner{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Partner") ) %>% 
                 hc_yAxis(title = list(text = "Total cash Transfers") ) 
         })
@@ -242,7 +219,10 @@ server <- function(input, output, session) {
         output$selecteddistrict <- renderText({
             if (input_text %in% input_assessed_districts){
                 paste("Selected District: ", input_text)
-            }else{
+            }else if(str_length(input_text) < 1){
+                paste("")
+            }
+            else{
                 paste("Selected District: ", "All")
             }
             
@@ -254,11 +234,13 @@ server <- function(input, output, session) {
         # Create a continuous palette function
         pal <- colorNumeric(
             palette = "Reds",
-            domain = input_data$cash_transfers_by_district)
+            domain = input_data$cash_transfers_by_district,
+            na.color = "#b6b6b7"
+            )
         # label districts in the map
         labels_v1 <- ~sprintf(
-            "<strong>%s</strong><br/>Cash Transfers : %g ",
-            ADM2_EN, cash_transfers_by_district
+            "<strong>%s</strong><br/>Cash Transfers : %s ",
+            ADM2_EN, scales::dollar(cash_transfers_by_district)
         ) %>% 
             lapply(htmltools::HTML)
         
@@ -269,19 +251,23 @@ server <- function(input, output, session) {
             lapply(htmltools::HTML)
         
         # construct the dynamic map
-        proxy = leafletProxy("map", data = input_data) %>% 
-            clearShapes()
+        proxy = leafletProxy("map", data = input_data) #%>% 
+            # clearShapes()
         
         proxy %>% 
             clearControls() %>% 
             addPolygons(
                 color = "white",
+                options = pathOptions(
+                    clickable = ~ifelse(!is.na(cash_transfers_by_district), TRUE, FALSE)),
                 fillColor = ~pal(cash_transfers_by_district),
-                fillOpacity = ~ifelse(is.na(cash_transfers_by_district), 0.4, 1),
+                fillOpacity = ~ifelse(is.na(cash_transfers_by_district), 0.7, 1),
                 weight = 1,
                 opacity = 1,
                 label = labels_district,
                 labelOptions = labelOptions(noHide = T, textOnly = TRUE),
+                popup = labels_v1,
+                popupOptions = popupOptions(keepInView = FALSE, closeButton = TRUE),
                 layerId = ~ADM2_EN,
                 dashArray = "3",
                 highlight = highlightOptions(weight = 3,
@@ -407,6 +393,7 @@ server <- function(input, output, session) {
     observeEvent(input$map_shape_click,{
         click = input$map_shape_click
         click_district <- click$id
+        display_in_title <<- paste(" For ", click_district)
         
         if(is.null(click)){
             filter_cash_data_based_on_map <- filter_cash_data(df_data)
@@ -466,7 +453,6 @@ server <- function(input, output, session) {
                     )
                 }
                 
-                
             }
         }
         
@@ -481,6 +467,7 @@ server <- function(input, output, session) {
     observeEvent(input$mapreset, {
         
         if (!is.null(input$mapreset)){
+            display_in_title <<- " For All districts"
             filter_cash_data_based_on_map <- filter_cash_data(df_data)
             # create all the charts
             draw_chart_receiving_cash(filter_cash_data_based_on_map)
@@ -490,7 +477,7 @@ server <- function(input, output, session) {
             # update button
             updateActionButton(session, "mapreset", "Reset Map")
             # update text
-            text_selected_district("All", districts_assessed)
+            text_selected_district("", districts_assessed)
             # update year selection
             updateSelectInput(session, "yearperiod", 
                               label = "Select Year", 
@@ -504,10 +491,6 @@ server <- function(input, output, session) {
                               choices = c("All"),
                               selected = "All"
             )
-            
-            leafletProxy("mmap") %>%
-                clearShapes() %>% 
-                clearControls()
         }
         
     })

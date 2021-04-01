@@ -27,14 +27,16 @@ currency_conversion_factor <- 3650
 
 display_in_title <- " For All districts"
 # add data
-df_data <- readRDS("data/cbi_project_df_data.RDS")
+dat<-read_rds(file = "data/data.rds")
+df_data<- dat$df_data
+df_shape<- dat$df_shape
+df_shape_data<- dat$df_shape_data
+
 
 beneficiary_types <- df_data %>% 
     filter(!is.na(Select_Beneficiary_Type)) %>% pull(Select_Beneficiary_Type) %>% unique()
 
-df_shape <- readRDS("data/cbi_project_df_shape.RDS")
 
-df_shape_data <- readRDS("data/cbi_project_df_shape_data.RDS")
 
 districts_assessed<-df_shape_data %>% 
     filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()

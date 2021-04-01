@@ -32,11 +32,8 @@ df_data<- dat$df_data
 df_shape<- dat$df_shape
 df_shape_data<- dat$df_shape_data
 
-
 beneficiary_types <- df_data %>% 
     filter(!is.na(Select_Beneficiary_Type)) %>% pull(Select_Beneficiary_Type) %>% unique()
-
-
 
 districts_assessed<-df_shape_data %>% 
     filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
@@ -261,8 +258,8 @@ server <- function(input, output, session) {
             lapply(htmltools::HTML)
         
         # construct the dynamic map
-        proxy = leafletProxy("map", data = input_data) %>% 
-            clearShapes()
+        proxy = leafletProxy("map", data = input_data) #%>% 
+            # clearShapes()
         
         proxy %>% 
             clearControls() %>% 

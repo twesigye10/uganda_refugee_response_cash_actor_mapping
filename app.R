@@ -91,7 +91,7 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
         # main panel
         mainPanel(
             # map
-            leafletOutput("map"),
+            leafletOutput("map", height = "60%"),
             
             
             fluidRow(
@@ -322,11 +322,11 @@ server <- function(input, output, session) {
             addProviderTiles(providers$CartoDB.Voyager, 
                              options = providerTileOptions(minZoom = 5, maxZoom = 10), 
                              group="CartoDB Voyager") %>% 
-            setView(lng = 32.2903, lat= 1.3733, zoom = 6.5) %>% 
+            setView(lng = 32.2903, lat= 1.3733, zoom = 7.25) %>% 
             addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
             addEasyButton(easyButton(
                 icon="fa-globe", title="Home",
-                onClick=JS("function(btn, map){ map.setView(new L.LatLng(1.3733,32.2903), 6.5) }")))
+                onClick=JS("function(btn, map){ map.setView(new L.LatLng(1.3733,32.2903), 7.25) }")))
     })
     
     

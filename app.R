@@ -90,19 +90,33 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
         
         # main panel
         mainPanel(
-            # map
-            leafletOutput("map", height = "60%"),
-            
-            
-            fluidRow(
-                column(width = 6,
-                       # Select Delivery Mechanism
-                       highchartOutput("plotdeliverymechanism", )
-                ),
-                column(width = 6,
-                       highchartOutput("plotcashpartner")
+            tabsetPanel(
+            tabPanel(
+                "Total Cash Transfer Map",
+                # map
+                leafletOutput("map"),
+                
+                fluidRow(
+                    column(width = 6,
+                           # Select Delivery Mechanism
+                           highchartOutput("plotdeliverymechanism", )
+                    ),
+                    column(width = 6,
+                           highchartOutput("plotcashpartner")
+                    )
                 )
+            ),
+            
+            tabPanel(
+                "Food Security Map",
+                # text output
+                textOutput("testid")
+            
             )
+            )
+            
+            
+            
             
         )
         # end main panel
@@ -115,6 +129,10 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 
 
 server <- function(input, output, session) {
+    
+    output$testid <-  renderText({
+        paste("Goods and services")
+    })
     
     # filter cash data
     filter_cash_data <- function(input_df){

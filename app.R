@@ -57,69 +57,64 @@ ui <- fluidPage(
     titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP) 2020-2021", style = "color:#3474A7"), windowTitle = "Cash Based Interventions"),
     p( "The response seeks to explore opportunities to transition from in-kind to cash-based assistance. The injection of cash, through unconditional multi-purpose, and conditional cash-based interventions will have 
 multiplier effects on food security, social cohesion, reduction of aid dependency, and productive engagement of the youth, among others. The established reference Minimum Expenditure Basket (MEB) tool will ultimately support the cost efficiency and cost effectiveness, and pave the way for coherent multi-purpose cash programming and delivery. Partners continue efforts to establish a common platform for cash transfers. The information is collected through the Activity Info platform." ),
-    # Sidebar
-    sidebarLayout(
-        # side panel
-        sidebarPanel(
-            fluidRow(
-                column(width = 4,
-                       selectInput("yearperiod", 
-                                   "Select Year", 
-                                   choices = c("All", unique(as.character(df_data$Year))),
-                                   selected = "All"
-                       )
-                ),
-                column(width = 4,
-                       selectInput("quarterperiod", 
-                                   "Select Quarter", 
-                                   choices = c("All"),
-                                   selected = "All"
-                       )
-                ),
-                column(width = 4,
-                       actionButton("mapreset", "Reset Map"),
-                       textOutput("selecteddistrict")
-                ),
-                
-            ),
-            billboarderOutput("hhreceivingcash" ),
-            highchartOutput("plotcashquarter")
+    tabsetPanel( 
+        tabPanel( "Total Cash Transfer",
+                  # Sidebar
+                  sidebarLayout(
+                      # side panel
+                      sidebarPanel(
+                          fluidRow(
+                              column(width = 4,
+                                     selectInput("yearperiod", 
+                                                 "Select Year", 
+                                                 choices = c("All", unique(as.character(df_data$Year))),
+                                                 selected = "All"
+                                     )
+                              ),
+                              column(width = 4,
+                                     selectInput("quarterperiod", 
+                                                 "Select Quarter", 
+                                                 choices = c("All"),
+                                                 selected = "All"
+                                     )
+                              ),
+                              column(width = 4,
+                                     actionButton("mapreset", "Reset Map"),
+                                     textOutput("selecteddistrict")
+                              ),
+                              
+                          ),
+                          billboarderOutput("hhreceivingcash" ),
+                          highchartOutput("plotcashquarter")
+                      ),
+                      # end side panel
+                      
+                      
+                      # main panel
+                      mainPanel(
+                          
+                                  # map
+                                  leafletOutput("map", height = "60%"),
+                                  
+                                  fluidRow(
+                                      column(width = 6,
+                                             # Select Delivery Mechanism
+                                             highchartOutput("plotdeliverymechanism", )
+                                      ),
+                                      column(width = 6,
+                                             highchartOutput("plotcashpartner")
+                                      )
+                                  )
+                              )
+                      # end main panel
+                  )
+                  
+                  
         ),
-        # end side panel
-        
-        
-        # main panel
-        mainPanel(
-            tabsetPanel(
-            tabPanel(
-                "Total Cash Transfer Map",
-                # map
-                leafletOutput("map"),
-                
-                fluidRow(
-                    column(width = 6,
-                           # Select Delivery Mechanism
-                           highchartOutput("plotdeliverymechanism", )
-                    ),
-                    column(width = 6,
-                           highchartOutput("plotcashpartner")
-                    )
-                )
-            ),
-            
-            tabPanel(
-                "Food Security Map",
-                # text output
-                textOutput("testid")
-            
-            )
-            )
-            
-            
-            
-            
-        )
-        # end main panel
+        tabPanel( "Food Security",
+                  # text output
+                  textOutput("testid")
+                  )
         
     )
 )
@@ -175,7 +170,7 @@ server <- function(input, output, session) {
                 bb_donut(title = "% of HH receiving cash \nfor Basic Needs\n by Beneficiary Type", width = 70) %>% 
                 bb_colors_manual(
                     setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(beneficiary_types))
-                    )
+                )
         })
     }
     
@@ -254,7 +249,7 @@ server <- function(input, output, session) {
             palette = "Reds",
             domain = input_data$cash_transfers_by_district,
             na.color = "#b6b6b7"
-            )
+        )
         # label districts in the map
         labels_v1 <- ~sprintf(
             "<strong>%s</strong><br/>Cash Transfers : %s ",
@@ -270,7 +265,7 @@ server <- function(input, output, session) {
         
         # construct the dynamic map
         proxy = leafletProxy("map", data = input_data) #%>% 
-            # clearShapes()
+        # clearShapes()
         
         proxy %>% 
             clearControls() %>% 

@@ -26,7 +26,7 @@ library(glue)
 currency_conversion_factor <- 3650
 
 display_in_title <- " For All districts"
-# add data
+# add data CBI
 dat<-read_rds(file = "data/data.rds")
 df_data<- dat$df_data
 df_shape<- dat$df_shape
@@ -37,6 +37,10 @@ beneficiary_types <- df_data %>%
 
 districts_assessed<-df_shape_data %>% 
     filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
+
+# add data food security
+df_food_security <-read_rds(file = "data/fs_data.RDS")
+
 
 reach_theme <- bs_theme(
     bg = ggreach::reach_cols("lightgrey"), 
@@ -125,9 +129,6 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 
 server <- function(input, output, session) {
     
-    output$testid <-  renderText({
-        paste("Goods and services")
-    })
     
     # filter cash data
     filter_cash_data <- function(input_df){
@@ -508,7 +509,12 @@ server <- function(input, output, session) {
         
     })
     
-    
+
+    # Food Security -----------------------------------------------------------
+
+    output$testid <-  renderText({
+        paste("Food Security")
+    })    
     
 }
 

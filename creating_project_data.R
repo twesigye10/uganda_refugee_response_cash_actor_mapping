@@ -18,7 +18,7 @@ library(ggreach)
 library(highcharter)
 library(billboarder)
 library(glue)
-
+library(janitor)
 
 # Data --------------------------------------------------------------------
 
@@ -57,7 +57,22 @@ df_shape_data <- df_shape%>%
 
 districts_assessed<-df_shape_data %>% 
     filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
-
+# save to rds format
 saveRDS(df_data,  file = "data/cbi_project_df_data.RDS")
 saveRDS(df_shape,  file = "data/cbi_project_df_shape.RDS")
 saveRDS(df_shape_data,  file = "data/cbi_project_df_shape_data.RDS")
+
+# Food security data
+df_food_security <- read_csv("data/Food_Security.csv")
+df_food_security <- janitor::clean_names(df_food_security)
+
+fs_df_food_security <- df_food_security %>% 
+    separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
+colnames(df_food_security)
+
+fs_beneficiary_types <- fs_df_food_security %>% 
+    filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
+fs_df_shape <- df_shape
+
+# save to rds format
+saveRDS(fs_df_food_security,  file = "data/fs_data.RDS")

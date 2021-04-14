@@ -202,6 +202,22 @@ server <- function(input, output, session) {
         }
     }
     
+    fs_filter_cash_data <- function(input_df){
+        # defaultly display all data from all districts, years and all quarters
+        if (input$fs_yearperiod == "All" & input$fs_quarterperiod == "All"){
+            input_df
+        }else if(input$fs_yearperiod == "All" & input$fs_quarterperiod != "All"){
+            input_df %>%
+                filter(Quarter == input$fs_quarterperiod )
+        }else if(input$fs_yearperiod != "All" & input$fs_quarterperiod == "All"){
+            input_df %>%
+                filter(Year == input$fs_yearperiod)
+        } else{
+            input_df %>%
+                filter(Year == input$fs_yearperiod, Quarter == input$fs_quarterperiod )
+        }
+    }
+    
     # filter cash data by district
     filter_cash_data_by_district <- function(input_df, input_district_click){
         input_df %>% 
@@ -761,7 +777,7 @@ server <- function(input, output, session) {
     # handle changes on the map data through proxy
     observe({
         # UI selectors to filter shape data
-        df_by_district_cash_data <- filter_cash_data(fs_df_data) 
+        df_by_district_cash_data <- fs_filter_cash_data(fs_df_data) 
         
         df_shape_data <- fs_df_shape_default(df_shape, df_by_district_cash_data)
         

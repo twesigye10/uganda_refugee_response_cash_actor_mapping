@@ -39,8 +39,9 @@ districts_assessed<-df_shape_data %>%
     filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
 
 # add data food security
-df_food_security <-read_rds(file = "data/fs_data.RDS")
-
+fs_df_data <-read_rds(file = "data/fs_data.RDS")
+fs_beneficiary_types <- fs_df_data %>% 
+    filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
 reach_theme <- bs_theme(
     bg = ggreach::reach_cols("lightgrey"), 
@@ -62,6 +63,8 @@ ui <- fluidPage(
     p( "The response seeks to explore opportunities to transition from in-kind to cash-based assistance. The injection of cash, through unconditional multi-purpose, and conditional cash-based interventions will have 
 multiplier effects on food security, social cohesion, reduction of aid dependency, and productive engagement of the youth, among others. The established reference Minimum Expenditure Basket (MEB) tool will ultimately support the cost efficiency and cost effectiveness, and pave the way for coherent multi-purpose cash programming and delivery. Partners continue efforts to establish a common platform for cash transfers. The information is collected through the Activity Info platform." ),
     tabsetPanel( 
+
+        # Total Cash Transfer -----------------------------------------------------
         tabPanel( "Total Cash Transfer",
                   # Sidebar
                   sidebarLayout(
@@ -112,12 +115,64 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
                               )
                       # end main panel
                   )
-                  
+                  # end sidebar layout
                   
         ),
+
+        # Food Security -----------------------------------------------------------
+
         tabPanel( "Food Security",
-                  # text output
-                  textOutput("testid")
+                  # Sidebar
+                  sidebarLayout(
+                      # side panel
+                      sidebarPanel(
+                          fluidRow(
+                              column(width = 4,
+                                     selectInput("fs_yearperiod", 
+                                                 "Select Year", 
+                                                 choices = c("All", unique(as.character(fs_df_data$Year))),
+                                                 selected = "All"
+                                     )
+                              ),
+                              column(width = 4,
+                                     selectInput("fs_quarterperiod", 
+                                                 "Select Quarter", 
+                                                 choices = c("All"),
+                                                 selected = "All"
+                                     )
+                              ),
+                              column(width = 4,
+                                     actionButton("fs_mapreset", "Reset Map"),
+                                     textOutput("fs_selecteddistrict")
+                              ),
+                              
+                          ),
+                          billboarderOutput("fs_hhreceivingcash" ),
+                          highchartOutput("fs_plotcashquarter")
+                      ),
+                      # end side panel
+                      
+                      
+                      # main panel
+                      mainPanel(
+                          
+                          # map
+                          leafletOutput("fs_map", height = "60%"),
+                          
+                          fluidRow(
+                              column(width = 6,
+                                     # Select Delivery Mechanism
+                                     highchartOutput("fs_plotdeliverymechanism", )
+                              ),
+                              column(width = 6,
+                                     highchartOutput("fs_plotcashpartner")
+                              )
+                          )
+                      )
+                      # end main panel
+                  )
+                  # end sidebar layout
+                  
                   )
         
     )
@@ -512,7 +567,7 @@ server <- function(input, output, session) {
 
     # Food Security -----------------------------------------------------------
 
-    output$testid <-  renderText({
+    output$fs_selecteddistrict <-  renderText({
         paste("Food Security")
     })    
     

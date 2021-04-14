@@ -690,7 +690,7 @@ server <- function(input, output, session) {
         
         labels_district <- ~sprintf(
             "<strong>%s</strong>",
-            ifelse(is.na(cash_transfers_by_district), ADM2_EN, "" ) 
+            ifelse(!is.na(cash_transfers_by_district), ADM2_EN, "" ) 
         ) %>% 
             lapply(htmltools::HTML)
         

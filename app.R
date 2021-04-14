@@ -63,7 +63,7 @@ ui <- fluidPage(
     p( "The response seeks to explore opportunities to transition from in-kind to cash-based assistance. The injection of cash, through unconditional multi-purpose, and conditional cash-based interventions will have 
 multiplier effects on food security, social cohesion, reduction of aid dependency, and productive engagement of the youth, among others. The established reference Minimum Expenditure Basket (MEB) tool will ultimately support the cost efficiency and cost effectiveness, and pave the way for coherent multi-purpose cash programming and delivery. Partners continue efforts to establish a common platform for cash transfers. The information is collected through the Activity Info platform." ),
     tabsetPanel( 
-
+        id = "tab_being_displayed",
         # Total Cash Transfer -----------------------------------------------------
         tabPanel( "Total Cash Transfer",
                   # Sidebar
@@ -776,6 +776,7 @@ server <- function(input, output, session) {
     
     # handle changes on the map data through proxy
     observe({
+        req(input$tab_being_displayed == "Food Security")
         # UI selectors to filter shape data
         df_by_district_cash_data <- fs_filter_cash_data(fs_df_data) 
         

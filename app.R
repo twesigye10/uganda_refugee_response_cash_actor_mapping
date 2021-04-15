@@ -609,15 +609,15 @@ server <- function(input, output, session) {
     fs_draw_chart_total_Cash_distributed <- function(input_data){
         output$fs_plotcashquarter <-  renderHighchart({
             input_data %>%
-                group_by(Year, Quarter, Select_Month, Date ) %>%
+                group_by(Year, Quarter, select_quarter ) %>%
                 summarise(
-                    total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
+                    total_amount_of_cash_by_quarter = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T)
                 ) %>%
-                arrange(Date) %>% 
+                # arrange(select_quarter) %>% 
                 hchart(type = "line",
-                       hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
-                hc_title( text = glue("Total Cash Distributed{display_in_title}"), margin = 5, align = "left" )%>% 
-                hc_xAxis( title = list(text = "Month") ) %>% 
+                       hcaes(x = select_quarter, y = total_amount_of_cash_by_quarter)) %>%  
+                hc_title( text = glue("Total Cash Transfer{display_in_title}"), margin = 5, align = "left" )%>% 
+                hc_xAxis( title = list(text = "Quarter") ) %>% 
                 hc_yAxis(title = list(text = "Total Cash")) 
         })
     }
@@ -626,14 +626,14 @@ server <- function(input, output, session) {
     fs_draw_chart_assistance_deliverymechanism <- function(input_data ){
         output$fs_plotdeliverymechanism <-  renderHighchart ({
             input_data %>% 
-                group_by(Select_Delivery_Mechanism ) %>% 
+                group_by(select_delivery_mechanism ) %>% 
                 summarise(
                     count_by_delivery_mechanism = n(),
                     percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
                 ) %>% 
                 arrange(-percentage_by_delivery_mechanism) %>% 
                 hchart(type = "bar",
-                       hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism)) %>%  
+                       hcaes(x = select_delivery_mechanism, y = percentage_by_delivery_mechanism)) %>%  
                 hc_title( text = glue("Percentage of Assistance by Delivery Mechanism{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
                 hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
@@ -787,8 +787,8 @@ server <- function(input, output, session) {
         
         # # create all the charts
         fs_draw_chart_receiving_cash(df_by_district_cash_data)
-        # fs_draw_chart_total_Cash_distributed(df_by_district_cash_data)
-        # fs_draw_chart_assistance_deliverymechanism(df_by_district_cash_data)
+        fs_draw_chart_total_Cash_distributed(df_by_district_cash_data)
+        fs_draw_chart_assistance_deliverymechanism(df_by_district_cash_data)
         # fs_draw_chart_cash_transfers_by_partner(df_by_district_cash_data)
         
     })

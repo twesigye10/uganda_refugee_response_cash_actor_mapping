@@ -912,39 +912,39 @@ server <- function(input, output, session) {
     })
 
 
-    # # Map reset button --------------------------------------------------------
-    # 
-    # 
-    # observeEvent(input$fs_mapreset, {
-    #     
-    #     if (!is.null(input$fs_mapreset)){
-    #         display_in_title <<- " For All districts"
-    #         filter_cash_data_based_on_map <- filter_cash_data(df_data)
-    #         # create all the charts
-    #         fs_draw_chart_receiving_cash(filter_cash_data_based_on_map)
-    #         fs_draw_chart_total_Cash_distributed(filter_cash_data_based_on_map)
-    #         fs_draw_chart_assistance_deliverymechanism(filter_cash_data_based_on_map)
-    #         fs_draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
-    #         # update button
-    #         updateActionButton(session, "fs_mapreset", "Reset Map")
-    #         # update text
-    #         text_selected_district("", districts_assessed)
-    #         # update year selection
-    #         updateSelectInput(session, "fs_yearperiod", 
-    #                           label = "Select Year", 
-    #                           choices = c("All", unique(as.character(df_data$Year))),
-    #                           selected = "All"
-    #         )
-    #         
-    #         # update Quarter selection
-    #         updateSelectInput(session, "fs_quarterperiod", 
-    #                           label = "Select Quarter", 
-    #                           choices = c("All"),
-    #                           selected = "All"
-    #         )
-    #     }
-    #     
-    # })
+    # Map reset button --------------------------------------------------------
+
+
+    observeEvent(input$fs_mapreset, {
+
+        if (!is.null(input$fs_mapreset)){
+            display_in_title <<- " For All districts"
+            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
+            # create all the charts
+            fs_draw_chart_receiving_cash(fs_filter_cash_data_based_on_map)
+            fs_draw_chart_total_Cash_distributed(fs_filter_cash_data_based_on_map)
+            fs_draw_chart_assistance_deliverymechanism(fs_filter_cash_data_based_on_map)
+            fs_draw_chart_cash_transfers_by_partner(fs_filter_cash_data_based_on_map)
+            # update button
+            updateActionButton(session, "fs_mapreset", "Reset Map")
+            # update text
+            fs_text_selected_district("", districts_assessed)
+            # update year selection
+            updateSelectInput(session, "fs_yearperiod",
+                              label = "Select Year",
+                              choices = c("All", unique(as.character(fs_df_data$Year))),
+                              selected = "All"
+            )
+
+            # update Quarter selection
+            updateSelectInput(session, "fs_quarterperiod",
+                              label = "Select Quarter",
+                              choices = c("All"),
+                              selected = "All"
+            )
+        }
+
+    })
     
     
     

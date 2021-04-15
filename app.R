@@ -224,6 +224,12 @@ server <- function(input, output, session) {
             filter(Location_District == input_district_click )
     }
     
+    # filter cash data by district
+    fs_filter_cash_data_by_district <- function(input_df, input_district_click){
+        input_df %>% 
+            filter(location_district == input_district_click )
+    }
+    
     # Charting functions ------------------------------------------------------
     
     # household receive cash
@@ -832,80 +838,80 @@ server <- function(input, output, session) {
         }
 
     })
-    # 
-    # # Charts listen to map click ----------------------------------------------
-    # 
-    # observeEvent(input$fs_map_shape_click,{
-    #     click = input$fs_map_shape_click
-    #     click_district <- click$id
-    #     display_in_title <<- paste(" For ", click_district)
-    #     
-    #     if(is.null(click)){
-    #         filter_cash_data_based_on_map <- filter_cash_data(df_data)
-    #     }
-    #     else if((!click_district %in% districts_assessed)){
-    #         filter_cash_data_based_on_map <- filter_cash_data(df_data)
-    #     }else{
-    #         filter_cash_data_based_on_map <- filter_cash_data(df_data) %>% 
-    #             filter(Location_District ==  click_district)}
-    #     
-    #     # create all the charts
-    #     fs_draw_chart_receiving_cash(filter_cash_data_based_on_map)
-    #     fs_draw_chart_total_Cash_distributed(filter_cash_data_based_on_map)
-    #     fs_draw_chart_assistance_deliverymechanism(filter_cash_data_based_on_map)
-    #     fs_draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
-    #     
-    #     if(!is.null(click)){
-    #         fs_text_selected_district(click_district, districts_assessed)
-    #         
-    #         # update year selection
-    #         filter_original_cash_data <- filter_cash_data_by_district(df_data, click_district)
-    #         available_year_choices <- unique(as.character(filter_original_cash_data$Year))
-    #         if (input$yearperiod %in% available_year_choices){
-    #             # print(paste("District", click_district, "Current selected year is:",input$yearperiod, " And available choices: ", available_year_choices ))
-    #             updateSelectInput(session, "fs_yearperiod", 
-    #                               label = "fs_Select Year", 
-    #                               choices = c("All", available_year_choices),
-    #                               selected = input$yearperiod
-    #             )
-    #         }else{
-    #             updateSelectInput(session, "fs_yearperiod", 
-    #                               label = "Select Year", 
-    #                               choices = c("All", available_year_choices),
-    #                               selected = "All"
-    #             )
-    #         }
-    #         
-    #         
-    #         if(input$fs_yearperiod != "All"){
-    #             selected_year <- input$fs_yearperiod
-    #             filter_cash_data_quarter <- df_data %>% 
-    #                 filter(Year == selected_year, Location_District == click_district )
-    #             
-    #             # update quarter selection
-    #             available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
-    #             if(input$fs_quarterperiod %in% available_quarter_choices){
-    #                 updateSelectInput(session, "fs_quarterperiod", 
-    #                                   label = "Select Quarter", 
-    #                                   choices = c("All", available_quarter_choices),
-    #                                   selected = input$fs_quarterperiod
-    #                 )
-    #             }else{
-    #                 updateSelectInput(session, "fs_quarterperiod", 
-    #                                   label = "Select Quarter", 
-    #                                   choices = c("All", available_quarter_choices),
-    #                                   selected = "All"
-    #                 )
-    #             }
-    #             
-    #         }
-    #     }
-    #     
-    #     
-    #     
-    # })
-    # 
-    # 
+
+    # Charts listen to map click ----------------------------------------------
+
+    observeEvent(input$fs_map_shape_click,{
+        click = input$fs_map_shape_click
+        click_district <- click$id
+        display_in_title <<- paste(" For ", click_district)
+
+        if(is.null(click)){
+            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
+        }
+        else if((!click_district %in% districts_assessed)){
+            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
+        }else{
+            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data) %>%
+                filter(location_district ==  click_district)}
+
+        # create all the charts
+        fs_draw_chart_receiving_cash(fs_filter_cash_data_based_on_map)
+        fs_draw_chart_total_Cash_distributed(fs_filter_cash_data_based_on_map)
+        fs_draw_chart_assistance_deliverymechanism(fs_filter_cash_data_based_on_map)
+        fs_draw_chart_cash_transfers_by_partner(fs_filter_cash_data_based_on_map)
+
+        if(!is.null(click)){
+            fs_text_selected_district(click_district, districts_assessed)
+
+            # update year selection
+            fs_filter_original_cash_data <- fs_filter_cash_data_by_district(fs_df_data, click_district)
+            fs_available_year_choices <- unique(as.character(fs_filter_original_cash_data$Year))
+            if (input$yearperiod %in% fs_available_year_choices){
+                # print(paste("District", click_district, "Current selected year is:",input$yearperiod, " And available choices: ", available_year_choices ))
+                updateSelectInput(session, "fs_yearperiod",
+                                  label = "fs_Select Year",
+                                  choices = c("All", fs_available_year_choices),
+                                  selected = input$yearperiod
+                )
+            }else{
+                updateSelectInput(session, "fs_yearperiod",
+                                  label = "Select Year",
+                                  choices = c("All", fs_available_year_choices),
+                                  selected = "All"
+                )
+            }
+
+
+            if(input$fs_yearperiod != "All"){
+                selected_year <- input$fs_yearperiod
+                fs_filter_cash_data_quarter <- fs_df_data %>%
+                    filter(Year == selected_year, location_district == click_district )
+
+                # update quarter selection
+                fs_available_quarter_choices <- unique(as.character(fs_filter_cash_data_quarter$Quarter))
+                if(input$fs_quarterperiod %in% fs_available_quarter_choices){
+                    updateSelectInput(session, "fs_quarterperiod",
+                                      label = "Select Quarter",
+                                      choices = c("All", fs_available_quarter_choices),
+                                      selected = input$fs_quarterperiod
+                    )
+                }else{
+                    updateSelectInput(session, "fs_quarterperiod",
+                                      label = "Select Quarter",
+                                      choices = c("All", fs_available_quarter_choices),
+                                      selected = "All"
+                    )
+                }
+
+            }
+        }
+
+
+
+    })
+
+
     # # Map reset button --------------------------------------------------------
     # 
     # 

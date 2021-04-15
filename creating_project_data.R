@@ -76,3 +76,17 @@ fs_df_shape <- df_shape
 
 # save to rds format
 saveRDS(fs_df_food_security,  file = "data/fs_data.RDS")
+
+
+# saving several data objects into an RDS object
+data_for_saving <- list()
+data_for_saving$df_data <- df_data
+data_for_saving$df_shape <- df_shape
+data_for_saving$df_shape_data <- df_shape_data
+data_for_saving$fs_df_data <- fs_df_data
+
+saveRDS(data_for_saving, file = "data/new_dat.rds")
+
+get_new_dat <- read_rds(file = "data/new_dat.rds")
+
+get_new_dat$df_data

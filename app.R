@@ -793,45 +793,45 @@ server <- function(input, output, session) {
         
     })
     
-    # # observe year change to update quarter
-    # observe({
-    #     if(input$fs_yearperiod != "All"){
-    #         selected_year <- input$yearperiod
-    #         click = input$map_shape_click
-    #         click_district <- click$id
-    #         
-    #         if (!is.null(click)){
-    #             filter_cash_data_quarter <- df_data %>% 
-    #                 filter(Year == selected_year, Location_District == click_district )
-    #         }else{
-    #             filter_cash_data_quarter <- df_data %>% 
-    #                 filter(Year == selected_year )
-    #         }
-    #         # update quarter selection
-    #         available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
-    #         if(input$fs_quarterperiod %in% available_quarter_choices){
-    #             updateSelectInput(session, "fs_quarterperiod", 
-    #                               label = "Select Quarter", 
-    #                               choices = c("All", available_quarter_choices),
-    #                               selected = input$fs_quarterperiod
-    #             )
-    #         }else{
-    #             updateSelectInput(session, "fs_quarterperiod", 
-    #                               label = "Select Quarter", 
-    #                               choices = c("All", available_quarter_choices),
-    #                               selected = "All"
-    #             )
-    #         }
-    #         
-    #     }else{
-    #         updateSelectInput(session, "fs_quarterperiod", 
-    #                           label = "Select Quarter", 
-    #                           choices = c("All"),
-    #                           selected = "All"
-    #         )
-    #     }
-    #     
-    # })
+    # observe year change to update quarter
+    observe({
+        if(input$fs_yearperiod != "All"){
+            selected_year <- input$fs_yearperiod
+            click = input$fs_map_shape_click
+            click_district <- click$id
+
+            if (!is.null(click)){
+                fs_filter_cash_data_quarter <- fs_df_data %>%
+                    filter(Year == selected_year, location_district == click_district )
+            }else{
+                fs_filter_cash_data_quarter <- fs_df_data %>%
+                    filter(Year == selected_year )
+            }
+            # update quarter selection
+            fs_available_quarter_choices <- unique(as.character(fs_filter_cash_data_quarter$Quarter))
+            if(input$fs_quarterperiod %in% fs_available_quarter_choices){
+                updateSelectInput(session, "fs_quarterperiod",
+                                  label = "Select Quarter",
+                                  choices = c("All", fs_available_quarter_choices),
+                                  selected = input$fs_quarterperiod
+                )
+            }else{
+                updateSelectInput(session, "fs_quarterperiod",
+                                  label = "Select Quarter",
+                                  choices = c("All", fs_available_quarter_choices),
+                                  selected = "All"
+                )
+            }
+
+        }else{
+            updateSelectInput(session, "fs_quarterperiod",
+                              label = "Select Quarter",
+                              choices = c("All"),
+                              selected = "All"
+            )
+        }
+
+    })
     # 
     # # Charts listen to map click ----------------------------------------------
     # 

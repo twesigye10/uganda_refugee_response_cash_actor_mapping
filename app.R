@@ -645,13 +645,13 @@ server <- function(input, output, session) {
         output$fs_plotcashpartner <-  renderHighchart({
             
             input_data %>% 
-                group_by(Partner_Name ) %>% 
+                group_by(partner_name ) %>% 
                 summarise(
-                    total_cash_by_parter = sum(Total_amount_of_cash_transfers, na.rm = T)
+                    total_cash_by_parter = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T)
                 ) %>% 
                 arrange(-total_cash_by_parter) %>%
                 hchart(type = "bar",
-                       hcaes(x = Partner_Name, y = total_cash_by_parter)) %>% 
+                       hcaes(x = partner_name, y = total_cash_by_parter)) %>% 
                 hc_title( text = glue("Total cash Transfers by Partner{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Partner") ) %>% 
                 hc_yAxis(title = list(text = "Total cash Transfers") ) 
@@ -789,7 +789,7 @@ server <- function(input, output, session) {
         fs_draw_chart_receiving_cash(df_by_district_cash_data)
         fs_draw_chart_total_Cash_distributed(df_by_district_cash_data)
         fs_draw_chart_assistance_deliverymechanism(df_by_district_cash_data)
-        # fs_draw_chart_cash_transfers_by_partner(df_by_district_cash_data)
+        fs_draw_chart_cash_transfers_by_partner(df_by_district_cash_data)
         
     })
     

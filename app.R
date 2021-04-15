@@ -64,8 +64,8 @@ ui <- fluidPage(
 multiplier effects on food security, social cohesion, reduction of aid dependency, and productive engagement of the youth, among others. The established reference Minimum Expenditure Basket (MEB) tool will ultimately support the cost efficiency and cost effectiveness, and pave the way for coherent multi-purpose cash programming and delivery. Partners continue efforts to establish a common platform for cash transfers. The information is collected through the Activity Info platform." ),
     tabsetPanel( 
         id = "tab_being_displayed",
-        # Total Cash Transfer -----------------------------------------------------
-        tabPanel( "Total Cash Transfer",
+        # CBI for Basic Needs -----------------------------------------------------
+        tabPanel( "CBI for Basic Needs",
                   # Sidebar
                   sidebarLayout(
                       # side panel
@@ -239,13 +239,13 @@ server <- function(input, output, session) {
             df_billb_data <- input_data %>% 
                 group_by(Select_Beneficiary_Type ) %>% 
                 summarise(
-                    count_hh_receive_cash_assistance = sum(i.hh_receiving_any_form_of_cash, na.rm = T)
+                    count_hh_receive_cash_assistance = sum(Total_amount_of_cash_transfers, na.rm = T)
                 ) 
             
             billboarder(data = df_billb_data) %>%
                 bb_donutchart() %>% 
                 bb_legend(position = 'right') %>%
-                bb_donut(title = "% of HH receiving cash \nfor Basic Needs\n by Beneficiary Type", width = 70) %>% 
+                bb_donut(title = "% of Total \nCash Transfer\n by Beneficiary Type", width = 70) %>% 
                 bb_colors_manual(
                     setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(beneficiary_types))
                 )

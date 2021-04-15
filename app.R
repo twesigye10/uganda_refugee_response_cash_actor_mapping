@@ -275,7 +275,7 @@ server <- function(input, output, session) {
             input_data %>% 
                 group_by(Select_Delivery_Mechanism ) %>% 
                 summarise(
-                    cash_transfer_by_delivery_mechanism = sum(Total_amount_of_cash_transfers)
+                    cash_transfer_by_delivery_mechanism = sum(Total_amount_of_cash_transfers, na.rm = T)
                 ) %>% 
                 arrange(-cash_transfer_by_delivery_mechanism) %>% 
                 hchart(type = "bar",
@@ -633,15 +633,14 @@ server <- function(input, output, session) {
             input_data %>% 
                 group_by(select_delivery_mechanism ) %>% 
                 summarise(
-                    count_by_delivery_mechanism = n(),
-                    percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
+                    chash_transfer_by_delivery_mechanism = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T)
                 ) %>% 
-                arrange(-percentage_by_delivery_mechanism) %>% 
+                arrange(-chash_transfer_by_delivery_mechanism) %>% 
                 hchart(type = "bar",
-                       hcaes(x = select_delivery_mechanism, y = percentage_by_delivery_mechanism)) %>%  
-                hc_title( text = glue("Percentage of Assistance by Delivery Mechanism{display_in_title}"), margin = 5, align = "left" )%>% 
+                       hcaes(x = select_delivery_mechanism, y = chash_transfer_by_delivery_mechanism)) %>%  
+                hc_title( text = glue("Total Cash Transfer by Delivery Mechanism{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
-                hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
+                hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanismt"))  
         })
     }
     

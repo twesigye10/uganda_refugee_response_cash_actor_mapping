@@ -275,15 +275,14 @@ server <- function(input, output, session) {
             input_data %>% 
                 group_by(Select_Delivery_Mechanism ) %>% 
                 summarise(
-                    count_by_delivery_mechanism = n(),
-                    percentage_by_delivery_mechanism = (count_by_delivery_mechanism/nrow(.))*100
+                    cash_transfer_by_delivery_mechanism = sum(Total_amount_of_cash_transfers)
                 ) %>% 
-                arrange(-percentage_by_delivery_mechanism) %>% 
+                arrange(-cash_transfer_by_delivery_mechanism) %>% 
                 hchart(type = "bar",
-                       hcaes(x = Select_Delivery_Mechanism, y = percentage_by_delivery_mechanism)) %>%  
-                hc_title( text = glue("Percentage of Assistance by Delivery Mechanism{display_in_title}"), margin = 5, align = "left" )%>% 
+                       hcaes(x = Select_Delivery_Mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
+                hc_title( text = glue("Total Cash by Delivery Mechanism{display_in_title}"), margin = 5, align = "left" )%>% 
                 hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
-                hc_yAxis(title = list(text = "% Assistance by Delivery Mechanismt"))  
+                hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism"))  
         })
     }
     

@@ -39,7 +39,7 @@ districts_assessed<-df_shape_data %>%
     filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
 
 # add data food security
-fs_df_data <-read_rds(file = "data/fs_data.RDS")
+fs_df_data <-dat$fs_df_data
 fs_beneficiary_types <- fs_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 

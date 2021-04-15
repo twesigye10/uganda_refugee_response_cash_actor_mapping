@@ -590,17 +590,17 @@ server <- function(input, output, session) {
         output$fs_hhreceivingcash <-  renderBillboarder({
             
             df_billb_data <- input_data %>% 
-                group_by(Select_Beneficiary_Type ) %>% 
+                group_by(select_beneficiary_type ) %>% 
                 summarise(
-                    count_hh_receive_cash_assistance = sum(i.hh_receiving_any_form_of_cash, na.rm = T)
+                    total_cash_transfer_by_beneficiary_type = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T)
                 ) 
             
             billboarder(data = df_billb_data) %>%
                 bb_donutchart() %>% 
                 bb_legend(position = 'right') %>%
-                bb_donut(title = "% of HH receiving cash \nfor Basic Needs\n by Beneficiary Type", width = 70) %>% 
+                bb_donut(title = "% total cash transfer \n by Beneficiary Type", width = 70) %>% 
                 bb_colors_manual(
-                    setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(beneficiary_types))
+                    setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(fs_beneficiary_types))
                 )
         })
     }
@@ -786,7 +786,7 @@ server <- function(input, output, session) {
         fs_creating_map(df_shape_data)
         
         # # create all the charts
-        # fs_draw_chart_receiving_cash(df_by_district_cash_data)
+        fs_draw_chart_receiving_cash(df_by_district_cash_data)
         # fs_draw_chart_total_Cash_distributed(df_by_district_cash_data)
         # fs_draw_chart_assistance_deliverymechanism(df_by_district_cash_data)
         # fs_draw_chart_cash_transfers_by_partner(df_by_district_cash_data)

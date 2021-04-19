@@ -370,8 +370,8 @@ server <- function(input, output, session) {
             addLegend(position ="bottomright", 
                       pal = pal, 
                       values = ~cash_transfers_by_district,
-                      title = "Total cash",
-                      labFormat = labelFormat(prefix = "USD "),
+                      title = "Total cash<br>(UGX '000)",
+                      # labFormat = labelFormat(prefix = "UGX '000"),
                       opacity  = 1,
                       na.label = "Not Assessed"
             )%>% 
@@ -728,8 +728,8 @@ server <- function(input, output, session) {
             addLegend(position ="bottomright", 
                       pal = pal, 
                       values = ~cash_transfers_by_district,
-                      title = "Total cash",
-                      labFormat = labelFormat(prefix = "USD "),
+                      title = "Total cash<br>(UGX '000)",
+                      # labFormat = labelFormat(prefix = "UGX '000"),
                       opacity  = 1,
                       na.label = "Not Assessed"
             )%>% 

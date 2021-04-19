@@ -308,7 +308,7 @@ server <- function(input, output, session) {
     text_selected_district <- function(input_text, input_assessed_districts){
         output$selecteddistrict <- renderText({
             if (input_text %in% input_assessed_districts){
-                paste("Selected District: ", input_text)
+                paste("Selected District: ", stringr::str_to_title(input_text))
             }else if(str_length(input_text) < 1){
                 paste("")
             }
@@ -483,7 +483,7 @@ server <- function(input, output, session) {
     observeEvent(input$map_shape_click,{
         click = input$map_shape_click
         click_district <- click$id
-        display_in_title <<- paste(" For ", click_district)
+        display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         
         if(is.null(click)){
             filter_cash_data_based_on_map <- filter_cash_data(df_data)

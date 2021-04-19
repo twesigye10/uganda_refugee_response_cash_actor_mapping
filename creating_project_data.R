@@ -23,7 +23,7 @@ library(janitor)
 # Data --------------------------------------------------------------------
 
 # currency conversion
-currency_conversion_factor <- 3650
+currency_conversion_factor <- 1000
 display_in_title <- " For All districts"
 # add data
 df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv") %>% 
@@ -57,14 +57,17 @@ df_shape_data <- df_shape%>%
 
 districts_assessed<-df_shape_data %>% 
     filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
-# save to rds format
-saveRDS(df_data,  file = "data/cbi_project_df_data.RDS")
-saveRDS(df_shape,  file = "data/cbi_project_df_shape.RDS")
-saveRDS(df_shape_data,  file = "data/cbi_project_df_shape_data.RDS")
+# save to rds format. This only works for single dataset
+# saveRDS(df_data,  file = "data/cbi_project_df_data.RDS")
+# saveRDS(df_shape,  file = "data/cbi_project_df_shape.RDS")
+# saveRDS(df_shape_data,  file = "data/cbi_project_df_shape_data.RDS")
 
 # Food security data
 df_food_security <- read_csv("data/Food_Security.csv")
-df_food_security <- janitor::clean_names(df_food_security)
+df_food_security <- janitor::clean_names(df_food_security) %>% 
+    mutate(
+    fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers = ifelse(!is.na(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers), (fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers/currency_conversion_factor)
+    )
 
 fs_df_food_security <- df_food_security %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
@@ -75,7 +78,7 @@ fs_beneficiary_types <- fs_df_food_security %>%
 fs_df_shape <- df_shape
 
 # save to rds format
-saveRDS(fs_df_food_security,  file = "data/fs_data.RDS")
+# saveRDS(fs_df_food_security,  file = "data/fs_data.RDS")
 
 
 # saving several data objects into an RDS object

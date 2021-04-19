@@ -25,7 +25,7 @@ library(glue)
 # currency conversion
 currency_conversion_factor <- 3650
 
-display_in_title <- " For All districts"
+display_in_title <- " for all Districts"
 # add data CBI
 dat<-read_rds(file = "data/data.rds")
 df_data<- dat$df_data

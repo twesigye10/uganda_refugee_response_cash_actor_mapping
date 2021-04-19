@@ -66,19 +66,18 @@ districts_assessed<-df_shape_data %>%
 df_food_security <- read_csv("data/Food_Security.csv")
 df_food_security <- janitor::clean_names(df_food_security) %>% 
     mutate(
-    fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers = ifelse(!is.na(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers), (fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers/currency_conversion_factor))
+    fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers = ifelse(!is.na(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers), (fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers/currency_conversion_factor), NA)
     )
 
-fs_df_food_security <- df_food_security %>% 
+fs_df_data <- df_food_security %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
 colnames(df_food_security)
 
-fs_beneficiary_types <- fs_df_food_security %>% 
+fs_beneficiary_types <- fs_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
-fs_df_shape <- df_shape
 
 # save to rds format
-# saveRDS(fs_df_food_security,  file = "data/fs_data.RDS")
+# saveRDS(fs_df_data,  file = "data/fs_data.RDS")
 
 
 # saving several data objects into an RDS object
@@ -92,4 +91,4 @@ saveRDS(data_for_saving, file = "data/new_dat.rds")
 
 get_new_dat <- read_rds(file = "data/new_dat.rds")
 
-get_new_dat$df_data
+get_new_dat$fs_df_data

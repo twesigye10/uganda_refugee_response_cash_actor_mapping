@@ -66,7 +66,7 @@ districts_assessed<-df_shape_data %>%
 df_food_security <- read_csv("data/Food_Security.csv")
 df_food_security <- janitor::clean_names(df_food_security) %>% 
     mutate(
-    fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers = ifelse(!is.na(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers), (fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers/currency_conversion_factor)
+    fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers = ifelse(!is.na(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers), (fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers/currency_conversion_factor))
     )
 
 fs_df_food_security <- df_food_security %>% 

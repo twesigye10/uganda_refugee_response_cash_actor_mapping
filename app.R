@@ -321,7 +321,7 @@ server <- function(input, output, session) {
         # label districts in the map
         labels_v1 <- ~sprintf(
             "<strong>%s</strong><br/>Cash Transfers : %s ",
-            ADM2_EN, scales::dollar(cash_transfers_by_district)
+            ADM2_EN, cash_transfers_by_district
         ) %>% 
             lapply(htmltools::HTML)
         
@@ -345,10 +345,8 @@ server <- function(input, output, session) {
                 fillOpacity = ~ifelse(is.na(cash_transfers_by_district), 0.7, 1),
                 weight = 1,
                 opacity = 1,
-                label = labels_district,
-                labelOptions = labelOptions(noHide = T, textOnly = TRUE),
-                popup = labels_v1,
-                popupOptions = popupOptions(keepInView = FALSE, closeButton = TRUE),
+                label = labels_v1,
+                labelOptions = labelOptions(noHide = F, textOnly = FALSE),
                 layerId = ~ADM2_EN,
                 dashArray = "3",
                 highlight = highlightOptions(weight = 3,
@@ -675,7 +673,7 @@ server <- function(input, output, session) {
         # label districts in the map
         labels_v1 <- ~sprintf(
             "<strong>%s</strong><br/>Cash Transfers : %s ",
-            ADM2_EN, scales::dollar(cash_transfers_by_district)
+            ADM2_EN, cash_transfers_by_district
         ) %>% 
             lapply(htmltools::HTML)
         
@@ -699,10 +697,8 @@ server <- function(input, output, session) {
                 fillOpacity = ~ifelse(is.na(cash_transfers_by_district), 0.7, 1),
                 weight = 1,
                 opacity = 1,
-                label = labels_district,
-                labelOptions = labelOptions(noHide = T, textOnly = TRUE),
-                popup = labels_v1,
-                popupOptions = popupOptions(keepInView = FALSE, closeButton = TRUE),
+                label = labels_v1,
+                labelOptions = labelOptions(noHide = F, textOnly = FALSE),
                 layerId = ~ADM2_EN,
                 dashArray = "3",
                 highlight = highlightOptions(weight = 3,

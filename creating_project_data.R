@@ -57,10 +57,6 @@ df_shape_data <- df_shape%>%
 
 districts_assessed<-df_shape_data %>% 
     filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
-# save to rds format. This only works for single dataset
-# saveRDS(df_data,  file = "data/cbi_project_df_data.RDS")
-# saveRDS(df_shape,  file = "data/cbi_project_df_shape.RDS")
-# saveRDS(df_shape_data,  file = "data/cbi_project_df_shape_data.RDS")
 
 # Food security data
 df_food_security <- read_csv("data/Food_Security.csv")
@@ -76,10 +72,6 @@ colnames(df_food_security)
 fs_beneficiary_types <- fs_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
-# save to rds format
-# saveRDS(fs_df_data,  file = "data/fs_data.RDS")
-
-
 # saving several data objects into an RDS object
 data_for_saving <- list()
 data_for_saving$df_data <- df_data
@@ -87,8 +79,8 @@ data_for_saving$df_shape <- df_shape
 data_for_saving$df_shape_data <- df_shape_data
 data_for_saving$fs_df_data <- fs_df_data
 
-saveRDS(data_for_saving, file = "data/new_dat.rds")
+saveRDS(data_for_saving, file = "data/data.rds")
 
-get_new_dat <- read_rds(file = "data/new_dat.rds")
+get_new_dat <- read_rds(file = "data/data.rds")
 
 get_new_dat$fs_df_data

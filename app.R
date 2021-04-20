@@ -305,15 +305,13 @@ server <- function(input, output, session) {
     }
     
     # handle text
-    text_selected_district <- function(input_text, input_assessed_districts){
+    text_selected_district <- function(input_text){
         output$selecteddistrict <- renderText({
-            if (input_text %in% input_assessed_districts){
-                paste("Selected District: ", stringr::str_to_title(input_text))
-            }else if(str_length(input_text) < 1){
+            if(str_length(input_text) < 1){
                 paste("")
             }
             else{
-                paste("Selected District: ", "All")
+                paste("Selected District: ", stringr::str_to_title(input_text))
             }
             
         })
@@ -501,7 +499,7 @@ server <- function(input, output, session) {
         draw_chart_cash_transfers_by_partner(filter_cash_data_based_on_map)
         
         if(!is.null(click)){
-            text_selected_district(click_district, districts_assessed)
+            text_selected_district(click_district)
             
             # update year selection
             filter_original_cash_data <- filter_cash_data_by_district(df_data, click_district)
@@ -557,7 +555,7 @@ server <- function(input, output, session) {
     observeEvent(input$mapreset, {
         
         if (!is.null(input$mapreset)){
-            display_in_title <<- " For All districts"
+            display_in_title <<- " for all Districts"
             filter_cash_data_based_on_map <- filter_cash_data(df_data)
             # create all the charts
             draw_chart_receiving_cash(filter_cash_data_based_on_map)
@@ -567,7 +565,7 @@ server <- function(input, output, session) {
             # update button
             updateActionButton(session, "mapreset", "Reset Map")
             # update text
-            text_selected_district("", districts_assessed)
+            text_selected_district("")
             # update year selection
             updateSelectInput(session, "yearperiod", 
                               label = "Select Year", 
@@ -663,15 +661,13 @@ server <- function(input, output, session) {
     }
     
     # handle text
-    fs_text_selected_district <- function(input_text, input_assessed_districts){
+    fs_text_selected_district <- function(input_text){
         output$fs_selecteddistrict <- renderText({
-            if (input_text %in% input_assessed_districts){
-                paste("Selected District: ", input_text)
-            }else if(str_length(input_text) < 1){
+            if(str_length(input_text) < 1){
                 paste("")
             }
             else{
-                paste("Selected District: ", "All")
+                paste("Selected District: ", stringr::str_to_title(input_text))
             }
             
         })
@@ -842,7 +838,7 @@ server <- function(input, output, session) {
     observeEvent(input$fs_map_shape_click,{
         click = input$fs_map_shape_click
         click_district <- click$id
-        display_in_title <<- paste(" For ", click_district)
+        display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
 
         if(is.null(click)){
             fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
@@ -860,7 +856,7 @@ server <- function(input, output, session) {
         fs_draw_chart_cash_transfers_by_partner(fs_filter_cash_data_based_on_map)
 
         if(!is.null(click)){
-            fs_text_selected_district(click_district, districts_assessed)
+            fs_text_selected_district(click_district)
 
             # update year selection
             fs_filter_original_cash_data <- fs_filter_cash_data_by_district(fs_df_data, click_district)
@@ -916,7 +912,7 @@ server <- function(input, output, session) {
     observeEvent(input$fs_mapreset, {
 
         if (!is.null(input$fs_mapreset)){
-            display_in_title <<- " For All districts"
+            display_in_title <<- " for all Districts"
             fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
             # create all the charts
             fs_draw_chart_receiving_cash(fs_filter_cash_data_based_on_map)
@@ -926,7 +922,7 @@ server <- function(input, output, session) {
             # update button
             updateActionButton(session, "fs_mapreset", "Reset Map")
             # update text
-            fs_text_selected_district("", districts_assessed)
+            fs_text_selected_district("")
             # update year selection
             updateSelectInput(session, "fs_yearperiod",
                               label = "Select Year",

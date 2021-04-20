@@ -360,7 +360,6 @@ server <- function(input, output, session) {
                       pal = pal, 
                       values = ~cash_transfers_by_district,
                       title = "Total cash<br>(UGX '000)",
-                      # labFormat = labelFormat(prefix = "UGX '000"),
                       opacity  = 1,
                       na.label = "Not Assessed"
             )%>% 
@@ -712,7 +711,6 @@ server <- function(input, output, session) {
                       pal = pal, 
                       values = ~cash_transfers_by_district,
                       title = "Total cash<br>(UGX '000)",
-                      # labFormat = labelFormat(prefix = "UGX '000"),
                       opacity  = 1,
                       na.label = "Not Assessed"
             )%>% 

@@ -35,9 +35,6 @@ df_shape_data<- dat$df_shape_data
 beneficiary_types <- df_data %>% 
     filter(!is.na(Select_Beneficiary_Type)) %>% pull(Select_Beneficiary_Type) %>% unique()
 
-districts_assessed<-df_shape_data %>% 
-    filter(!is.na(Partner_Name)) %>% pull(ADM2_EN) %>% unique()
-
 # add data food security
 fs_df_data <-dat$fs_df_data
 fs_beneficiary_types <- fs_df_data %>% 
@@ -334,7 +331,7 @@ server <- function(input, output, session) {
         
         labels_district <- ~sprintf(
             "<strong>%s</strong>",
-            ifelse(ADM2_EN %in% districts_assessed, ADM2_EN, "" ) 
+            ifelse(!is.na(cash_transfers_by_district), ADM2_EN, "" ) 
         ) %>% 
             lapply(htmltools::HTML)
         
@@ -484,9 +481,6 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         
         if(is.null(click)){
-            filter_cash_data_based_on_map <- filter_cash_data(df_data)
-        }
-        else if((!click_district %in% districts_assessed)){
             filter_cash_data_based_on_map <- filter_cash_data(df_data)
         }else{
             filter_cash_data_based_on_map <- filter_cash_data(df_data) %>% 
@@ -841,9 +835,6 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
 
         if(is.null(click)){
-            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
-        }
-        else if((!click_district %in% districts_assessed)){
             fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
         }else{
             fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data) %>%

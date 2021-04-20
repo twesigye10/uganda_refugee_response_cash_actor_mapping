@@ -321,7 +321,7 @@ server <- function(input, output, session) {
         # label districts in the map
         labels_v1 <- ~sprintf(
             "<strong>%s</strong><br/>Cash Transfers : %s ",
-            ADM2_EN, cash_transfers_by_district
+            stringr::str_to_title(ADM2_EN), cash_transfers_by_district
         ) %>% 
             lapply(htmltools::HTML)
         
@@ -346,7 +346,9 @@ server <- function(input, output, session) {
                 weight = 1,
                 opacity = 1,
                 label = labels_v1,
-                labelOptions = labelOptions(noHide = F, textOnly = FALSE),
+                labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"),
+                                            textsize = "15px",
+                                            direction = "auto", opacity =0.75),
                 layerId = ~ADM2_EN,
                 dashArray = "3",
                 highlight = highlightOptions(weight = 3,
@@ -363,7 +365,7 @@ server <- function(input, output, session) {
                       opacity  = 1,
                       na.label = "Not Assessed"
             )%>% 
-            leafem::addStaticLabels( label=ifelse(!is.na(input_data$cash_transfers_by_district), input_data$ADM2_EN, "" ), style = list("font-weight" = "bold")) %>% 
+            leafem::addStaticLabels( label=ifelse(!is.na(input_data$cash_transfers_by_district), stringr::str_to_title(input_data$ADM2_EN), "" )) %>% 
             addLayersControl(
                 baseGroups = c("Esri Gray Canvas", "Stamen Toner", "CartoDB Voyager"),
                 overlayGroups = c("Districts Assessed"),
@@ -377,7 +379,8 @@ server <- function(input, output, session) {
         df_by_district_cash_data <- input_cash_data %>% 
             select(Location_District, Total_amount_of_cash_transfers) %>% 
             group_by(Location_District) %>% 
-            summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T))
+            summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T)) %>% 
+            filter(cash_transfers_by_district > 0)
         
         df_shape_data <- input_shape_data%>% 
             left_join(df_by_district_cash_data, by = c("ADM2_EN"="Location_District"))
@@ -672,7 +675,7 @@ server <- function(input, output, session) {
         # label districts in the map
         labels_v1 <- ~sprintf(
             "<strong>%s</strong><br/>Cash Transfers : %s ",
-            ADM2_EN, cash_transfers_by_district
+            stringr::str_to_title(ADM2_EN), cash_transfers_by_district
         ) %>% 
             lapply(htmltools::HTML)
         
@@ -697,7 +700,9 @@ server <- function(input, output, session) {
                 weight = 1,
                 opacity = 1,
                 label = labels_v1,
-                labelOptions = labelOptions(noHide = F, textOnly = FALSE),
+                labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"),
+                                            textsize = "15px",
+                                            direction = "auto", opacity =0.75),
                 layerId = ~ADM2_EN,
                 dashArray = "3",
                 highlight = highlightOptions(weight = 3,
@@ -714,7 +719,7 @@ server <- function(input, output, session) {
                       opacity  = 1,
                       na.label = "Not Assessed"
             )%>% 
-            leafem::addStaticLabels( label=ifelse(!is.na(input_data$cash_transfers_by_district), input_data$ADM2_EN, "" ), style = list("font-weight" = "bold")) %>% 
+            leafem::addStaticLabels( label=ifelse(!is.na(input_data$cash_transfers_by_district), stringr::str_to_title(input_data$ADM2_EN), "" )) %>% 
             addLayersControl(
                 baseGroups = c("Esri Gray Canvas", "Stamen Toner", "CartoDB Voyager"),
                 overlayGroups = c("Districts Assessed"),
@@ -728,7 +733,8 @@ server <- function(input, output, session) {
         df_by_district_cash_data <- input_cash_data %>% 
             select(location_district, fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers) %>% 
             group_by(location_district) %>% 
-            summarise(cash_transfers_by_district = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T))
+            summarise(cash_transfers_by_district = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T)) %>% 
+            filter(cash_transfers_by_district > 0)
         
         df_shape_data <- input_shape_data%>% 
             left_join(df_by_district_cash_data, by = c("ADM2_EN"="location_district"))

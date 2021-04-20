@@ -366,6 +366,7 @@ server <- function(input, output, session) {
                       opacity  = 1,
                       na.label = "Not Assessed"
             )%>% 
+            leafem::addStaticLabels( label=ifelse(!is.na(input_data$cash_transfers_by_district), input_data$ADM2_EN, "" ), style = list("font-weight" = "bold")) %>% 
             addLayersControl(
                 baseGroups = c("Esri Gray Canvas", "Stamen Toner", "CartoDB Voyager"),
                 overlayGroups = c("Districts Assessed"),
@@ -719,6 +720,7 @@ server <- function(input, output, session) {
                       opacity  = 1,
                       na.label = "Not Assessed"
             )%>% 
+            leafem::addStaticLabels( label=ifelse(!is.na(input_data$cash_transfers_by_district), input_data$ADM2_EN, "" ), style = list("font-weight" = "bold")) %>% 
             addLayersControl(
                 baseGroups = c("Esri Gray Canvas", "Stamen Toner", "CartoDB Voyager"),
                 overlayGroups = c("Districts Assessed"),

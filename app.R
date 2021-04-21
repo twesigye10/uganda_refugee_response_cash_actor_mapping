@@ -93,27 +93,27 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
                       # main panel
                       mainPanel(
                           
-                                  # map
-                                  leafletOutput("map", height = "60%"),
-                                  
-                                  fluidRow(
-                                      column(width = 6,
-                                             # Select Delivery Mechanism
-                                             highchartOutput("plotdeliverymechanism", )
-                                      ),
-                                      column(width = 6,
-                                             highchartOutput("plotcashpartner")
-                                      )
-                                  )
+                          # map
+                          leafletOutput("map", height = "60%"),
+                          
+                          fluidRow(
+                              column(width = 6,
+                                     # Select Delivery Mechanism
+                                     highchartOutput("plotdeliverymechanism", )
+                              ),
+                              column(width = 6,
+                                     highchartOutput("plotcashpartner")
                               )
+                          )
+                      )
                       # end main panel
                   )
                   # end sidebar layout
                   
         ),
-
+        
         # Food Security -----------------------------------------------------------
-
+        
         tabPanel( "Food Security",
                   # Sidebar
                   sidebarLayout(
@@ -166,7 +166,65 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
                   )
                   # end sidebar layout
                   
+        ),
+        
+        # Livelihood --------------------------------------------------------------
+        
+        tabPanel( "Livelihoods & Resilience",
+                  # Sidebar
+                  sidebarLayout(
+                      # side panel
+                      sidebarPanel(
+                          fluidRow(
+                              column(width = 4,
+                                     selectInput("lr_yearperiod", 
+                                                 "Select Year", 
+                                                 choices = c("All", unique(as.character(lr_df_data$Year))),
+                                                 selected = "All"
+                                     )
+                              ),
+                              column(width = 4,
+                                     selectInput("lr_quarterperiod", 
+                                                 "Select Quarter", 
+                                                 choices = c("All"),
+                                                 selected = "All"
+                                     )
+                              ),
+                              column(width = 4,
+                                     actionButton("lr_mapreset", "Reset Map"),
+                                     textOutput("lr_selecteddistrict")
+                              ),
+                              
+                          ),
+                          billboarderOutput("lr_hhreceivingcash" ),
+                          highchartOutput("lr_plotcashquarter")
+                      ),
+                      # end side panel
+                      
+                      
+                      # main panel
+                      mainPanel(
+                          
+                          # map
+                          leafletOutput("lr_map", height = "60%"),
+                          
+                          fluidRow(
+                              column(width = 6,
+                                     # Select Delivery Mechanism
+                                     highchartOutput("lr_plotdeliverymechanism", )
+                              ),
+                              column(width = 6,
+                                     highchartOutput("lr_plotcashpartner")
+                              )
+                          )
+                      )
+                      # end main panel
                   )
+                  # end sidebar layout
+                  
+        )
+        
+        
         
     )
 )
@@ -600,7 +658,7 @@ server <- function(input, output, session) {
         
     })
     
-
+    
     # Food Security -----------------------------------------------------------
     
     # Charting functions ------------------------------------------------------
@@ -841,7 +899,7 @@ server <- function(input, output, session) {
             selected_year <- input$fs_yearperiod
             click = input$fs_map_shape_click
             click_district <- click$id
-
+            
             if (!is.null(click)){
                 fs_filter_cash_data_quarter <- fs_df_data %>%
                     filter(Year == selected_year, location_district == click_district )
@@ -864,7 +922,7 @@ server <- function(input, output, session) {
                                   selected = "All"
                 )
             }
-
+            
         }else{
             updateSelectInput(session, "fs_quarterperiod",
                               label = "Select Quarter",
@@ -872,31 +930,31 @@ server <- function(input, output, session) {
                               selected = "All"
             )
         }
-
+        
     })
-
+    
     # Charts listen to map click ----------------------------------------------
-
+    
     observeEvent(input$fs_map_shape_click,{
         click = input$fs_map_shape_click
         click_district <- click$id
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
-
+        
         if(is.null(click)){
             fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
         }else{
             fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data) %>%
                 filter(location_district ==  click_district)}
-
+        
         # create all the charts
         fs_draw_chart_receiving_cash(fs_filter_cash_data_based_on_map)
         fs_draw_chart_total_Cash_distributed(fs_filter_cash_data_based_on_map)
         fs_draw_chart_assistance_deliverymechanism(fs_filter_cash_data_based_on_map)
         fs_draw_chart_cash_transfers_by_partner(fs_filter_cash_data_based_on_map)
-
+        
         if(!is.null(click)){
             fs_text_selected_district(click_district)
-
+            
             # update year selection
             fs_filter_original_cash_data <- fs_filter_cash_data_by_district(fs_df_data, click_district)
             fs_available_year_choices <- unique(as.character(fs_filter_original_cash_data$Year))
@@ -914,13 +972,13 @@ server <- function(input, output, session) {
                                   selected = "All"
                 )
             }
-
-
+            
+            
             if(input$fs_yearperiod != "All"){
                 selected_year <- input$fs_yearperiod
                 fs_filter_cash_data_quarter <- fs_df_data %>%
                     filter(Year == selected_year, location_district == click_district )
-
+                
                 # update quarter selection
                 fs_available_quarter_choices <- unique(as.character(fs_filter_cash_data_quarter$Quarter))
                 if(input$fs_quarterperiod %in% fs_available_quarter_choices){
@@ -936,20 +994,20 @@ server <- function(input, output, session) {
                                       selected = "All"
                     )
                 }
-
+                
             }
         }
-
-
-
+        
+        
+        
     })
-
-
+    
+    
     # Map reset button --------------------------------------------------------
-
-
+    
+    
     observeEvent(input$fs_mapreset, {
-
+        
         if (!is.null(input$fs_mapreset)){
             display_in_title <<- " for all Districts"
             fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
@@ -968,7 +1026,7 @@ server <- function(input, output, session) {
                               choices = c("All", unique(as.character(fs_df_data$Year))),
                               selected = "All"
             )
-
+            
             # update Quarter selection
             updateSelectInput(session, "fs_quarterperiod",
                               label = "Select Quarter",
@@ -976,7 +1034,7 @@ server <- function(input, output, session) {
                               selected = "All"
             )
         }
-
+        
     })
     
     

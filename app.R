@@ -373,6 +373,23 @@ server <- function(input, output, session) {
             )
     }
     
+    # function for adding labels to map
+    creating_map_labels <- function(input_data){
+        # label districts in the map
+        labels_district <- ~sprintf(
+            "<strong>%s</strong>",
+            ifelse(!is.na(cash_transfers_by_district),  stringr::str_to_title(ADM2_EN), "" ) 
+        ) %>% 
+            lapply(htmltools::HTML)
+        # add labels on the map
+        proxy = leafletProxy("map", data=input_data ) 
+        proxy %>%
+            clearMarkers() %>%
+            addLabelOnlyMarkers( label = labels_district, 
+                                 labelOptions = labelOptions(noHide = T, textOnly = TRUE)
+            )
+    }
+    
     # default polgons data
     df_shape_default <- function(input_shape_data, input_cash_data){
         # UI selectors to filter shape data
@@ -419,8 +436,17 @@ server <- function(input, output, session) {
         
         df_shape_data <- df_shape_default(df_shape, df_by_district_cash_data)
         
+        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+            sf::st_centroid() %>% sf::st_transform(4326) %>%
+            mutate(
+                lat = sf::st_coordinates(.)[,1],
+                lon = sf::st_coordinates(.)[,2]
+            )
+        
         # add polygon shapes to the map
         creating_map(df_shape_data)
+        # add labels to the map
+        creating_map_labels(df_point_data)
         
         # create all the charts
         draw_chart_receiving_cash(df_by_district_cash_data)
@@ -719,11 +745,27 @@ server <- function(input, output, session) {
                       opacity  = 1,
                       na.label = "Not Assessed"
             )%>% 
-            leafem::addStaticLabels( label=ifelse(!is.na(input_data$cash_transfers_by_district), stringr::str_to_title(input_data$ADM2_EN), "" )) %>% 
             addLayersControl(
                 baseGroups = c("Esri Gray Canvas", "Stamen Toner", "CartoDB Voyager"),
                 overlayGroups = c("Districts Assessed"),
                 options = layersControlOptions(collapsed = FALSE)
+            )
+    }
+    
+    # function for adding labels to map
+    fs_creating_map_labels <- function(input_data){
+        # label districts in the map
+        labels_district <- ~sprintf(
+            "<strong>%s</strong>",
+            ifelse(!is.na(cash_transfers_by_district),  stringr::str_to_title(ADM2_EN), "" ) 
+        ) %>% 
+            lapply(htmltools::HTML)
+        # add labels on the map
+        proxy = leafletProxy("fs_map", data=input_data ) 
+        proxy %>%
+            clearMarkers() %>%
+            addLabelOnlyMarkers( label = labels_district, 
+                                 labelOptions = labelOptions(noHide = T, textOnly = TRUE)
             )
     }
     
@@ -774,8 +816,16 @@ server <- function(input, output, session) {
         
         df_shape_data <- fs_df_shape_default(df_shape, df_by_district_cash_data)
         
+        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+            sf::st_centroid() %>% sf::st_transform(4326) %>%
+            mutate(
+                lat = sf::st_coordinates(.)[,1],
+                lon = sf::st_coordinates(.)[,2]
+            )
+        
         # add polygon shapes to the map
         fs_creating_map(df_shape_data)
+        fs_creating_map_labels(df_point_data)
         
         # # create all the charts
         fs_draw_chart_receiving_cash(df_by_district_cash_data)

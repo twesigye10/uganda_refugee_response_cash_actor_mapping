@@ -25,3 +25,69 @@ beneficiary_types <- df_data %>%
 fs_df_data <-dat$fs_df_data
 fs_beneficiary_types <- fs_df_data %>% 
   filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique() %>% sort()
+
+
+# creating reusable modules -----------------------------------------------
+
+
+
+# Tab page UI -------------------------------------------------------------
+
+tabpageUI <- function(
+  id, label, inp_yearperiod, 
+  inp_quarterperiod, inp_mapreset, inp_selecteddistrict, outp_hhreceivingcash,
+  outp_plotcashquarter, outp_map, outp_plotdeliverymechanism, outp_plotcashpartner
+){
+  tabPanel( label,
+            # Sidebar
+            sidebarLayout(
+              # side panel
+              sidebarPanel(
+                fluidRow(
+                  column(width = 4,
+                         selectInput(inp_yearperiod, 
+                                     "Select Year", 
+                                     choices = c("All", unique(as.character(df_data$Year))),
+                                     selected = "All"
+                         )
+                  ),
+                  column(width = 4,
+                         selectInput(inp_quarterperiod, 
+                                     "Select Quarter", 
+                                     choices = c("All"),
+                                     selected = "All"
+                         )
+                  ),
+                  column(width = 4,
+                         actionButton(inp_mapreset, "Reset Map"),
+                         textOutput(inp_selecteddistrict)
+                  ),
+                  
+                ),
+                billboarderOutput(outp_hhreceivingcash ),
+                highchartOutput(outp_plotcashquarter)
+              ),
+              # end side panel
+              
+              # main panel
+              mainPanel(
+                
+                # map
+                leafletOutput(outp_map, height = "60%"),
+                
+                fluidRow(
+                  column(width = 6,
+                         # Select Delivery Mechanism
+                         highchartOutput(outp_plotdeliverymechanism, )
+                  ),
+                  column(width = 6,
+                         highchartOutput(outp_plotcashpartner)
+                  )
+                )
+              )
+              # end main panel
+            )
+            # end sidebar layout
+  )
+  
+}

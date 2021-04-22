@@ -74,40 +74,6 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 
 server <- function(input, output, session) {
     
-    
-    # filter cash data
-    filter_cash_data <- function(input_df){
-        # defaultly display all data from all districts, years and all quarters
-        if (input$yearperiod == "All" & input$quarterperiod == "All"){
-            input_df
-        }else if(input$yearperiod == "All" & input$quarterperiod != "All"){
-            input_df %>%
-                filter(Quarter == input$quarterperiod )
-        }else if(input$yearperiod != "All" & input$quarterperiod == "All"){
-            input_df %>%
-                filter(Year == input$yearperiod)
-        } else{
-            input_df %>%
-                filter(Year == input$yearperiod, Quarter == input$quarterperiod )
-        }
-    }
-    
-    fs_filter_cash_data <- function(input_df){
-        # defaultly display all data from all districts, years and all quarters
-        if (input$fs_yearperiod == "All" & input$fs_quarterperiod == "All"){
-            input_df
-        }else if(input$fs_yearperiod == "All" & input$fs_quarterperiod != "All"){
-            input_df %>%
-                filter(Quarter == input$fs_quarterperiod )
-        }else if(input$fs_yearperiod != "All" & input$fs_quarterperiod == "All"){
-            input_df %>%
-                filter(Year == input$fs_yearperiod)
-        } else{
-            input_df %>%
-                filter(Year == input$fs_yearperiod, Quarter == input$fs_quarterperiod )
-        }
-    }
-    
     # filter cash data by district
     filter_cash_data_by_district <- function(input_df, input_district_click){
         input_df %>% 
@@ -709,7 +675,7 @@ server <- function(input, output, session) {
     observe({
         req(input$tab_being_displayed == "Food Security")
         # UI selectors to filter shape data
-        df_by_district_cash_data <- fs_filter_cash_data(fs_df_data) 
+        df_by_district_cash_data <- filterCashData("filter_fs_cash_data", fs_df_data, input$fs_yearperiod, "Year", input$fs_quarterperiod, "Quarter") 
         
         df_shape_data <- fs_df_shape_default(df_shape, df_by_district_cash_data)
         
@@ -780,9 +746,9 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         
         if(is.null(click)){
-            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
+            fs_filter_cash_data_based_on_map <- filterCashData("filter_fs_cash_data", fs_df_data, input$fs_yearperiod, "Year", input$fs_quarterperiod, "Quarter") 
         }else{
-            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data) %>%
+            fs_filter_cash_data_based_on_map <- filterCashData("filter_fs_cash_data", fs_df_data, input$fs_yearperiod, "Year", input$fs_quarterperiod, "Quarter")  %>%
                 filter(location_district ==  click_district)}
         
         # create all the charts
@@ -849,7 +815,7 @@ server <- function(input, output, session) {
         
         if (!is.null(input$fs_mapreset)){
             display_in_title <<- " for all Districts"
-            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)
+            fs_filter_cash_data_based_on_map <- filterCashData("filter_fs_cash_data", fs_df_data, input$fs_yearperiod, "Year", input$fs_quarterperiod, "Quarter") 
             # create all the charts
             fs_draw_chart_receiving_cash(fs_filter_cash_data_based_on_map)
             fs_draw_chart_total_Cash_distributed(fs_filter_cash_data_based_on_map)

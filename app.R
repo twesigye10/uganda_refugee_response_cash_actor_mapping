@@ -74,12 +74,6 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 
 server <- function(input, output, session) {
     
-    # filter cash data by district
-    filter_cash_data_by_district <- function(input_df, inp_field_district, input_district_click){
-        input_df %>% 
-            filter(inp_field_district == input_district_click )
-    }
-    
     # Charting functions ------------------------------------------------------
     
     # household receive cash
@@ -376,7 +370,7 @@ server <- function(input, output, session) {
             text_selected_district(click_district)
             
             # update year selection
-            filter_original_cash_data <- filter_cash_data_by_district(df_data, "Location_District", click_district)
+            filter_original_cash_data <- filterCashDataByDistrict("filter_cbi_cash_data_by_district", df_data, "Location_District", click_district)
             available_year_choices <- unique(as.character(filter_original_cash_data$Year))
             if (input$yearperiod %in% available_year_choices){
                 # print(paste("District", click_district, "Current selected year is:",input$yearperiod, " And available choices: ", available_year_choices ))
@@ -755,7 +749,7 @@ server <- function(input, output, session) {
             fs_text_selected_district(click_district)
             
             # update year selection
-            fs_filter_original_cash_data <- filter_cash_data_by_district(fs_df_data, "location_district", click_district)
+            fs_filter_original_cash_data <- filterCashDataByDistrict("filter_fs_cash_data_by_district", fs_df_data, "location_district", click_district)
             fs_available_year_choices <- unique(as.character(fs_filter_original_cash_data$Year))
             if (input$yearperiod %in% fs_available_year_choices){
                 # print(paste("District", click_district, "Current selected year is:",input$yearperiod, " And available choices: ", available_year_choices ))

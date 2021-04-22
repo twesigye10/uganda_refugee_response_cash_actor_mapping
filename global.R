@@ -118,7 +118,7 @@ filterCashData <- function(id, input_df, inp_id_yearperiod, inp_field_year,
 }
 
 # filter cash data by district
-filterCashDataByDistrict <- function(input_df, inp_field_district, input_district_click){
+filterCashDataByDistrict <- function(id, input_df, inp_field_district, input_district_click){
   moduleServer(id, function(input, output, session){
     input_df %>% 
       filter(inp_field_district == input_district_click )
@@ -127,3 +127,8 @@ filterCashDataByDistrict <- function(input_df, inp_field_district, input_distric
   })
   
 }
+
+
+# donut chart module ------------------------------------------------------
+
+

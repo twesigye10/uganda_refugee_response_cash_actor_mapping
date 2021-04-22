@@ -46,75 +46,24 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
         id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
         tabpageUI(
-            "cbipagetab", "CBI for Basic Needs", "yearperiod", 
+            "cbipagetab", "CBI for Basic Needs", "yearperiod", df_data$Year,
             "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
             "plotcashquarter", "map", "plotdeliverymechanism", "plotcashpartner"
         ),
         
         # Food Security -----------------------------------------------------------
         tabpageUI(
-            "fspagetab", "Food Security", "fs_yearperiod", 
+            "fspagetab", "Food Security", "fs_yearperiod", fs_df_data$Year,
             "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
             "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
         ),
         
         # Livelihood --------------------------------------------------------------
-        
-        tabPanel( "Livelihoods & Resilience",
-                  # Sidebar
-                  sidebarLayout(
-                      # side panel
-                      sidebarPanel(
-                          fluidRow(
-                              column(width = 4,
-                                     selectInput("lr_yearperiod", 
-                                                 "Select Year", 
-                                                 choices = c("All", unique(as.character(lr_df_data$Year))),
-                                                 selected = "All"
-                                     )
-                              ),
-                              column(width = 4,
-                                     selectInput("lr_quarterperiod", 
-                                                 "Select Quarter", 
-                                                 choices = c("All"),
-                                                 selected = "All"
-                                     )
-                              ),
-                              column(width = 4,
-                                     actionButton("lr_mapreset", "Reset Map"),
-                                     textOutput("lr_selecteddistrict")
-                              ),
-                              
-                          ),
-                          billboarderOutput("lr_hhreceivingcash" ),
-                          highchartOutput("lr_plotcashquarter")
-                      ),
-                      # end side panel
-                      
-                      
-                      # main panel
-                      mainPanel(
-                          
-                          # map
-                          leafletOutput("lr_map", height = "60%"),
-                          
-                          fluidRow(
-                              column(width = 6,
-                                     # Select Delivery Mechanism
-                                     highchartOutput("lr_plotdeliverymechanism", )
-                              ),
-                              column(width = 6,
-                                     highchartOutput("lr_plotcashpartner")
-                              )
-                          )
-                      )
-                      # end main panel
-                  )
-                  # end sidebar layout
-                  
+        tabpageUI(
+            "lrpagetab", "Livelihoods & Resilience", "lr_yearperiod", fs_df_data$Year,
+            "lr_quarterperiod", "lr_mapreset", "lr_selecteddistrict", "lr_hhreceivingcash",
+            "lr_plotcashquarter", "lr_map", "lr_plotdeliverymechanism", "lr_plotcashpartner"
         )
-        
-        
         
     )
 )

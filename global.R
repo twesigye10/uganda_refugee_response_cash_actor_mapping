@@ -27,11 +27,8 @@ fs_beneficiary_types <- fs_df_data %>%
   filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique() %>% sort()
 
 
-# creating reusable modules -----------------------------------------------
 
-
-
-# Tab page UI -------------------------------------------------------------
+# UI module -------------------------------------------------------------
 
 tabPageUI <- function(
   id, label, inp_yearperiod, inp_yearperiod_choices,
@@ -96,4 +93,26 @@ tabPageUI <- function(
 
 # Server modules ----------------------------------------------------------
 
+filterCashData <- function(id, input_df, inp_id_yearperiod, inp_field_year, 
+                           inp_id_quarterperiod, inp_field_quarter){
+  moduleServer(id, function(input, output, session){
+    # defaultly display all data from all districts, years and all quarters
+    if (inp_id_yearperiod == "All" & inp_id_quarterperiod == "All"){
+      input_df
+    }else if(inp_id_yearperiod == "All" & inp_id_quarterperiod != "All"){
+      input_df %>%
+        filter(inp_field_quarter == inp_id_quarterperiod )
+    }else if(inp_id_yearperiod != "All" & inp_id_quarterperiod == "All"){
+      input_df %>%
+        filter(inp_field_year == inp_id_yearperiod)
+    } else{
+      input_df %>%
+        filter(inp_field_year == inp_id_yearperiod, 
+               inp_field_quarter == inp_id_quarterperiod )
+    }
+    
+    return(input_df)
+  })
+  
+}
 

@@ -45,21 +45,21 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
     tabsetPanel( 
         id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
-        tabpageUI(
+        tabPageUI(
             "cbipagetab", "CBI for Basic Needs", "yearperiod", df_data$Year,
             "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
             "plotcashquarter", "map", "plotdeliverymechanism", "plotcashpartner"
         ),
         
         # Food Security -----------------------------------------------------------
-        tabpageUI(
+        tabPageUI(
             "fspagetab", "Food Security", "fs_yearperiod", fs_df_data$Year,
             "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
             "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
         ),
         
         # Livelihood --------------------------------------------------------------
-        tabpageUI(
+        tabPageUI(
             "lrpagetab", "Livelihoods & Resilience", "lr_yearperiod", fs_df_data$Year,
             "lr_quarterperiod", "lr_mapreset", "lr_selecteddistrict", "lr_hhreceivingcash",
             "lr_plotcashquarter", "lr_map", "lr_plotdeliverymechanism", "lr_plotcashpartner"

@@ -62,7 +62,7 @@ tabPageUI <- function(
                   ),
                   
                 ),
-                billboarderOutput(outp_hhreceivingcash ),
+                billboarderOutput(ns(outp_hhreceivingcash) ),
                 highchartOutput(outp_plotcashquarter)
               ),
               # end side panel
@@ -131,15 +131,15 @@ filterCashDataByDistrict <- function(id, input_df, inp_field_district, input_dis
 
 # donut chart module ------------------------------------------------------
 
-donutChartCashBeneficiary <- function(id, chart_id, input_data, input_field_group,
+donutChartCashBeneficiary <- function(id, input_data, input_field_group,
                                       input_field_analysis, input_title, input_beneficiary_vector){
   moduleServer(id, function(input, output, session){
-    chart_id <-  renderBillboarder({
+    output$hhreceivingcash <-  renderBillboarder({
       
       df_billb_data <- input_data %>% 
-        group_by(input_field_group ) %>% 
+        group_by({{input_field_group}} ) %>% 
         summarise(
-          cash_assistance_by_beneficiary_type = sum(input_field_analysis, na.rm = T)
+          cash_assistance_by_beneficiary_type = sum({{input_field_analysis}}, na.rm = T)
         ) 
       
       billboarder(data = df_billb_data) %>%

@@ -46,66 +46,16 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
         id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
         tabpageUI(
-            "cbipagetab", label="CBI for Basic Needs", "yearperiod", 
+            "cbipagetab", "CBI for Basic Needs", "yearperiod", 
             "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
             "plotcashquarter", "map", "plotdeliverymechanism", "plotcashpartner"
-        )
-        ,
+        ),
         
         # Food Security -----------------------------------------------------------
-        
-        tabPanel( "Food Security",
-                  # Sidebar
-                  sidebarLayout(
-                      # side panel
-                      sidebarPanel(
-                          fluidRow(
-                              column(width = 4,
-                                     selectInput("fs_yearperiod", 
-                                                 "Select Year", 
-                                                 choices = c("All", unique(as.character(fs_df_data$Year))),
-                                                 selected = "All"
-                                     )
-                              ),
-                              column(width = 4,
-                                     selectInput("fs_quarterperiod", 
-                                                 "Select Quarter", 
-                                                 choices = c("All"),
-                                                 selected = "All"
-                                     )
-                              ),
-                              column(width = 4,
-                                     actionButton("fs_mapreset", "Reset Map"),
-                                     textOutput("fs_selecteddistrict")
-                              ),
-                              
-                          ),
-                          billboarderOutput("fs_hhreceivingcash" ),
-                          highchartOutput("fs_plotcashquarter")
-                      ),
-                      # end side panel
-                      
-                      
-                      # main panel
-                      mainPanel(
-                          
-                          # map
-                          leafletOutput("fs_map", height = "60%"),
-                          
-                          fluidRow(
-                              column(width = 6,
-                                     # Select Delivery Mechanism
-                                     highchartOutput("fs_plotdeliverymechanism", )
-                              ),
-                              column(width = 6,
-                                     highchartOutput("fs_plotcashpartner")
-                              )
-                          )
-                      )
-                      # end main panel
-                  )
-                  # end sidebar layout
-                  
+        tabpageUI(
+            "fspagetab", "Food Security", "fs_yearperiod", 
+            "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
+            "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
         ),
         
         # Livelihood --------------------------------------------------------------

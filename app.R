@@ -80,12 +80,6 @@ server <- function(input, output, session) {
             filter(inp_field_district == input_district_click )
     }
     
-    # # filter cash data by district
-    # fs_filter_cash_data_by_district <- function(input_df, input_district_click){
-    #     input_df %>% 
-    #         filter(location_district == input_district_click )
-    # }
-    
     # Charting functions ------------------------------------------------------
     
     # household receive cash

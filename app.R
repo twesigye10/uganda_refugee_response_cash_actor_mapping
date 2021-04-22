@@ -20,21 +20,8 @@ library(billboarder)
 library(glue)
 
 
-# Data --------------------------------------------------------------------
-
-display_in_title <- " for all Districts"
-# add data CBI
-dat<-read_rds(file = "data/data.rds")
-df_data<- dat$df_data
-df_shape<- dat$df_shape
-
-beneficiary_types <- df_data %>% 
-    filter(!is.na(Select_Beneficiary_Type)) %>% pull(Select_Beneficiary_Type) %>% unique() %>% sort()
-
-# add data food security
-fs_df_data <-dat$fs_df_data
-fs_beneficiary_types <- fs_df_data %>% 
-    filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique() %>% sort()
+# load scripts
+source("global.R")
 
 reach_theme <- bs_theme(
     bg = ggreach::reach_cols("lightgrey"), 
@@ -58,59 +45,12 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
     tabsetPanel( 
         id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
-        tabPanel( "CBI for Basic Needs",
-                  # Sidebar
-                  sidebarLayout(
-                      # side panel
-                      sidebarPanel(
-                          fluidRow(
-                              column(width = 4,
-                                     selectInput("yearperiod", 
-                                                 "Select Year", 
-                                                 choices = c("All", unique(as.character(df_data$Year))),
-                                                 selected = "All"
-                                     )
-                              ),
-                              column(width = 4,
-                                     selectInput("quarterperiod", 
-                                                 "Select Quarter", 
-                                                 choices = c("All"),
-                                                 selected = "All"
-                                     )
-                              ),
-                              column(width = 4,
-                                     actionButton("mapreset", "Reset Map"),
-                                     textOutput("selecteddistrict")
-                              ),
-                              
-                          ),
-                          billboarderOutput("hhreceivingcash" ),
-                          highchartOutput("plotcashquarter")
-                      ),
-                      # end side panel
-                      
-                      
-                      # main panel
-                      mainPanel(
-                          
-                          # map
-                          leafletOutput("map", height = "60%"),
-                          
-                          fluidRow(
-                              column(width = 6,
-                                     # Select Delivery Mechanism
-                                     highchartOutput("plotdeliverymechanism", )
-                              ),
-                              column(width = 6,
-                                     highchartOutput("plotcashpartner")
-                              )
-                          )
-                      )
-                      # end main panel
-                  )
-                  # end sidebar layout
-                  
-        ),
+        tabpageUI(
+            "cbipagetab", label="CBI for Basic Needs", "yearperiod", 
+            "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
+            "plotcashquarter", "map", "plotdeliverymechanism", "plotcashpartner"
+        )
+        ,
         
         # Food Security -----------------------------------------------------------
         

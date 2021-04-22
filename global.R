@@ -62,7 +62,7 @@ tabPageUI <- function(
                   ),
                   
                 ),
-                billboarderOutput(ns(outp_hhreceivingcash) ),
+                billboarderOutput(outp_hhreceivingcash ),
                 highchartOutput(outp_plotcashquarter)
               ),
               # end side panel

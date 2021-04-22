@@ -300,13 +300,13 @@ server <- function(input, output, session) {
         creating_map_labels(df_point_data)
         
         # create all the charts
-        # draw_chart_receiving_cash(df_by_district_cash_data)
-        donutChartCashBeneficiary ("hhreceivingcash", 
-                                   output$hhreceivingcash, df_by_district_cash_data, 
-                                   "Select_Beneficiary_Type", 
-                                   "Total_amount_of_cash_transfers", 
-                                   "% of Total \nCash Transfer\n by Beneficiary Type", 
-                                   beneficiary_types)
+        draw_chart_receiving_cash(df_by_district_cash_data)
+        # donutChartCashBeneficiary ("cbipagetab",
+        #                            df_by_district_cash_data,
+        #                            Select_Beneficiary_Type,
+        #                            Total_amount_of_cash_transfers,
+        #                            "% of Total \nCash Transfer\n by Beneficiary Type",
+        #                            beneficiary_types)
         draw_chart_total_Cash_distributed(df_by_district_cash_data)
         draw_chart_assistance_deliverymechanism(df_by_district_cash_data)
         draw_chart_cash_transfers_by_partner(df_by_district_cash_data)

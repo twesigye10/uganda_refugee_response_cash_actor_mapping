@@ -329,7 +329,7 @@ server <- function(input, output, session) {
     # handle changes on the map data through proxy
     observe({
         # UI selectors to filter shape data
-        df_by_district_cash_data <- filter_cash_data(df_data) 
+        df_by_district_cash_data <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter") 
         
         df_shape_data <- df_shape_default(df_shape, df_by_district_cash_data)
         
@@ -401,9 +401,9 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         
         if(is.null(click)){
-            filter_cash_data_based_on_map <- filter_cash_data(df_data)
+            filter_cash_data_based_on_map <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter")
         }else{
-            filter_cash_data_based_on_map <- filter_cash_data(df_data) %>% 
+            filter_cash_data_based_on_map <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter") %>% 
                 filter(Location_District ==  click_district)}
         
         # create all the charts
@@ -470,7 +470,7 @@ server <- function(input, output, session) {
         
         if (!is.null(input$mapreset)){
             display_in_title <<- " for all Districts"
-            filter_cash_data_based_on_map <- filter_cash_data(df_data)
+            filter_cash_data_based_on_map <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter")
             # create all the charts
             draw_chart_receiving_cash(filter_cash_data_based_on_map)
             draw_chart_total_Cash_distributed(filter_cash_data_based_on_map)

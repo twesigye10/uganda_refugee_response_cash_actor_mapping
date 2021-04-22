@@ -131,4 +131,25 @@ filterCashDataByDistrict <- function(id, input_df, inp_field_district, input_dis
 
 # donut chart module ------------------------------------------------------
 
-
+donutChartCashBeneficiary <- function(id, chart_id, input_data, input_field_group,
+                                      input_field_analysis, input_title, input_beneficiary_vector){
+  moduleServer(id, function(input, output, session){
+    chart_id <-  renderBillboarder({
+      
+      df_billb_data <- input_data %>% 
+        group_by(input_field_group ) %>% 
+        summarise(
+          cash_assistance_by_beneficiary_type = sum(input_field_analysis, na.rm = T)
+        ) 
+      
+      billboarder(data = df_billb_data) %>%
+        bb_donutchart() %>% 
+        bb_legend(position = 'right') %>%
+        bb_donut(title = input_title, width = 70) %>% 
+        bb_colors_manual(
+          setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(input_beneficiary_vector))
+        )
+    })
+    
+  })
+}

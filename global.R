@@ -34,7 +34,7 @@ fs_beneficiary_types <- fs_df_data %>%
 # Tab page UI -------------------------------------------------------------
 
 tabpageUI <- function(
-  id, label, inp_yearperiod, 
+  id, label, inp_yearperiod, inp_yearperiod_choices,
   inp_quarterperiod, inp_mapreset, inp_selecteddistrict, outp_hhreceivingcash,
   outp_plotcashquarter, outp_map, outp_plotdeliverymechanism, outp_plotcashpartner
 ){
@@ -47,7 +47,7 @@ tabpageUI <- function(
                   column(width = 4,
                          selectInput(inp_yearperiod, 
                                      "Select Year", 
-                                     choices = c("All", unique(as.character(df_data$Year))),
+                                     choices = c("All", unique(as.character(inp_yearperiod_choices))),
                                      selected = "All"
                          )
                   ),

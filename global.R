@@ -26,7 +26,9 @@ fs_df_data <-dat$fs_df_data
 fs_beneficiary_types <- fs_df_data %>% 
   filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique() %>% sort()
 
-
+els_df_data <-dat$els_df_data
+els_beneficiary_types <- els_df_data %>% 
+  filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
 # UI module -------------------------------------------------------------
 

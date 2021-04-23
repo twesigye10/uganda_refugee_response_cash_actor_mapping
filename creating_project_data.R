@@ -67,20 +67,34 @@ df_food_security <- janitor::clean_names(df_food_security) %>%
 
 fs_df_data <- df_food_security %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
-colnames(df_food_security)
 
 fs_beneficiary_types <- fs_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
+
+# Livelihoods data
+df_emergency_livelihood_support <- read_csv("data/ELS_Increased_access_to_short-term_employment_opportunities.csv")
+df_emergency_livelihood_support <- janitor::clean_names(df_emergency_livelihood_support) %>% 
+    mutate(
+        total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA)
+    )
+
+els_df_data <- df_emergency_livelihood_support %>% 
+    separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
+colnames(els_df_data)
+
+els_beneficiary_types <- els_df_data %>% 
+    filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
+
 
 # saving several data objects into an RDS object
 data_for_saving <- list()
 data_for_saving$df_data <- df_data
 data_for_saving$df_shape <- df_shape
-data_for_saving$df_shape_data <- df_shape_data
 data_for_saving$fs_df_data <- fs_df_data
+data_for_saving$els_df_data <- els_df_data
 
-saveRDS(data_for_saving, file = "data/data.rds")
+saveRDS(data_for_saving, file = "data/new_data.rds")
 
-get_new_dat <- read_rds(file = "data/data.rds")
+get_new_dat <- read_rds(file = "data/new_data.rds")
 
-get_new_dat$fs_df_data
+get_new_dat$els_df_data

@@ -74,6 +74,52 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
 
 server <- function(input, output, session) {
     
+    # filter cash data
+    filter_cash_data <- function(input_df){
+        # defaultly display all data from all districts, years and all quarters
+        if (input$yearperiod == "All" & input$quarterperiod == "All"){
+            input_df
+        }else if(input$yearperiod == "All" & input$quarterperiod != "All"){
+            input_df %>%
+                filter(Quarter == input$quarterperiod )
+        }else if(input$yearperiod != "All" & input$quarterperiod == "All"){
+            input_df %>%
+                filter(Year == input$yearperiod)
+        } else{
+            input_df %>%
+                filter(Year == input$yearperiod, Quarter == input$quarterperiod )
+        }
+    }
+    
+    fs_filter_cash_data <- function(input_df){
+        # defaultly display all data from all districts, years and all quarters
+        if (input$fs_yearperiod == "All" & input$fs_quarterperiod == "All"){
+            input_df
+        }else if(input$fs_yearperiod == "All" & input$fs_quarterperiod != "All"){
+            input_df %>%
+                filter(Quarter == input$fs_quarterperiod )
+        }else if(input$fs_yearperiod != "All" & input$fs_quarterperiod == "All"){
+            input_df %>%
+                filter(Year == input$fs_yearperiod)
+        } else{
+            input_df %>%
+                filter(Year == input$fs_yearperiod, Quarter == input$fs_quarterperiod )
+        }
+    }
+    
+    # filter cash data by district
+    filter_cash_data_by_district <- function(input_df, input_district_click){
+        input_df %>% 
+            filter(Location_District == input_district_click )
+    }
+    
+    # filter cash data by district
+    fs_filter_cash_data_by_district <- function(input_df, input_district_click){
+        input_df %>% 
+            filter(location_district == input_district_click )
+    }
+    
+    
     # Charting functions ------------------------------------------------------
     
     # household receive cash
@@ -283,8 +329,8 @@ server <- function(input, output, session) {
     # handle changes on the map data through proxy
     observe({
         # UI selectors to filter shape data
-        df_by_district_cash_data <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter") 
-        
+        # df_by_district_cash_data <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter") 
+        df_by_district_cash_data <- filter_cash_data(df_data)
         df_shape_data <- df_shape_default(df_shape, df_by_district_cash_data)
         
         df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
@@ -361,9 +407,9 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         
         if(is.null(click)){
-            filter_cash_data_based_on_map <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter")
+            filter_cash_data_based_on_map <- filter_cash_data(df_data)
         }else{
-            filter_cash_data_based_on_map <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter") %>% 
+            filter_cash_data_based_on_map <- filter_cash_data(df_data) %>% 
                 filter(Location_District ==  click_district)}
         
         # create all the charts
@@ -430,7 +476,7 @@ server <- function(input, output, session) {
         
         if (!is.null(input$mapreset)){
             display_in_title <<- " for all Districts"
-            filter_cash_data_based_on_map <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter")
+            filter_cash_data_based_on_map <- filter_cash_data(df_data)
             # create all the charts
             draw_chart_receiving_cash(filter_cash_data_based_on_map)
             draw_chart_total_Cash_distributed(filter_cash_data_based_on_map)

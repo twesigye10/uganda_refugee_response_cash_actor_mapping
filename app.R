@@ -329,7 +329,6 @@ server <- function(input, output, session) {
     # handle changes on the map data through proxy
     observe({
         # UI selectors to filter shape data
-        # df_by_district_cash_data <- filterCashData("filter_cbi_cash_data", df_data, input$yearperiod, "Year", input$quarterperiod, "Quarter") 
         df_by_district_cash_data <- filter_cash_data(df_data)
         df_shape_data <- df_shape_default(df_shape, df_by_district_cash_data)
         
@@ -422,7 +421,7 @@ server <- function(input, output, session) {
             text_selected_district(click_district)
             
             # update year selection
-            filter_original_cash_data <- filterCashDataByDistrict("filter_cbi_cash_data_by_district", df_data, "Location_District", click_district)
+            filter_original_cash_data <- filter_cash_data_by_district(df_data, click_district)
             available_year_choices <- unique(as.character(filter_original_cash_data$Year))
             if (input$yearperiod %in% available_year_choices){
                 # print(paste("District", click_district, "Current selected year is:",input$yearperiod, " And available choices: ", available_year_choices ))
@@ -715,7 +714,7 @@ server <- function(input, output, session) {
     observe({
         req(input$tab_being_displayed == "Food Security")
         # UI selectors to filter shape data
-        df_by_district_cash_data <- filterCashData("filter_fs_cash_data", fs_df_data, input$fs_yearperiod, "Year", input$fs_quarterperiod, "Quarter") 
+        df_by_district_cash_data <- fs_filter_cash_data(fs_df_data)
         
         df_shape_data <- fs_df_shape_default(df_shape, df_by_district_cash_data)
         
@@ -786,9 +785,9 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         
         if(is.null(click)){
-            fs_filter_cash_data_based_on_map <- filterCashData("filter_fs_cash_data", fs_df_data, input$fs_yearperiod, "Year", input$fs_quarterperiod, "Quarter") 
+            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data) 
         }else{
-            fs_filter_cash_data_based_on_map <- filterCashData("filter_fs_cash_data", fs_df_data, input$fs_yearperiod, "Year", input$fs_quarterperiod, "Quarter")  %>%
+            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data)  %>%
                 filter(location_district ==  click_district)}
         
         # create all the charts
@@ -801,7 +800,7 @@ server <- function(input, output, session) {
             fs_text_selected_district(click_district)
             
             # update year selection
-            fs_filter_original_cash_data <- filterCashDataByDistrict("filter_fs_cash_data_by_district", fs_df_data, "location_district", click_district)
+            fs_filter_original_cash_data <- fs_filter_cash_data_by_district(fs_df_data, click_district)
             fs_available_year_choices <- unique(as.character(fs_filter_original_cash_data$Year))
             if (input$yearperiod %in% fs_available_year_choices){
                 # print(paste("District", click_district, "Current selected year is:",input$yearperiod, " And available choices: ", available_year_choices ))
@@ -855,7 +854,7 @@ server <- function(input, output, session) {
         
         if (!is.null(input$fs_mapreset)){
             display_in_title <<- " for all Districts"
-            fs_filter_cash_data_based_on_map <- filterCashData("filter_fs_cash_data", fs_df_data, input$fs_yearperiod, "Year", input$fs_quarterperiod, "Quarter") 
+            fs_filter_cash_data_based_on_map <- fs_filter_cash_data(fs_df_data) 
             # create all the charts
             fs_draw_chart_receiving_cash(fs_filter_cash_data_based_on_map)
             fs_draw_chart_total_Cash_distributed(fs_filter_cash_data_based_on_map)

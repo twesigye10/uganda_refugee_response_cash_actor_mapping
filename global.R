@@ -28,7 +28,7 @@ fs_beneficiary_types <- fs_df_data %>%
 
 els_df_data <-dat$els_df_data
 els_beneficiary_types <- els_df_data %>% 
-  filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
+  filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()%>% sort()
 
 # UI module -------------------------------------------------------------
 
@@ -133,10 +133,10 @@ filterCashDataByDistrict <- function(id, input_df, inp_field_district, input_dis
 
 # donut chart module ------------------------------------------------------
 
-donutChartCashBeneficiary <- function(id, input_data, input_field_group,
+donutChartCashBeneficiary <- function(id, chart_id, input_data, input_field_group,
                                       input_field_analysis, input_title, input_beneficiary_vector){
   moduleServer(id, function(input, output, session){
-    output$hhreceivingcash <-  renderBillboarder({
+    chart_id <-  renderBillboarder({
       
       df_billb_data <- input_data %>% 
         group_by({{input_field_group}} ) %>% 

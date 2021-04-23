@@ -60,9 +60,9 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
         
         # Livelihood --------------------------------------------------------------
         tabPageUI(
-            "lrpagetab", "Livelihoods & Resilience", "lr_yearperiod", fs_df_data$Year,
-            "lr_quarterperiod", "lr_mapreset", "lr_selecteddistrict", "lr_hhreceivingcash",
-            "lr_plotcashquarter", "lr_map", "lr_plotdeliverymechanism", "lr_plotcashpartner"
+            "elspagetab", "Emergency Livelihood Support", "els_yearperiod", fs_df_data$Year,
+            "els_quarterperiod", "els_mapreset", "els_selecteddistrict", "els_hhreceivingcash",
+            "els_plotcashquarter", "els_map", "els_plotdeliverymechanism", "els_plotcashpartner"
         )
         
     )

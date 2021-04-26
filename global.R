@@ -114,7 +114,9 @@ filterCashData <- function(id, input_df, inp_id_yearperiod, inp_field_year,
                inp_field_quarter == inp_id_quarterperiod )
     }
     
-    return(input_df)
+    return(
+      reactive({input_df})
+      )
   })
   
 }
@@ -125,7 +127,9 @@ filterCashDataByDistrict <- function(id, input_df, inp_field_district, input_dis
     input_df %>% 
       filter(inp_field_district == input_district_click )
     
-    return(input_df)
+    return(
+      reactive({input_df})
+    )
   })
   
 }

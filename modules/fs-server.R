@@ -1,7 +1,7 @@
 # Server modules ----------------------------------------------------------
 
 # get year
-cbiYearValueServer <- function(id){
+fsYearValueServer <- function(id){
   moduleServer(id, function(input, output, session){
     return(
       reactive({input$fs_yearperiod})
@@ -11,7 +11,7 @@ cbiYearValueServer <- function(id){
 }
 
 # get quarter
-cbiQuarterValueServer <- function(id){
+fsQuarterValueServer <- function(id){
   moduleServer(id, function(input, output, session){
     return(
       reactive({input$fs_quarterperiod})
@@ -21,19 +21,19 @@ cbiQuarterValueServer <- function(id){
 
 
 # reset map
-cbiResetMapServer <- function(id){
+fsResetMapServer <- function(id){
   moduleServer(id, function(input, output, session){
     observeEvent(input$fs_mapreset,{
       display_in_title <<- " for all Districts"
-      cbiUpdateQuarter("cbipagetab", unique(as.character(df_data$Year)), "All")
-      textSelectedDistrict("cbipagetab", "")
+      fsUpdateQuarter("fspagetab", unique(as.character(df_data$Year)), "All")
+      textSelectedDistrict("fspagetab", "")
     })
     
   })
 }
 
 # get clicked district
-cbiClickedDistrictValueServer <- function(id){
+fsClickedDistrictValueServer <- function(id){
   moduleServer(id, function(input, output, session){
     click = input$fs_map_shape_click
     click_district <- click$id
@@ -238,9 +238,9 @@ textSelectedDistrict <- function(id, input_text){
   })
 }
 
-# cbi default map module ------------------------------------------------------
+# fs default map module ------------------------------------------------------
 
-cbiDefaultMap <- function(id){
+fsDefaultMap <- function(id){
   moduleServer(id, function(input, output, session){
     output$fs_map  <-  renderLeaflet({
       leaflet(options = leafletOptions(zoomSnap = 0.25, zoomDelta=0.25)) %>% 
@@ -257,14 +257,14 @@ cbiDefaultMap <- function(id){
         addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
         addEasyButton(easyButton(
           icon="fa-globe", title="Home",
-          onClick=JS("function(btn, map){ map.setView(new L.LatLng(1.3733,32.2903), 7.25) }")))
+          onClick=JS("function(btn, fs_map){ fs_map.setView(new L.LatLng(1.3733,32.2903), 7.25) }")))
     })
     
   })
 }
 
-# cbi dynamic map layer module ------------------------------------------------------
-cbiCreatingMap <- function(id, input_data){
+# fs dynamic map layer module ------------------------------------------------------
+fsCreatingMap <- function(id, input_data){
   moduleServer(id, function(input, output, session){
     # Create a continuous palette function
     pal <- colorNumeric(
@@ -286,7 +286,7 @@ cbiCreatingMap <- function(id, input_data){
       lapply(htmltools::HTML)
     
     # construct the dynamic map
-    proxy = leafletProxy("map", data = input_data) #%>% 
+    proxy = leafletProxy("fs_map", data = input_data) #%>% 
     # clearShapes()
     
     proxy %>% 
@@ -327,8 +327,8 @@ cbiCreatingMap <- function(id, input_data){
   })
 }
 
-# cbi dynamic map labels module ------------------------------------------------------
-cbiMapLabels <- function(id, input_data){
+# fs dynamic map labels module ------------------------------------------------------
+fsMapLabels <- function(id, input_data){
   moduleServer(id, function(input, output, session){
     # label districts in the map
     labels_district <- ~sprintf(
@@ -337,7 +337,7 @@ cbiMapLabels <- function(id, input_data){
     ) %>% 
       lapply(htmltools::HTML)
     # add labels on the map
-    proxy = leafletProxy("map", data=input_data ) 
+    proxy = leafletProxy("fs_map", data=input_data ) 
     proxy %>%
       clearMarkers() %>%
       addLabelOnlyMarkers( label = labels_district, 
@@ -347,9 +347,9 @@ cbiMapLabels <- function(id, input_data){
 }
 
 # update quarter module ------------------------------------------------------
-cbiUpdateQuarter <- function(id, input_quarter_choices, input_selected){
+fsUpdateQuarter <- function(id, input_quarter_choices, input_selected){
   moduleServer(id, function(input, output, session){
-    updateSelectInput(session, "quarterperiod", 
+    updateSelectInput(session, "fs_quarterperiod", 
                       label = "Select Quarter", 
                       choices = c("All", input_quarter_choices),
                       selected = input_selected)
@@ -357,9 +357,9 @@ cbiUpdateQuarter <- function(id, input_quarter_choices, input_selected){
 }
 
 # update quarter module ------------------------------------------------------
-cbiUpdateYear <- function(id, input_year_choices, input_selected){
+fsUpdateYear <- function(id, input_year_choices, input_selected){
   moduleServer(id, function(input, output, session){
-    updateSelectInput(session, "quarterperiod", 
+    updateSelectInput(session, "fs_quarterperiod", 
                       label = "Select Quarter", 
                       choices = c("All", input_year_choices),
                       selected = input_selected)

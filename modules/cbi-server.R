@@ -24,7 +24,7 @@ cbiResetMapServer <- function(id){
     observeEvent(input$mapreset,{
       display_in_title <<- " for all Districts"
       cbiUpdateQuarter("cbipagetab", unique(as.character(df_data$Year)), "All")
-      textSelectedDistrict("cbipagetab", "")
+      cbiTextSelectedDistrict("cbipagetab", "")
     })
   })
 }

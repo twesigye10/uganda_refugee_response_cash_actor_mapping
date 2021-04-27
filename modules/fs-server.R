@@ -83,7 +83,7 @@ fsBarChartDeliveryMechanism <- function(id, input_data, input_field_group, input
         ) %>%
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
-               hcaes(x = select_delivery_Mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
+               hcaes(x = select_delivery_mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
         hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism")) 

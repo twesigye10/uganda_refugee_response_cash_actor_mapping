@@ -17,7 +17,7 @@ fsResetMapServer <- function(id){
   moduleServer(id, function(input, output, session){
     observeEvent(input$fs_mapreset,{
       display_in_title <<- " for all Districts"
-      fsUpdateQuarter("fspagetab", unique(as.character(df_data$Year)), "All")
+      fsUpdateQuarter("fspagetab", unique(as.character(fs_df_data$Year)), "All")
       textSelectedDistrict("fspagetab", "")
     })
     
@@ -32,7 +32,7 @@ fsClickedDistrictValueServer <- function(id){
   })
 }
 # donut chart module ------------------------------------------------------
-donutChartCashBeneficiary <- function(id, input_data, input_field_group,
+fsDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
                                       input_field_analysis, input_title, input_beneficiary_vector){
   moduleServer(id, function(input, output, session){
     output$fs_hhreceivingcash <-  renderBillboarder({
@@ -52,13 +52,13 @@ donutChartCashBeneficiary <- function(id, input_data, input_field_group,
   })
 }
 # line chart cash transfer module ------------------------------------------------------
-lineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
+fsLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
                                       input_field_quarter, input_field_select_Month, 
-                                      input_field_date, input_field_x, input_title){
+                                       input_field_x, input_title){
   moduleServer(id, function(input, output, session){
     output$fs_plotcashquarter <-  renderHighchart({
       input_data %>%
-        group_by({{input_field_year}}, {{input_field_quarter}}, {{input_field_select_Month}}, {{input_field_date}} ) %>%
+        group_by({{input_field_year}}, {{input_field_quarter}}, {{input_field_select_Month}} ) %>%
         summarise(
           total_amount_of_cash_by_quarter = sum({{input_field_analysis}}, na.rm = T)
         ) %>%
@@ -72,7 +72,7 @@ lineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, inpu
   })
 }
 # bar chart delivery mechanism module ------------------------------------------------------
-barChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
+fsBarChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
                                       input_title){
   moduleServer(id, function(input, output, session){
     output$fs_plotdeliverymechanism <-  renderHighchart({
@@ -91,7 +91,7 @@ barChartDeliveryMechanism <- function(id, input_data, input_field_group, input_f
   })
 }
 # bar chart cash by partner module ------------------------------------------------------
-barChartCashByPartner <- function(id, input_data, input_field_group, input_field_analysis,  
+fsBarChartCashByPartner <- function(id, input_data, input_field_group, input_field_analysis,  
                                   input_title){
   moduleServer(id, function(input, output, session){
     output$fs_plotcashpartner <-  renderHighchart({
@@ -111,7 +111,7 @@ barChartCashByPartner <- function(id, input_data, input_field_group, input_field
   })
 }
 # text for selected district on the map chart module ------------------------------------------------------
-textSelectedDistrict <- function(id, input_text){
+fsTextSelectedDistrict <- function(id, input_text){
   moduleServer(id, function(input, output, session){
     output$fs_selecteddistrict <- renderText({
       if(str_length(input_text) < 1){ paste("")

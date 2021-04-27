@@ -1,4 +1,4 @@
-# Server modules ----------------------------------------------------------
+# CBI Server modules ----------------------------------------------------------
 
 # get year
 cbiYearValueServer <- function(id){
@@ -7,8 +7,8 @@ cbiYearValueServer <- function(id){
       reactive({input$yearperiod})
     )
   })
-  
 }
+
 # get quarter
 cbiQuarterValueServer <- function(id){
   moduleServer(id, function(input, output, session){
@@ -17,6 +17,7 @@ cbiQuarterValueServer <- function(id){
     )
   })
 }
+
 # reset map
 cbiResetMapServer <- function(id){
   moduleServer(id, function(input, output, session){
@@ -25,9 +26,9 @@ cbiResetMapServer <- function(id){
       cbiUpdateQuarter("cbipagetab", unique(as.character(df_data$Year)), "All")
       textSelectedDistrict("cbipagetab", "")
     })
-    
   })
 }
+
 # get clicked district
 cbiClickedDistrictValueServer <- function(id){
   moduleServer(id, function(input, output, session){
@@ -77,6 +78,7 @@ lineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, inpu
         hc_xAxis( title = list(text = "Month") ) %>% 
         hc_yAxis(title = list(text = "Total Cash")) 
     })
+    
   })
 }
 # bar chart delivery mechanism module ------------------------------------------------------

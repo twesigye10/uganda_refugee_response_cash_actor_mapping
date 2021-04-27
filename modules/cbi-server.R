@@ -41,7 +41,7 @@ cbiClickedDistrictValueServer <- function(id){
 }
 
 # donut chart module ------------------------------------------------------
-donutChartCashBeneficiary <- function(id, input_data, input_field_group,
+cbiDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
                                       input_field_analysis, input_title, input_beneficiary_vector){
   moduleServer(id, function(input, output, session){
     output$hhreceivingcash <-  renderBillboarder({
@@ -61,7 +61,7 @@ donutChartCashBeneficiary <- function(id, input_data, input_field_group,
   })
 }
 # line chart cash transfer module ------------------------------------------------------
-lineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
+cbiLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
                                       input_field_quarter, input_field_select_Month, 
                                       input_field_date, input_field_x, input_title){
   moduleServer(id, function(input, output, session){
@@ -82,7 +82,7 @@ lineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, inpu
   })
 }
 # bar chart delivery mechanism module ------------------------------------------------------
-barChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
+cbiBarChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
                                       input_title){
   moduleServer(id, function(input, output, session){
     output$plotdeliverymechanism <-  renderHighchart({
@@ -101,7 +101,7 @@ barChartDeliveryMechanism <- function(id, input_data, input_field_group, input_f
   })
 }
 # bar chart cash by partner module ------------------------------------------------------
-barChartCashByPartner <- function(id, input_data, input_field_group, input_field_analysis,  
+cbiBarChartCashByPartner <- function(id, input_data, input_field_group, input_field_analysis,  
                                   input_title){
   moduleServer(id, function(input, output, session){
     output$plotcashpartner <-  renderHighchart({
@@ -120,7 +120,7 @@ barChartCashByPartner <- function(id, input_data, input_field_group, input_field
   })
 }
 # text for selected district on the map chart module ------------------------------------------------------
-textSelectedDistrict <- function(id, input_text){
+cbiTextSelectedDistrict <- function(id, input_text){
   moduleServer(id, function(input, output, session){
     output$selecteddistrict <- renderText({
       if(str_length(input_text) < 1){ paste("")

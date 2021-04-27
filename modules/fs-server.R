@@ -54,7 +54,7 @@ fsDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
 # line chart cash transfer module ------------------------------------------------------
 fsLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
                                       input_field_quarter, input_field_select_Month, 
-                                       input_field_x, input_title){
+                                       input_title){
   moduleServer(id, function(input, output, session){
     output$fs_plotcashquarter <-  renderHighchart({
       input_data %>%
@@ -62,9 +62,9 @@ fsLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, in
         summarise(
           total_amount_of_cash_by_quarter = sum({{input_field_analysis}}, na.rm = T)
         ) %>%
-        arrange(Date) %>% 
+        # arrange(select_quarter) %>% 
         hchart(type = "line",
-               hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
+               hcaes(x = select_quarter, y = total_amount_of_cash_by_quarter)) %>%  
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Month") ) %>% 
         hc_yAxis(title = list(text = "Total Cash")) 
@@ -83,7 +83,7 @@ fsBarChartDeliveryMechanism <- function(id, input_data, input_field_group, input
         ) %>%
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
-               hcaes(x = Select_Delivery_Mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
+               hcaes(x = select_delivery_Mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
         hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism")) 
@@ -102,7 +102,7 @@ fsBarChartCashByPartner <- function(id, input_data, input_field_group, input_fie
         ) %>%
         arrange(-total_cash_by_parter) %>% 
         hchart(type = "bar",
-               hcaes(x = Partner_Name, y = total_cash_by_parter)) %>%  
+               hcaes(x = partner_name, y = total_cash_by_parter)) %>%  
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Partner") ) %>% 
         hc_yAxis(title = list(text = "Total cash Transfers")) 

@@ -21,7 +21,8 @@ library(glue)
 
 
 # load scripts
-source("global.R")
+list.files("modules") %>%
+    purrr::map(~ source(paste0("modules/", .)))
 
 reach_theme <- bs_theme(
     bg = ggreach::reach_cols("lightgrey"), 

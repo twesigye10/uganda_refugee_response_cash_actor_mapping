@@ -140,7 +140,6 @@ fsDefaultMap <- function(id){
           icon="fa-globe", title="Home",
           onClick=JS("function(btn, fs_map){ fs_map.setView(new L.LatLng(1.3733,32.2903), 7.25) }")))
     })
-    
   })
 }
 # fs dynamic map layer module ------------------------------------------------------

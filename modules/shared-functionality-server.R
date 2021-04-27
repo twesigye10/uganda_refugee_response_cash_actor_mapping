@@ -51,21 +51,20 @@ filterYearDistrictForQuarters <- function(id, input_df, inp_field_year, input_se
 }
 
 # filter cash data by district
-dfShapeDefault <- function(id, input_shape_data, input_cash_data){
+dfShapeDefault <- function(id, input_shape_data, input_cash_data, input_field_district, input_field_analysis, input_field_join_district){
   moduleServer(id, function(input, output, session){
     # UI selectors to filter shape data
     df_by_district_cash_data <- input_cash_data %>%
-      select(Location_District, Total_amount_of_cash_transfers) %>%
-      group_by(Location_District) %>%
-      summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T)) %>%
+      select({{input_field_district}}, {{input_field_analysis}}) %>%
+      group_by({{input_field_district}}) %>%
+      summarise(cash_transfers_by_district = sum({{input_field_analysis}}, na.rm = T)) %>%
       filter(cash_transfers_by_district > 0)
     
     df_shape_data <- input_shape_data%>%
-      left_join(df_by_district_cash_data, by = c("ADM2_EN"="Location_District"))
+      left_join(df_by_district_cash_data, by = c("ADM2_EN"=input_field_join_district))
     return(
       df_shape_data
     )
-    
   })
   
 }

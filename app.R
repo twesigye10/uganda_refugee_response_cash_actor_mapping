@@ -194,7 +194,7 @@ server <- function(input, output, session) {
                                      fs_beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", df_by_district_cash_data(), 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
-                                     "select_quarter",  glue("Total Cash Distributed{display_in_title}"))
+                                     glue("Total Cash Distributed{display_in_title}"))
         fsBarChartDeliveryMechanism ("fspagetab", df_by_district_cash_data(),
                                      select_delivery_mechanism,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,

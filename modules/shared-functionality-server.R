@@ -19,7 +19,6 @@ filterCashData <- function(id, input_df, input_year, year_field, input_quarter, 
     #  input_df
     # )
   })
-  
 }
 
 # filter cash data by district
@@ -28,7 +27,6 @@ filterCashDataByDistrict <- function(id, input_df, inp_field_district, input_dis
     input_df %>% 
       filter({{inp_field_district}} == input_district_click )
   })
-  
 }
 
 # filter year for available quarters
@@ -37,7 +35,6 @@ filterYearForQuarters <- function(id, input_df, inp_field_year, input_selected_y
     input_df %>% 
       filter({{inp_field_year}} == input_selected_year )
   })
-  
 }
 
 # filter year and district for available quarters
@@ -47,7 +44,6 @@ filterYearDistrictForQuarters <- function(id, input_df, inp_field_year, input_se
     input_df %>% 
       filter({{inp_field_year}} == input_selected_year, {{inp_field_district}} == input_district_click  )
   })
-  
 }
 
 # filter cash data by district
@@ -61,10 +57,9 @@ dfShapeDefault <- function(id, input_shape_data, input_cash_data, input_field_di
       filter(cash_transfers_by_district > 0)
     
     df_shape_data <- input_shape_data%>%
-      left_join(df_by_district_cash_data, by = c("ADM2_EN"=input_field_join_district))
+      left_join(df_by_district_cash_data, by = c("ADM2_EN" = input_field_join_district))
     return(
       df_shape_data
     )
   })
-  
 }

@@ -171,35 +171,35 @@ server <- function(input, output, session) {
     
     # Food Security -----------------------------------------------------------
      
-    fs_year <- fsYearValueServer("fs_pagetab")
-    fs_quarter <- fsQuarterValueServer("fs_pagetab")
-    fsDefaultMap("fs_pagetab")
+    fs_year <- fsYearValueServer("fspagetab")
+    fs_quarter <- fsQuarterValueServer("fspagetab")
+    fsDefaultMap("fspagetab")
     # dynamic charts and map --------------------------------------------------
     observe({
         req(input$tab_being_displayed == "Food Security")
         # UI selectors to filter shape data
-        df_by_district_cash_data <- reactive({filterCashData("fs_pagetab", fs_df_data, fs_year(), Year, fs_quarter(), Quarter )})
-        df_shape_data <- dfShapeDefault("fs_pagetab", df_shape, df_by_district_cash_data(), location_district, fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, "location_district")
+        df_by_district_cash_data <- reactive({filterCashData("fspagetab", fs_df_data, fs_year(), Year, fs_quarter(), Quarter )})
+        df_shape_data <- dfShapeDefault("fspagetab", df_shape, df_by_district_cash_data(), location_district, fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, "location_district")
         df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         ## create all the charts
-        fsCreatingMap("fs_pagetab", df_shape_data)
-        fsMapLabels("fs_pagetab", df_point_data)
-        fsDonutChartCashBeneficiary ("fs_pagetab",
+        fsCreatingMap("fspagetab", df_shape_data)
+        fsMapLabels("fspagetab", df_point_data)
+        fsDonutChartCashBeneficiary ("fspagetab",
                                      df_by_district_cash_data(),
                                      select_beneficiary_type,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
                                      "% of Total \nCash Transfer\n by Beneficiary Type",
                                      fs_beneficiary_types)
-        fsLineChartTotalCashQuarter ("fs_pagetab", df_by_district_cash_data(), 
+        fsLineChartTotalCashQuarter ("fspagetab", df_by_district_cash_data(), 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
                                      "select_quarter",  glue("Total Cash Distributed{display_in_title}"))
-        fsBarChartDeliveryMechanism ("fs_pagetab", df_by_district_cash_data(),
+        fsBarChartDeliveryMechanism ("fspagetab", df_by_district_cash_data(),
                                      select_delivery_mechanism,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
-        fsBarChartCashByPartner ("fs_pagetab", df_by_district_cash_data(), partner_name,
+        fsBarChartCashByPartner ("fspagetab", df_by_district_cash_data(), partner_name,
                                  fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
                                  glue("Total cash Transfers by Partner{display_in_title}"))
         
@@ -209,66 +209,66 @@ server <- function(input, output, session) {
     observe({
         if(fs_year() != "All"){
             selected_year <- fs_year()
-            filter_cash_data_quarter <- filterYearForQuarters("fs_pagetab", fs_df_data, Year, selected_year ) 
+            filter_cash_data_quarter <- filterYearForQuarters("fspagetab", fs_df_data, Year, selected_year ) 
             # update quarter selection
             available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
             if(fs_quarter() %in% available_quarter_choices){
-                fsUpdateQuarter("fs_pagetab", available_quarter_choices, fs_quarter())
+                fsUpdateQuarter("fspagetab", available_quarter_choices, fs_quarter())
             }else{
-                fsUpdateQuarter("fs_pagetab", available_quarter_choices, "All")
+                fsUpdateQuarter("fspagetab", available_quarter_choices, "All")
             }
         }else{
-            fsUpdateQuarter("fs_pagetab", "All", "All")
+            fsUpdateQuarter("fspagetab", "All", "All")
         }
     })
     
     # Charts listen to map click ----------------------------------------------
-    observeEvent(fsClickedDistrictValueServer("fs_pagetab"),{
-        click_district <- fsClickedDistrictValueServer("fs_pagetab")
+    observeEvent(fsClickedDistrictValueServer("fspagetab"),{
+        click_district <- fsClickedDistrictValueServer("fspagetab")
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
-        filter_cash_data_based_on_map <- filterCashDataByDistrict("fs_pagetab", fs_df_data, location_district, click_district)
+        filter_cash_data_based_on_map <- filterCashDataByDistrict("fspagetab", fs_df_data, location_district, click_district)
         # create all the charts
-        fsDonutChartCashBeneficiary ("fs_pagetab",
+        fsDonutChartCashBeneficiary ("fspagetab",
                                      filter_cash_data_based_on_map,
                                      select_beneficiary_type,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
                                      "% of Total \nCash Transfer\n by Beneficiary Type",
                                      beneficiary_types)
-        fsLineChartTotalCashQuarter ("fs_pagetab", filter_cash_data_based_on_map, 
+        fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
                                      Date, "select_quarter",  glue("Total Cash Distributed{display_in_title}"))
-        fsBarChartDeliveryMechanism ("fs_pagetab", filter_cash_data_based_on_map,
+        fsBarChartDeliveryMechanism ("fspagetab", filter_cash_data_based_on_map,
                                      select_delivery_mechanism,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
-        fsBarChartCashByPartner ("fs_pagetab", filter_cash_data_based_on_map, partner_name,
+        fsBarChartCashByPartner ("fspagetab", filter_cash_data_based_on_map, partner_name,
                                  fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
                                  glue("Total cash Transfers by Partner{display_in_title}"))
-        fsTextSelectedDistrict("fs_pagetab", click_district)
+        fsTextSelectedDistrict("fspagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
         available_year_choices <- unique(as.character(filter_original_cash_data$Year))
         if (fs_year() %in% available_year_choices){
-            fsUpdateYear("fs_pagetab", available_year_choices, fs_year())
+            fsUpdateYear("fspagetab", available_year_choices, fs_year())
         }else{
-            fsUpdateYear("fs_pagetab", available_year_choices, "All")
+            fsUpdateYear("fspagetab", available_year_choices, "All")
         }
         # update quarter selection based on year and district
         if(fs_year() != "All"){
             selected_year <- fs_year()
-            filter_cash_data_quarter <- filterYearDistrictForQuarters ("fs_pagetab", fs_df_data, Year, selected_year,
+            filter_cash_data_quarter <- filterYearDistrictForQuarters ("fspagetab", fs_df_data, Year, selected_year,
                                                                        location_district, click_district )
             available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
             if(fs_quarter() %in% available_quarter_choices){
-                fsUpdateQuarter("fs_pagetab", available_quarter_choices, fs_quarter())
+                fsUpdateQuarter("fspagetab", available_quarter_choices, fs_quarter())
             }else{
-                fsUpdateQuarter("fs_pagetab", available_quarter_choices, "All")
+                fsUpdateQuarter("fspagetab", available_quarter_choices, "All")
             }
         }
     })
     
     # Map reset button --------------------------------------------------------
-    fsResetMapServer("fs_pagetab")
+    fsResetMapServer("fspagetab")
     
     
     

@@ -18,7 +18,7 @@ fsResetMapServer <- function(id){
     observeEvent(input$fs_mapreset,{
       display_in_title <<- " for all Districts"
       fsUpdateQuarter("fspagetab", unique(as.character(fs_df_data$Year)), "All")
-      textSelectedDistrict("fspagetab", "")
+      fsTextSelectedDistrict("fspagetab", "")
     })
     
   })

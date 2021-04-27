@@ -9,7 +9,6 @@ cbiYearValueServer <- function(id){
   })
   
 }
-
 # get quarter
 cbiQuarterValueServer <- function(id){
   moduleServer(id, function(input, output, session){
@@ -18,8 +17,6 @@ cbiQuarterValueServer <- function(id){
     )
   })
 }
-
-
 # reset map
 cbiResetMapServer <- function(id){
   moduleServer(id, function(input, output, session){
@@ -31,7 +28,6 @@ cbiResetMapServer <- function(id){
     
   })
 }
-
 # get clicked district
 cbiClickedDistrictValueServer <- function(id){
   moduleServer(id, function(input, output, session){
@@ -43,85 +39,7 @@ cbiClickedDistrictValueServer <- function(id){
   })
 }
 
-# filter cash data
-filterCashData <- function(id, input_df, input_year, year_field, input_quarter, quarter_field ){
-  moduleServer(id, function(input, output, session){
-    # defaultly display all data from all districts, years and all quarters
-    if (input_year == "All" & input_quarter == "All"){
-      input_df
-    }else if(input_year == "All" & input_quarter != "All"){
-      input_df %>%
-        filter({{quarter_field}} == input_quarter )
-    }else if(input_year != "All" & input_quarter == "All"){
-      input_df %>%
-        filter({{year_field}} == input_year)
-    } else{
-      input_df %>%
-        filter(Year == input_year, Quarter == input_quarter )
-    }
-    # removed return value for this type of function. It will not return reactive values
-    # return(
-    #  input_df
-    # )
-  })
-  
-}
-
-# filter cash data by district
-filterCashDataByDistrict <- function(id, input_df, inp_field_district, input_district_click){
-  moduleServer(id, function(input, output, session){
-    input_df %>% 
-      filter({{inp_field_district}} == input_district_click )
-  })
-  
-}
-
-# filter year for available quarters
-filterYearForQuarters <- function(id, input_df, inp_field_year, input_selected_year){
-  moduleServer(id, function(input, output, session){
-    input_df %>% 
-      filter({{inp_field_year}} == input_selected_year )
-  })
-  
-}
-
-# filter year and district for available quarters
-filterYearDistrictForQuarters <- function(id, input_df, inp_field_year, input_selected_year,
-                                          inp_field_district, input_district_click
-){
-  moduleServer(id, function(input, output, session){
-    input_df %>% 
-      filter({{inp_field_year}} == input_selected_year, {{inp_field_district}} == input_district_click  )
-    
-    
-  })
-  
-}
-
-
-# filter cash data by district
-dfShapeDefault <- function(id, input_shape_data, input_cash_data){
-  moduleServer(id, function(input, output, session){
-    # UI selectors to filter shape data
-    df_by_district_cash_data <- input_cash_data %>%
-      select(Location_District, Total_amount_of_cash_transfers) %>%
-      group_by(Location_District) %>%
-      summarise(cash_transfers_by_district = sum(Total_amount_of_cash_transfers, na.rm = T)) %>%
-      filter(cash_transfers_by_district > 0)
-    
-    df_shape_data <- input_shape_data%>%
-      left_join(df_by_district_cash_data, by = c("ADM2_EN"="Location_District"))
-    return(
-      df_shape_data
-    )
-    
-  })
-  
-}
-
-
 # donut chart module ------------------------------------------------------
-
 donutChartCashBeneficiary <- function(id, input_data, input_field_group,
                                       input_field_analysis, input_title, input_beneficiary_vector){
   moduleServer(id, function(input, output, session){
@@ -131,7 +49,6 @@ donutChartCashBeneficiary <- function(id, input_data, input_field_group,
         summarise(
           cash_assistance_by_beneficiary_type = sum({{input_field_analysis}}, na.rm = T)
         ) 
-      
       billboarder(data = df_billb_data) %>%
         bb_donutchart() %>% 
         bb_legend(position = 'right') %>%
@@ -140,10 +57,9 @@ donutChartCashBeneficiary <- function(id, input_data, input_field_group,
           setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(input_beneficiary_vector))
         )
     })
-    
   })
 }
-
+# line chart cash transfer module ------------------------------------------------------
 lineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
                                       input_field_quarter, input_field_select_Month, 
                                       input_field_date, input_field_x, input_title){
@@ -161,11 +77,9 @@ lineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, inpu
         hc_xAxis( title = list(text = "Month") ) %>% 
         hc_yAxis(title = list(text = "Total Cash")) 
     })
-    
   })
 }
-
-
+# bar chart delivery mechanism module ------------------------------------------------------
 barChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
                                       input_title){
   moduleServer(id, function(input, output, session){
@@ -182,32 +96,9 @@ barChartDeliveryMechanism <- function(id, input_data, input_field_group, input_f
         hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
         hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism")) 
     })
-    
   })
 }
-
-
-barChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
-                                      input_title){
-  moduleServer(id, function(input, output, session){
-    output$plotdeliverymechanism <-  renderHighchart({
-      input_data %>%
-        group_by({{input_field_group}} ) %>%
-        summarise(
-          cash_transfer_by_delivery_mechanism = sum({{input_field_analysis}}, na.rm = T)
-        ) %>%
-        arrange(-cash_transfer_by_delivery_mechanism) %>% 
-        hchart(type = "bar",
-               hcaes(x = Select_Delivery_Mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
-        hc_title( text = input_title, margin = 5, align = "left" )%>% 
-        hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
-        hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism")) 
-    })
-    
-  })
-}
-
-
+# bar chart cash by partner module ------------------------------------------------------
 barChartCashByPartner <- function(id, input_data, input_field_group, input_field_analysis,  
                                   input_title){
   moduleServer(id, function(input, output, session){
@@ -224,22 +115,18 @@ barChartCashByPartner <- function(id, input_data, input_field_group, input_field
         hc_xAxis( title = list(text = "Partner") ) %>% 
         hc_yAxis(title = list(text = "Total cash Transfers")) 
     })
-    
   })
 }
-
+# text for selected district on the map chart module ------------------------------------------------------
 textSelectedDistrict <- function(id, input_text){
   moduleServer(id, function(input, output, session){
     output$selecteddistrict <- renderText({
       if(str_length(input_text) < 1){ paste("")
       } else{ paste("Selected District: ", stringr::str_to_title(input_text))  }
     })
-    
   })
 }
-
 # cbi default map module ------------------------------------------------------
-
 cbiDefaultMap <- function(id){
   moduleServer(id, function(input, output, session){
     output$map  <-  renderLeaflet({
@@ -259,10 +146,8 @@ cbiDefaultMap <- function(id){
           icon="fa-globe", title="Home",
           onClick=JS("function(btn, map){ map.setView(new L.LatLng(1.3733,32.2903), 7.25) }")))
     })
-    
   })
 }
-
 # cbi dynamic map layer module ------------------------------------------------------
 cbiCreatingMap <- function(id, input_data){
   moduleServer(id, function(input, output, session){
@@ -284,11 +169,8 @@ cbiCreatingMap <- function(id, input_data){
       ifelse(!is.na(cash_transfers_by_district), ADM2_EN, "" ) 
     ) %>% 
       lapply(htmltools::HTML)
-    
     # construct the dynamic map
     proxy = leafletProxy("map", data = input_data) #%>% 
-    # clearShapes()
-    
     proxy %>% 
       clearControls() %>% 
       addPolygons(
@@ -326,7 +208,6 @@ cbiCreatingMap <- function(id, input_data){
       )
   })
 }
-
 # cbi dynamic map labels module ------------------------------------------------------
 cbiMapLabels <- function(id, input_data){
   moduleServer(id, function(input, output, session){
@@ -345,7 +226,6 @@ cbiMapLabels <- function(id, input_data){
       )
   })
 }
-
 # update quarter module ------------------------------------------------------
 cbiUpdateQuarter <- function(id, input_quarter_choices, input_selected){
   moduleServer(id, function(input, output, session){
@@ -355,7 +235,6 @@ cbiUpdateQuarter <- function(id, input_quarter_choices, input_selected){
                       selected = input_selected)
   })
 }
-
 # update quarter module ------------------------------------------------------
 cbiUpdateYear <- function(id, input_year_choices, input_selected){
   moduleServer(id, function(input, output, session){

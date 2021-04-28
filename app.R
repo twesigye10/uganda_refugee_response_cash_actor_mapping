@@ -55,6 +55,13 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
             "elspagetab", "Emergency Livelihood Support", "els_yearperiod", els_df_data$Year,
             "els_quarterperiod", "els_mapreset", "els_selecteddistrict", "els_hhreceivingcash",
             "els_plotcashquarter", "els_map", "els_plotdeliverymechanism", "els_plotcashpartner"
+        ),
+        
+        # Environmental Protection --------------------------------------------------------------
+        tabPageUI(
+            "eprpagetab", "Environmental Protection", "epr_yearperiod", epr_df_data$Year,
+            "epr_quarterperiod", "epr_mapreset", "epr_selecteddistrict", "epr_hhreceivingcash",
+            "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
         )
     )
 )

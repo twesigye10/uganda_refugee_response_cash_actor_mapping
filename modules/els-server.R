@@ -15,13 +15,9 @@ elsQuarterValueServer <- function(id){
 # reset map
 elsResetMapServer <- function(id){
   moduleServer(id, function(input, output, session){
-    observeEvent(input$els_mapreset,{
-      display_in_title <<- " for all Districts"
-      elsUpdateYear("elspagetab", unique(as.character(els_df_data$Year)), "All")
-      elsUpdateQuarter("elspagetab", "All", "All")
-      elsTextSelectedDistrict("elspagetab", "")
-    })
-    
+    return(
+      input$els_mapreset
+    )
   })
 }
 # get clicked district

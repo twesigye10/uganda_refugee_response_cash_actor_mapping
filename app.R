@@ -167,7 +167,35 @@ server <- function(input, output, session) {
     })
     
     # Map reset button --------------------------------------------------------
-    cbiResetMapServer("cbipagetab")
+    observeEvent(cbiResetMapServer("cbipagetab"),{
+        
+        display_in_title <<- " for all Districts"
+        
+        cbiUpdateYear("cbipagetab", unique(as.character(df_data$Year)), "All")
+        cbiUpdateQuarter("cbipagetab", "All", "All")
+        
+        filter_cash_data_based_on_map <- df_data
+        
+        cbiDonutChartCashBeneficiary ("cbipagetab",
+                                      filter_cash_data_based_on_map,
+                                      Select_Beneficiary_Type,
+                                      Total_amount_of_cash_transfers,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      beneficiary_types)
+        cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
+                                      Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
+                                      Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
+        cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
+                                      Select_Delivery_Mechanism,
+                                      Total_amount_of_cash_transfers,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, Partner_Name,
+                                  Total_amount_of_cash_transfers,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
+        cbiTextSelectedDistrict("cbipagetab", "")
+        
+        
+    })
     
     # Food Security -----------------------------------------------------------
      

@@ -63,7 +63,8 @@ df_food_security <- read_csv("data/Food_Security.csv")
 df_food_security <- janitor::clean_names(df_food_security) %>% 
     mutate(
     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers = ifelse(!is.na(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers), (fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers/currency_conversion_factor), NA)
-    )
+    )%>% 
+    filter(!is.na(select_quarter))
 
 fs_df_data <- df_food_security %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
@@ -76,12 +77,27 @@ df_emergency_livelihood_support <- read_csv("data/ELS_Increased_access_to_short-
 df_emergency_livelihood_support <- janitor::clean_names(df_emergency_livelihood_support) %>% 
     mutate(
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA)
-    )
+    )%>% 
+    filter(!is.na(select_quarter))
 
 els_df_data <- df_emergency_livelihood_support %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
 
 els_beneficiary_types <- els_df_data %>% 
+    filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
+
+# Increased Access Productive Assets
+df_access_productive_assets <- read_csv("data/Increased_access_to_productive_assets.csv")
+df_access_productive_assets <- janitor::clean_names(df_access_productive_assets) %>% 
+    mutate(
+        total_cash_value_of_grants_distributed_for_productive_assets_ugx = ifelse(!is.na(total_cash_value_of_grants_distributed_for_productive_assets_ugx), (total_cash_value_of_grants_distributed_for_productive_assets_ugx/currency_conversion_factor), NA)
+    )%>% 
+    filter(!is.na(select_quarter))
+
+apa_df_data <- df_access_productive_assets %>% 
+    separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
+
+apa_beneficiary_types <- apa_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
 
@@ -91,7 +107,8 @@ df_environment_protection_restoration <- janitor::clean_names(df_environment_pro
     mutate(
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA)
     ) %>% 
-    rename(location_district = district_name)
+    rename(location_district = district_name) %>% 
+    filter(!is.na(select_quarter))
 
 epr_df_data <- df_environment_protection_restoration %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
@@ -99,16 +116,17 @@ epr_df_data <- df_environment_protection_restoration %>%
 epr_beneficiary_types <- epr_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
-?rename
 # saving several data objects into an RDS object
 data_for_saving <- list()
 data_for_saving$df_data <- df_data
 data_for_saving$df_shape <- df_shape
 data_for_saving$fs_df_data <- fs_df_data
 data_for_saving$els_df_data <- els_df_data
+data_for_saving$apa_df_data <- apa_df_data
+data_for_saving$epr_df_data <- epr_df_data
 
 saveRDS(data_for_saving, file = "data/new_data.rds")
 
 get_new_dat <- read_rds(file = "data/new_data.rds")
 
-get_new_dat$els_df_data
+get_new_dat$apa_df_data

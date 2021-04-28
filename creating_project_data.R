@@ -80,12 +80,26 @@ df_emergency_livelihood_support <- janitor::clean_names(df_emergency_livelihood_
 
 els_df_data <- df_emergency_livelihood_support %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
-colnames(els_df_data)
 
 els_beneficiary_types <- els_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
 
+# Environment Protection data
+df_environment_protection_restoration <- read_csv("data/Forests_wetlands_shorelines_protected_and_restored.csv")
+df_environment_protection_restoration <- janitor::clean_names(df_environment_protection_restoration) %>% 
+    mutate(
+        total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA)
+    ) %>% 
+    rename(location_district = district_name)
+
+epr_df_data <- df_environment_protection_restoration %>% 
+    separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
+
+epr_beneficiary_types <- epr_df_data %>% 
+    filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
+
+?rename
 # saving several data objects into an RDS object
 data_for_saving <- list()
 data_for_saving$df_data <- df_data

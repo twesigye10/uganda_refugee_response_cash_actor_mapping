@@ -371,7 +371,32 @@ server <- function(input, output, session) {
     })
     
     # Map reset button --------------------------------------------------------
-    elsResetMapServer("elspagetab")
+    observeEvent(elsResetMapServer("elspagetab"),{
+        display_in_title <<- " for all Districts"
+        
+        elsUpdateYear("elspagetab", unique(as.character(els_df_data$Year)), "All")
+        elsUpdateQuarter("elspagetab", "All", "All")
+        
+        filter_cash_data_based_on_map <- els_df_data
+        elsDonutChartCashBeneficiary ("elspagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      beneficiary_types)
+        elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map, 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      Date, "select_quarter",  glue("Total Cash Distributed{display_in_title}"))
+        elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map,
+                                      select_delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        elsBarChartCashByPartner ("elspagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
+        elsTextSelectedDistrict("elspagetab", "")
+        
+    })
 }
 
 # Run the application 

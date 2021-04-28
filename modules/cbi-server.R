@@ -23,7 +23,8 @@ cbiResetMapServer <- function(id){
   moduleServer(id, function(input, output, session){
     observeEvent(input$mapreset,{
       display_in_title <<- " for all Districts"
-      cbiUpdateQuarter("cbipagetab", unique(as.character(df_data$Year)), "All")
+      cbiUpdateYear("cbipagetab", unique(as.character(df_data$Year)), "All")
+      cbiUpdateQuarter("cbipagetab", "All", "All")
       cbiTextSelectedDistrict("cbipagetab", "")
     })
   })

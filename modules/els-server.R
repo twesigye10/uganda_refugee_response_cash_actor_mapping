@@ -17,7 +17,8 @@ elsResetMapServer <- function(id){
   moduleServer(id, function(input, output, session){
     observeEvent(input$els_mapreset,{
       display_in_title <<- " for all Districts"
-      elsUpdateQuarter("elspagetab", unique(as.character(els_df_data$Year)), "All")
+      elsUpdateYear("elspagetab", unique(as.character(els_df_data$Year)), "All")
+      elsUpdateQuarter("elspagetab", "All", "All")
       elsTextSelectedDistrict("elspagetab", "")
     })
     

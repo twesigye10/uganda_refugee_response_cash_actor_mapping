@@ -396,7 +396,7 @@ server <- function(input, output, session) {
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
                                       glue("Total Cash Distributed{display_in_title}"))
         elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map,
-                                      select_delivery_mechanism,
+                                      delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
                                       glue("Total Cash by Delivery Mechanism{display_in_title}"))
         elsBarChartCashByPartner ("elspagetab", filter_cash_data_based_on_map, partner_name,
@@ -444,7 +444,7 @@ server <- function(input, output, session) {
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
                                       glue("Total Cash Distributed{display_in_title}"))
         elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map,
-                                      select_delivery_mechanism,
+                                      delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
                                       glue("Total Cash by Delivery Mechanism{display_in_title}"))
         elsBarChartCashByPartner ("elspagetab", filter_cash_data_based_on_map, partner_name,

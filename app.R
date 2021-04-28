@@ -433,12 +433,13 @@ server <- function(input, output, session) {
         elsUpdateQuarter("elspagetab", "All", "All")
         
         filter_cash_data_based_on_map <- els_df_data
+        
         elsDonutChartCashBeneficiary ("elspagetab",
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
                                       "% of Total \nCash Transfer\n by Beneficiary Type",
-                                      beneficiary_types)
+                                      els_beneficiary_types)
         elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
                                       glue("Total Cash Distributed{display_in_title}"))

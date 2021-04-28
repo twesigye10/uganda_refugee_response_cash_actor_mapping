@@ -264,7 +264,7 @@ server <- function(input, output, session) {
                                      beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
-                                     Date, "select_quarter",  glue("Total Cash Distributed{display_in_title}"))
+                                     glue("Total Cash Distributed{display_in_title}"))
         fsBarChartDeliveryMechanism ("fspagetab", filter_cash_data_based_on_map,
                                      select_delivery_mechanism,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
@@ -313,7 +313,7 @@ server <- function(input, output, session) {
                                      fs_beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
-                                     Date, "select_quarter",  glue("Total Cash Distributed{display_in_title}"))
+                                     glue("Total Cash Distributed{display_in_title}"))
         fsBarChartDeliveryMechanism ("fspagetab", filter_cash_data_based_on_map,
                                      select_delivery_mechanism,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
@@ -394,7 +394,7 @@ server <- function(input, output, session) {
                                       els_beneficiary_types)
         elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      Date, "select_quarter",  glue("Total Cash Distributed{display_in_title}"))
+                                      glue("Total Cash Distributed{display_in_title}"))
         elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map,
                                       select_delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
@@ -441,7 +441,7 @@ server <- function(input, output, session) {
                                       beneficiary_types)
         elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      Date, "select_quarter",  glue("Total Cash Distributed{display_in_title}"))
+                                      glue("Total Cash Distributed{display_in_title}"))
         elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map,
                                       select_delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,

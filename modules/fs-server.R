@@ -230,11 +230,11 @@ fsUpdateQuarter <- function(id, input_quarter_choices, input_selected){
                       selected = input_selected)
   })
 }
-# update quarter module ------------------------------------------------------
+# update year module ------------------------------------------------------
 fsUpdateYear <- function(id, input_year_choices, input_selected){
   moduleServer(id, function(input, output, session){
-    updateSelectInput(session, "fs_quarterperiod", 
-                      label = "Select Quarter", 
+    updateSelectInput(session, "fs_yearperiod", 
+                      label = "Select Year", 
                       choices = c("All", input_year_choices),
                       selected = input_selected)
   })

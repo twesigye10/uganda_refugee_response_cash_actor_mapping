@@ -230,11 +230,11 @@ elsUpdateQuarter <- function(id, input_quarter_choices, input_selected){
                       selected = input_selected)
   })
 }
-# update quarter module ------------------------------------------------------
+# update year module ------------------------------------------------------
 elsUpdateYear <- function(id, input_year_choices, input_selected){
   moduleServer(id, function(input, output, session){
-    updateSelectInput(session, "els_quarterperiod", 
-                      label = "Select Quarter", 
+    updateSelectInput(session, "els_yearperiod", 
+                      label = "Select Year", 
                       choices = c("All", input_year_choices),
                       selected = input_selected)
   })

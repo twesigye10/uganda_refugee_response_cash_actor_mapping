@@ -310,7 +310,7 @@ server <- function(input, output, session) {
                                      select_beneficiary_type,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
                                      "% of Total \nCash Transfer\n by Beneficiary Type",
-                                     beneficiary_types)
+                                     fs_beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
                                      Date, "select_quarter",  glue("Total Cash Distributed{display_in_title}"))
@@ -391,7 +391,7 @@ server <- function(input, output, session) {
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
                                       "% of Total \nCash Transfer\n by Beneficiary Type",
-                                      beneficiary_types)
+                                      els_beneficiary_types)
         elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
                                       Date, "select_quarter",  glue("Total Cash Distributed{display_in_title}"))

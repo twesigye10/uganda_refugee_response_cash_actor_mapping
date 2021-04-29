@@ -91,7 +91,9 @@ server <- function(input, output, session) {
         
         cbiDonutChartCashBeneficiary ("cbipagetab", df_by_district_cash_data())
         
-        cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data())
+        cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data(), 
+                                   Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
+                                   Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
         
         cbiBarChartDeliveryMechanism ("cbipagetab", df_by_district_cash_data(),
                                    Select_Delivery_Mechanism,
@@ -128,7 +130,9 @@ server <- function(input, output, session) {
         filter_cash_data_based_on_map <- filterCashDataByDistrict("cbipagetab", df_data, Location_District, click_district)
         # create all the charts
         cbiDonutChartCashBeneficiary ("cbipagetab", filter_cash_data_based_on_map)
-        cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map)
+        cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
+                                   Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
+                                   Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
                                    Select_Delivery_Mechanism,
                                    Total_amount_of_cash_transfers,
@@ -170,7 +174,9 @@ server <- function(input, output, session) {
         filter_cash_data_based_on_map <- df_data
         
         cbiDonutChartCashBeneficiary ("cbipagetab", filter_cash_data_based_on_map)
-        cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map)
+        cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
+                                      Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
+                                      Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
                                       Select_Delivery_Mechanism,
                                       Total_amount_of_cash_transfers,

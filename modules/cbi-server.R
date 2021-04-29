@@ -58,18 +58,20 @@ cbiDonutChartCashBeneficiary <- function(id, input_data){
   })
 }
 # line chart cash transfer module ------------------------------------------------------
-cbiLineChartTotalCashQuarter <- function(id, input_data){
+cbiLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
+                                      input_field_quarter, input_field_select_Month, 
+                                      input_field_date, input_field_x, input_title){
   moduleServer(id, function(input, output, session){
     output$plotcashquarter <-  renderHighchart({
       input_data %>%
-        group_by(Year, Quarter, Select_Month, Date ) %>%
+        group_by({{input_field_year}}, {{input_field_quarter}}, {{input_field_select_Month}}, {{input_field_date}} ) %>%
         summarise(
-          total_amount_of_cash_by_quarter = sum(Total_amount_of_cash_transfers, na.rm = T)
+          total_amount_of_cash_by_quarter = sum({{input_field_analysis}}, na.rm = T)
         ) %>%
         arrange(Date) %>% 
         hchart(type = "line",
                hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
-        hc_title( text = glue("Total Cash Distributed{display_in_title}"), margin = 5, align = "left" )%>% 
+        hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Month") ) %>% 
         hc_yAxis(title = list(text = "Total Cash")) 
     })

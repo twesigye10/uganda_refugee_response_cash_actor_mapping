@@ -90,8 +90,14 @@ server <- function(input, output, session) {
         cbiMapLabels("cbipagetab", df_point_data)
         
         cbiDonutChartCashBeneficiary ("cbipagetab", df_by_district_cash_data())
+        
         cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data())
-        cbiBarChartDeliveryMechanism ("cbipagetab", df_by_district_cash_data())
+        
+        cbiBarChartDeliveryMechanism ("cbipagetab", df_by_district_cash_data(),
+                                   Select_Delivery_Mechanism,
+                                   Total_amount_of_cash_transfers,
+                                   glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        
         cbiBarChartCashByPartner ("cbipagetab", df_by_district_cash_data(), Partner_Name,
                                Total_amount_of_cash_transfers,
                                glue("Total cash Transfers by Partner{display_in_title}"))
@@ -123,7 +129,10 @@ server <- function(input, output, session) {
         # create all the charts
         cbiDonutChartCashBeneficiary ("cbipagetab", filter_cash_data_based_on_map)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map)
-        cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map)
+        cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
+                                   Select_Delivery_Mechanism,
+                                   Total_amount_of_cash_transfers,
+                                   glue("Total Cash by Delivery Mechanism{display_in_title}"))
         cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, Partner_Name,
                                Total_amount_of_cash_transfers,
                                glue("Total cash Transfers by Partner{display_in_title}"))
@@ -162,7 +171,10 @@ server <- function(input, output, session) {
         
         cbiDonutChartCashBeneficiary ("cbipagetab", filter_cash_data_based_on_map)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map)
-        cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map)
+        cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
+                                      Select_Delivery_Mechanism,
+                                      Total_amount_of_cash_transfers,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
         cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, Partner_Name,
                                   Total_amount_of_cash_transfers,
                                   glue("Total cash Transfers by Partner{display_in_title}"))

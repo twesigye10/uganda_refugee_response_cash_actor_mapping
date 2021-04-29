@@ -95,18 +95,19 @@ cbiBarChartDeliveryMechanism <- function(id, input_data){
   })
 }
 # bar chart cash by partner module ------------------------------------------------------
-cbiBarChartCashByPartner <- function(id, input_data){
+cbiBarChartCashByPartner <- function(id, input_data, input_field_group, input_field_analysis,  
+                                  input_title){
   moduleServer(id, function(input, output, session){
     output$plotcashpartner <-  renderHighchart({
       input_data %>%
-        group_by(Partner_Name) %>%
+        group_by({{input_field_group}} ) %>%
         summarise(
-          total_cash_by_parter = sum(Total_amount_of_cash_transfers, na.rm = T)
+          total_cash_by_parter = sum({{input_field_analysis}}, na.rm = T)
         ) %>%
         arrange(-total_cash_by_parter) %>% 
         hchart(type = "bar",
                hcaes(x = Partner_Name, y = total_cash_by_parter)) %>%  
-        hc_title( text = glue("Total cash Transfers by Partner{display_in_title}"), margin = 5, align = "left" )%>% 
+        hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Partner") ) %>% 
         hc_yAxis(title = list(text = "Total cash Transfers")) 
     })

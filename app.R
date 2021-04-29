@@ -57,6 +57,13 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
             "els_plotcashquarter", "els_map", "els_plotdeliverymechanism", "els_plotcashpartner"
         ),
         
+        # Access to Productive Assets --------------------------------------------------------------
+        tabPageUI(
+            "apapagetab", "Access to Productive Assets", "apa_yearperiod", apa_df_data$Year,
+            "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
+            "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
+        ),
+        
         # Environmental Protection --------------------------------------------------------------
         tabPageUI(
             "eprpagetab", "Environmental Protection", "epr_yearperiod", epr_df_data$Year,

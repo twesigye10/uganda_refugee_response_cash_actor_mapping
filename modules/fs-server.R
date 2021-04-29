@@ -29,73 +29,78 @@ fsClickedDistrictValueServer <- function(id){
   })
 }
 # donut chart module ------------------------------------------------------
-fsDonutChartCashBeneficiary <- function(id, input_data){
+fsDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
+                                      input_field_analysis, input_title, input_beneficiary_vector){
   moduleServer(id, function(input, output, session){
     output$fs_hhreceivingcash <-  renderBillboarder({
       df_billb_data <- input_data %>% 
-        group_by(select_beneficiary_type) %>% 
+        group_by({{input_field_group}} ) %>% 
         summarise(
-          cash_assistance_by_beneficiary_type = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T)
+          cash_assistance_by_beneficiary_type = sum({{input_field_analysis}}, na.rm = T)
         ) 
       billboarder(data = df_billb_data) %>%
         bb_donutchart() %>% 
         bb_legend(position = 'right') %>%
-        bb_donut(title = "% of Total \nCash Transfer\n by Beneficiary Type", width = 70) %>% 
+        bb_donut(title = input_title, width = 70) %>% 
         bb_colors_manual(
-          setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(fs_beneficiary_types))
+          setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(input_beneficiary_vector))
         )
     })
   })
 }
 # line chart cash transfer module ------------------------------------------------------
-fsLineChartTotalCashQuarter <- function(id, input_data){
+fsLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
+                                      input_field_quarter, input_field_select_Month, 
+                                       input_title){
   moduleServer(id, function(input, output, session){
     output$fs_plotcashquarter <-  renderHighchart({
       input_data %>%
-        group_by(Year, Quarter, select_quarter) %>%
+        group_by({{input_field_year}}, {{input_field_quarter}}, {{input_field_select_Month}} ) %>%
         summarise(
-          total_amount_of_cash_by_quarter = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T)
+          total_amount_of_cash_by_quarter = sum({{input_field_analysis}}, na.rm = T)
         ) %>%
         # arrange(select_quarter) %>% 
         hchart(type = "line",
                hcaes(x = select_quarter, y = total_amount_of_cash_by_quarter)) %>%  
-        hc_title( text = glue("Total Cash Distributed{display_in_title}"), margin = 5, align = "left" )%>% 
+        hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Month") ) %>% 
         hc_yAxis(title = list(text = "Total Cash")) 
     })
   })
 }
 # bar chart delivery mechanism module ------------------------------------------------------
-fsBarChartDeliveryMechanism <- function(id, input_data){
+fsBarChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
+                                      input_title){
   moduleServer(id, function(input, output, session){
     output$fs_plotdeliverymechanism <-  renderHighchart({
       input_data %>%
-        group_by(select_delivery_mechanism) %>%
+        group_by({{input_field_group}} ) %>%
         summarise(
-          cash_transfer_by_delivery_mechanism = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T)
+          cash_transfer_by_delivery_mechanism = sum({{input_field_analysis}}, na.rm = T)
         ) %>%
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
                hcaes(x = select_delivery_mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
-        hc_title( text = glue("Total Cash by Delivery Mechanism{display_in_title}"), margin = 5, align = "left" )%>% 
+        hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
         hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism")) 
     })
   })
 }
 # bar chart cash by partner module ------------------------------------------------------
-fsBarChartCashByPartner <- function(id, input_data){
+fsBarChartCashByPartner <- function(id, input_data, input_field_group, input_field_analysis,  
+                                  input_title){
   moduleServer(id, function(input, output, session){
     output$fs_plotcashpartner <-  renderHighchart({
       input_data %>%
-        group_by(partner_name) %>%
+        group_by({{input_field_group}} ) %>%
         summarise(
-          total_cash_by_parter = sum(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, na.rm = T)
+          total_cash_by_parter = sum({{input_field_analysis}}, na.rm = T)
         ) %>%
         arrange(-total_cash_by_parter) %>% 
         hchart(type = "bar",
                hcaes(x = partner_name, y = total_cash_by_parter)) %>%  
-        hc_title( text = glue("Total cash Transfers by Partner{display_in_title}"), margin = 5, align = "left" )%>% 
+        hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Partner") ) %>% 
         hc_yAxis(title = list(text = "Total cash Transfers")) 
     })

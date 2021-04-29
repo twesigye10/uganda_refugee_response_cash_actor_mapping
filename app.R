@@ -156,7 +156,6 @@ server <- function(input, output, session) {
         cbiTextSelectedDistrict("cbipagetab", "")
     })
     
-    
     # Food Security -----------------------------------------------------------
      
     fs_year <- fsYearValueServer("fspagetab")
@@ -174,10 +173,23 @@ server <- function(input, output, session) {
         ## create all the charts
         fsCreatingMap("fspagetab", df_shape_data)
         fsMapLabels("fspagetab", df_point_data)
-        fsDonutChartCashBeneficiary ("fspagetab", df_by_district_cash_data())
-        fsLineChartTotalCashQuarter ("fspagetab", df_by_district_cash_data())
-        fsBarChartDeliveryMechanism ("fspagetab", df_by_district_cash_data())
-        fsBarChartCashByPartner ("fspagetab", df_by_district_cash_data())
+        fsDonutChartCashBeneficiary ("fspagetab",
+                                     df_by_district_cash_data(),
+                                     select_beneficiary_type,
+                                     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
+                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     fs_beneficiary_types)
+        fsLineChartTotalCashQuarter ("fspagetab", df_by_district_cash_data(), 
+                                     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
+                                     glue("Total Cash Distributed{display_in_title}"))
+        fsBarChartDeliveryMechanism ("fspagetab", df_by_district_cash_data(),
+                                     select_delivery_mechanism,
+                                     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
+                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        fsBarChartCashByPartner ("fspagetab", df_by_district_cash_data(), partner_name,
+                                 fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
+                                 glue("Total cash Transfers by Partner{display_in_title}"))
+        
     })
     
     # observe year change to update quarter -----------------------------------
@@ -203,10 +215,22 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         filter_cash_data_based_on_map <- filterCashDataByDistrict("fspagetab", fs_df_data, location_district, click_district)
         # create all the charts
-        fsDonutChartCashBeneficiary ("fspagetab", filter_cash_data_based_on_map)
-        fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map)
-        fsBarChartDeliveryMechanism ("fspagetab", filter_cash_data_based_on_map)
-        fsBarChartCashByPartner ("fspagetab", filter_cash_data_based_on_map)
+        fsDonutChartCashBeneficiary ("fspagetab",
+                                     filter_cash_data_based_on_map,
+                                     select_beneficiary_type,
+                                     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
+                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     beneficiary_types)
+        fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
+                                     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
+                                     glue("Total Cash Distributed{display_in_title}"))
+        fsBarChartDeliveryMechanism ("fspagetab", filter_cash_data_based_on_map,
+                                     select_delivery_mechanism,
+                                     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
+                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        fsBarChartCashByPartner ("fspagetab", filter_cash_data_based_on_map, partner_name,
+                                 fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
+                                 glue("Total cash Transfers by Partner{display_in_title}"))
         fsTextSelectedDistrict("fspagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -232,16 +256,34 @@ server <- function(input, output, session) {
     
     # Map reset button --------------------------------------------------------
     observeEvent(fsResetMapServer("fspagetab"),{
+        
         display_in_title <<- " for all Districts"
+        
         fsUpdateYear("fspagetab", unique(as.character(fs_df_data$Year)), "All")
         fsUpdateQuarter("fspagetab", "All", "All")
+        
         filter_cash_data_based_on_map <- fs_df_data
-        fsDonutChartCashBeneficiary ("fspagetab", filter_cash_data_based_on_map)
-        fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map)
-        fsBarChartDeliveryMechanism ("fspagetab", filter_cash_data_based_on_map)
-        fsBarChartCashByPartner ("fspagetab", filter_cash_data_based_on_map)
+        
+        fsDonutChartCashBeneficiary ("fspagetab",
+                                     filter_cash_data_based_on_map,
+                                     select_beneficiary_type,
+                                     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
+                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     fs_beneficiary_types)
+        fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
+                                     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
+                                     glue("Total Cash Distributed{display_in_title}"))
+        fsBarChartDeliveryMechanism ("fspagetab", filter_cash_data_based_on_map,
+                                     select_delivery_mechanism,
+                                     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
+                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        fsBarChartCashByPartner ("fspagetab", filter_cash_data_based_on_map, partner_name,
+                                 fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
+                                 glue("Total cash Transfers by Partner{display_in_title}"))
         fsTextSelectedDistrict("fspagetab", "")
     })
+    
+    
     
     
     # Emergency Livelihood Support -----------------------------------------------------------

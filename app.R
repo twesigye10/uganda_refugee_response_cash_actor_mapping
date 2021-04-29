@@ -90,24 +90,24 @@ server <- function(input, output, session) {
         cbiMapLabels("cbipagetab", df_point_data)
         
         cbiDonutChartCashBeneficiary ("cbipagetab",
-                                   df_by_district_cash_data(),
-                                   Select_Beneficiary_Type,
-                                   Total_amount_of_cash_transfers,
-                                   "% of Total \nCash Transfer\n by Beneficiary Type",
-                                   beneficiary_types)
+                                      df_by_district_cash_data(),
+                                      Select_Beneficiary_Type,
+                                      Total_amount_of_cash_transfers,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      beneficiary_types)
         
         cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data(), 
-                                   Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
-                                   Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
+                                      Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
+                                      Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
         
         cbiBarChartDeliveryMechanism ("cbipagetab", df_by_district_cash_data(),
-                                   Select_Delivery_Mechanism,
-                                   Total_amount_of_cash_transfers,
-                                   glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      Select_Delivery_Mechanism,
+                                      Total_amount_of_cash_transfers,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
         
         cbiBarChartCashByPartner ("cbipagetab", df_by_district_cash_data(), Partner_Name,
-                               Total_amount_of_cash_transfers,
-                               glue("Total cash Transfers by Partner{display_in_title}"))
+                                  Total_amount_of_cash_transfers,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
     })
     
     # observe year change to update quarter -----------------------------------
@@ -135,21 +135,21 @@ server <- function(input, output, session) {
         filter_cash_data_based_on_map <- filterCashDataByDistrict("cbipagetab", df_data, Location_District, click_district)
         # create all the charts
         cbiDonutChartCashBeneficiary ("cbipagetab",
-                                   filter_cash_data_based_on_map,
-                                   Select_Beneficiary_Type,
-                                   Total_amount_of_cash_transfers,
-                                   "% of Total \nCash Transfer\n by Beneficiary Type",
-                                   beneficiary_types)
+                                      filter_cash_data_based_on_map,
+                                      Select_Beneficiary_Type,
+                                      Total_amount_of_cash_transfers,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      beneficiary_types)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
-                                   Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
-                                   Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
+                                      Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
+                                      Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
-                                   Select_Delivery_Mechanism,
-                                   Total_amount_of_cash_transfers,
-                                   glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      Select_Delivery_Mechanism,
+                                      Total_amount_of_cash_transfers,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
         cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, Partner_Name,
-                               Total_amount_of_cash_transfers,
-                               glue("Total cash Transfers by Partner{display_in_title}"))
+                                  Total_amount_of_cash_transfers,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
         cbiTextSelectedDistrict("cbipagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -205,7 +205,7 @@ server <- function(input, output, session) {
     })
     
     # Food Security -----------------------------------------------------------
-     
+    
     fs_year <- fsYearValueServer("fspagetab")
     fs_quarter <- fsQuarterValueServer("fspagetab")
     fsDefaultMap("fspagetab")
@@ -460,6 +460,136 @@ server <- function(input, output, session) {
         elsTextSelectedDistrict("elspagetab", "")
         
     })
+    
+    
+    # Environmental Protection Restoration ------------------------------------
+    
+    epr_year <- eprYearValueServer("eprpagetab")
+    epr_quarter <- eprQuarterValueServer("eprpagetab")
+    eprDefaultMap("eprpagetab")
+    # dynamic charts and map --------------------------------------------------
+    observe({
+        req(input$tab_being_displayed == "Environmental Protection")
+        # UI selectors to filter shape data
+        df_by_district_cash_data <- reactive({filterCashData("eprpagetab", epr_df_data, epr_year(), Year, epr_quarter(), Quarter )})
+        df_shape_data <- dfShapeDefault("eprpagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_for_work_ugx, "location_district")
+        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+            sf::st_centroid() %>% sf::st_transform(4326) %>%
+            mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+        ## create all the charts
+        eprCreatingMap("eprpagetab", df_shape_data)
+        eprMapLabels("eprpagetab", df_point_data)
+        eprDonutChartCashBeneficiary ("eprpagetab",
+                                      df_by_district_cash_data(),
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      epr_beneficiary_types)
+        eprLineChartTotalCashQuarter ("eprpagetab", df_by_district_cash_data(), 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total Cash Distributed{display_in_title}"))
+        eprBarChartDeliveryMechanism ("eprpagetab", df_by_district_cash_data(),
+                                      delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        eprBarChartCashByPartner ("eprpagetab", df_by_district_cash_data(), partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
+        
+    })
+    
+    # observe year change to update quarter -----------------------------------
+    observe({
+        if(epr_year() != "All"){
+            selected_year <- epr_year()
+            filter_cash_data_quarter <- filterYearForQuarters("eprpagetab", epr_df_data, Year, selected_year ) 
+            # update quarter selection
+            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+            if(epr_quarter() %in% available_quarter_choices){
+                eprUpdateQuarter("eprpagetab", available_quarter_choices, epr_quarter())
+            }else{
+                eprUpdateQuarter("eprpagetab", available_quarter_choices, "All")
+            }
+        }else{
+            eprUpdateQuarter("eprpagetab", "All", "All")
+        }
+    })
+    
+    # Charts listen to map click ----------------------------------------------
+    observeEvent(eprClickedDistrictValueServer("eprpagetab"),{
+        click_district <- eprClickedDistrictValueServer("eprpagetab")
+        display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
+        filter_cash_data_based_on_map <- filterCashDataByDistrict("eprpagetab", epr_df_data, location_district, click_district)
+        # create all the charts
+        eprDonutChartCashBeneficiary ("eprpagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      epr_beneficiary_types)
+        eprLineChartTotalCashQuarter ("eprpagetab", filter_cash_data_based_on_map, 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total Cash Distributed{display_in_title}"))
+        eprBarChartDeliveryMechanism ("eprpagetab", filter_cash_data_based_on_map,
+                                      delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        eprBarChartCashByPartner ("eprpagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
+        eprTextSelectedDistrict("eprpagetab", click_district)
+        # update year selection
+        filter_original_cash_data <- filter_cash_data_based_on_map
+        available_year_choices <- unique(as.character(filter_original_cash_data$Year))
+        if (epr_year() %in% available_year_choices){
+            eprUpdateYear("eprpagetab", available_year_choices, epr_year())
+        }else{
+            eprUpdateYear("eprpagetab", available_year_choices, "All")
+        }
+        # update quarter selection based on year and district
+        if(epr_year() != "All"){
+            selected_year <- epr_year()
+            filter_cash_data_quarter <- filterYearDistrictForQuarters ("eprpagetab", epr_df_data, Year, selected_year,
+                                                                       location_district, click_district )
+            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+            if(epr_quarter() %in% available_quarter_choices){
+                eprUpdateQuarter("eprpagetab", available_quarter_choices, epr_quarter())
+            }else{
+                eprUpdateQuarter("eprpagetab", available_quarter_choices, "All")
+            }
+        }
+    })
+    
+    # Map reset button --------------------------------------------------------
+    observeEvent(eprResetMapServer("eprpagetab"),{
+        display_in_title <<- " for all Districts"
+        
+        eprUpdateYear("eprpagetab", unique(as.character(epr_df_data$Year)), "All")
+        eprUpdateQuarter("eprpagetab", "All", "All")
+        
+        filter_cash_data_based_on_map <- epr_df_data
+        
+        eprDonutChartCashBeneficiary ("eprpagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      epr_beneficiary_types)
+        eprLineChartTotalCashQuarter ("eprpagetab", filter_cash_data_based_on_map, 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total Cash Distributed{display_in_title}"))
+        eprBarChartDeliveryMechanism ("eprpagetab", filter_cash_data_based_on_map,
+                                      delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        eprBarChartCashByPartner ("eprpagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
+        eprTextSelectedDistrict("eprpagetab", "")
+        
+    })
+    
+    
 }
 
 # Run the application 

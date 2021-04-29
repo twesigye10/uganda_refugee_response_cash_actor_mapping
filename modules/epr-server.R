@@ -43,7 +43,7 @@ eprDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
         bb_legend(position = 'right') %>%
         bb_donut(title = input_title, width = 70) %>% 
         bb_colors_manual(
-          setNames(c('#5D69B1','#52BCA3','#99C945'), c(input_beneficiary_vector))
+          setNames(c('#5D69B1','#99C945'), c(input_beneficiary_vector))
         )
     })
   })

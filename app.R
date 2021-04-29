@@ -86,15 +86,11 @@ server <- function(input, output, session) {
         
         ## create all the charts
         cbiCreatingMap("cbipagetab", df_shape_data)
-        
         cbiMapLabels("cbipagetab", df_point_data)
-        
         cbiDonutChartCashBeneficiary ("cbipagetab", df_by_district_cash_data())
         cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data())
         cbiBarChartDeliveryMechanism ("cbipagetab", df_by_district_cash_data())
-        cbiBarChartCashByPartner ("cbipagetab", df_by_district_cash_data(), Partner_Name,
-                               Total_amount_of_cash_transfers,
-                               glue("Total cash Transfers by Partner{display_in_title}"))
+        cbiBarChartCashByPartner ("cbipagetab", df_by_district_cash_data())
     })
     
     # observe year change to update quarter -----------------------------------
@@ -118,15 +114,12 @@ server <- function(input, output, session) {
     observeEvent(cbiClickedDistrictValueServer("cbipagetab"),{
         click_district <- cbiClickedDistrictValueServer("cbipagetab")
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
-        
         filter_cash_data_based_on_map <- filterCashDataByDistrict("cbipagetab", df_data, Location_District, click_district)
         # create all the charts
         cbiDonutChartCashBeneficiary ("cbipagetab", filter_cash_data_based_on_map)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map)
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map)
-        cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, Partner_Name,
-                               Total_amount_of_cash_transfers,
-                               glue("Total cash Transfers by Partner{display_in_title}"))
+        cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map)
         cbiTextSelectedDistrict("cbipagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -152,23 +145,15 @@ server <- function(input, output, session) {
     
     # Map reset button --------------------------------------------------------
     observeEvent(cbiResetMapServer("cbipagetab"),{
-        
         display_in_title <<- " for all Districts"
-        
         cbiUpdateYear("cbipagetab", unique(as.character(df_data$Year)), "All")
         cbiUpdateQuarter("cbipagetab", "All", "All")
-        
         filter_cash_data_based_on_map <- df_data
-        
         cbiDonutChartCashBeneficiary ("cbipagetab", filter_cash_data_based_on_map)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map)
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map)
-        cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, Partner_Name,
-                                  Total_amount_of_cash_transfers,
-                                  glue("Total cash Transfers by Partner{display_in_title}"))
+        cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map)
         cbiTextSelectedDistrict("cbipagetab", "")
-        
-        
     })
     
     # Food Security -----------------------------------------------------------

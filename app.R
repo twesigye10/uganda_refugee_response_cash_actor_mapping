@@ -261,10 +261,23 @@ server <- function(input, output, session) {
         ## create all the charts
         elsCreatingMap("elspagetab", df_shape_data)
         elsMapLabels("elspagetab", df_point_data)
-        elsDonutChartCashBeneficiary ("elspagetab", df_by_district_cash_data())
-        elsLineChartTotalCashQuarter ("elspagetab", df_by_district_cash_data())
-        elsBarChartDeliveryMechanism ("elspagetab", df_by_district_cash_data())
-        elsBarChartCashByPartner ("elspagetab", df_by_district_cash_data())
+        elsDonutChartCashBeneficiary ("elspagetab",
+                                      df_by_district_cash_data(),
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      els_beneficiary_types)
+        elsLineChartTotalCashQuarter ("elspagetab", df_by_district_cash_data(), 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total Cash Distributed{display_in_title}"))
+        elsBarChartDeliveryMechanism ("elspagetab", df_by_district_cash_data(),
+                                      delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        elsBarChartCashByPartner ("elspagetab", df_by_district_cash_data(), partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
+        
     })
     
     # observe year change to update quarter -----------------------------------
@@ -290,10 +303,22 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         filter_cash_data_based_on_map <- filterCashDataByDistrict("elspagetab", els_df_data, location_district, click_district)
         # create all the charts
-        elsDonutChartCashBeneficiary ("elspagetab", filter_cash_data_based_on_map)
-        elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map)
-        elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map)
-        elsBarChartCashByPartner ("elspagetab", filter_cash_data_based_on_map)
+        elsDonutChartCashBeneficiary ("elspagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      els_beneficiary_types)
+        elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map, 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total Cash Distributed{display_in_title}"))
+        elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map,
+                                      delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        elsBarChartCashByPartner ("elspagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
         elsTextSelectedDistrict("elspagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -320,14 +345,30 @@ server <- function(input, output, session) {
     # Map reset button --------------------------------------------------------
     observeEvent(elsResetMapServer("elspagetab"),{
         display_in_title <<- " for all Districts"
+        
         elsUpdateYear("elspagetab", unique(as.character(els_df_data$Year)), "All")
         elsUpdateQuarter("elspagetab", "All", "All")
+        
         filter_cash_data_based_on_map <- els_df_data
-        elsDonutChartCashBeneficiary ("elspagetab", filter_cash_data_based_on_map)
-        elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map)
-        elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map)
-        elsBarChartCashByPartner ("elspagetab", filter_cash_data_based_on_map)
+        
+        elsDonutChartCashBeneficiary ("elspagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      els_beneficiary_types)
+        elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map, 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total Cash Distributed{display_in_title}"))
+        elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map,
+                                      delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+        elsBarChartCashByPartner ("elspagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash Transfers by Partner{display_in_title}"))
         elsTextSelectedDistrict("elspagetab", "")
+        
     })
 }
 

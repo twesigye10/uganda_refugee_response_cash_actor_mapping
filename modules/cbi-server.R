@@ -77,19 +77,18 @@ cbiLineChartTotalCashQuarter <- function(id, input_data){
   })
 }
 # bar chart delivery mechanism module ------------------------------------------------------
-cbiBarChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
-                                      input_title){
+cbiBarChartDeliveryMechanism <- function(id, input_data){
   moduleServer(id, function(input, output, session){
     output$plotdeliverymechanism <-  renderHighchart({
       input_data %>%
-        group_by({{input_field_group}} ) %>%
+        group_by(Select_Delivery_Mechanism ) %>%
         summarise(
-          cash_transfer_by_delivery_mechanism = sum({{input_field_analysis}}, na.rm = T)
+          cash_transfer_by_delivery_mechanism = sum(Total_amount_of_cash_transfers, na.rm = T)
         ) %>%
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
                hcaes(x = Select_Delivery_Mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
-        hc_title( text = input_title, margin = 5, align = "left" )%>% 
+        hc_title( text = glue("Total Cash by Delivery Mechanism{display_in_title}"), margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
         hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism")) 
     })

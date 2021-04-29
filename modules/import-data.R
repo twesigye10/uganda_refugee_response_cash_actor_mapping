@@ -22,6 +22,11 @@ els_df_data <-dat$els_df_data
 els_beneficiary_types <- els_df_data %>% 
   filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()%>% sort()
 
+# add data: Access to Productive Assets
+apa_df_data <-dat$apa_df_data
+apa_beneficiary_types <- apa_df_data %>% 
+  filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()%>% sort()
+
 # add data: environmental protection and restoration
 epr_df_data <-dat$epr_df_data
 epr_beneficiary_types <- epr_df_data %>% 

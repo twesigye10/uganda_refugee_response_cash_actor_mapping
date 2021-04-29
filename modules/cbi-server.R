@@ -39,21 +39,20 @@ cbiClickedDistrictValueServer <- function(id){
 }
 
 # donut chart module ------------------------------------------------------
-cbiDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
-                                      input_field_analysis, input_title, input_beneficiary_vector){
+cbiDonutChartCashBeneficiary <- function(id, input_data){
   moduleServer(id, function(input, output, session){
     output$hhreceivingcash <-  renderBillboarder({
       df_billb_data <- input_data %>% 
-        group_by({{input_field_group}} ) %>% 
+        group_by(Select_Beneficiary_Type) %>% 
         summarise(
-          cash_assistance_by_beneficiary_type = sum({{input_field_analysis}}, na.rm = T)
+          cash_assistance_by_beneficiary_type = sum(Total_amount_of_cash_transfers, na.rm = T)
         ) 
       billboarder(data = df_billb_data) %>%
         bb_donutchart() %>% 
         bb_legend(position = 'right') %>%
-        bb_donut(title = input_title, width = 70) %>% 
+        bb_donut(title = "% of Total \nCash Transfer\n by Beneficiary Type", width = 70) %>% 
         bb_colors_manual(
-          setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(input_beneficiary_vector))
+          setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(beneficiary_types))
         )
     })
   })

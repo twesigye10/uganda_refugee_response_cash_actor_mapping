@@ -89,12 +89,7 @@ server <- function(input, output, session) {
         
         cbiMapLabels("cbipagetab", df_point_data)
         
-        cbiDonutChartCashBeneficiary ("cbipagetab",
-                                   df_by_district_cash_data(),
-                                   Select_Beneficiary_Type,
-                                   Total_amount_of_cash_transfers,
-                                   "% of Total \nCash Transfer\n by Beneficiary Type",
-                                   beneficiary_types)
+        cbiDonutChartCashBeneficiary ("cbipagetab", df_by_district_cash_data())
         
         cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data(), 
                                    Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
@@ -134,12 +129,7 @@ server <- function(input, output, session) {
         
         filter_cash_data_based_on_map <- filterCashDataByDistrict("cbipagetab", df_data, Location_District, click_district)
         # create all the charts
-        cbiDonutChartCashBeneficiary ("cbipagetab",
-                                   filter_cash_data_based_on_map,
-                                   Select_Beneficiary_Type,
-                                   Total_amount_of_cash_transfers,
-                                   "% of Total \nCash Transfer\n by Beneficiary Type",
-                                   beneficiary_types)
+        cbiDonutChartCashBeneficiary ("cbipagetab", filter_cash_data_based_on_map)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
                                    Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
                                    Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
@@ -183,12 +173,7 @@ server <- function(input, output, session) {
         
         filter_cash_data_based_on_map <- df_data
         
-        cbiDonutChartCashBeneficiary ("cbipagetab",
-                                      filter_cash_data_based_on_map,
-                                      Select_Beneficiary_Type,
-                                      Total_amount_of_cash_transfers,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
-                                      beneficiary_types)
+        cbiDonutChartCashBeneficiary ("cbipagetab", filter_cash_data_based_on_map)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
                                       Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
                                       Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))

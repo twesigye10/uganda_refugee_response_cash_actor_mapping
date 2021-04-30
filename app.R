@@ -10,6 +10,7 @@ library(ggreach)
 library(highcharter)
 library(billboarder)
 library(glue)
+library(DT)
 
 # load scripts
 list.files("modules") %>%
@@ -115,6 +116,9 @@ server <- function(input, output, session) {
         cbiBarChartCashByPartner ("cbipagetab", df_by_district_cash_data(), Partner_Name,
                                   Total_amount_of_cash_transfers,
                                   glue("Total cash Transfers by Partner{display_in_title}"))
+        
+        # cbiTableForPSN ("cbipagetab", df_by_district_cash_data(), Location_District,
+        #                 PSN_households_receiving_cash_assistance_for_basic_needs__total_)
     })
     
     # observe year change to update quarter -----------------------------------

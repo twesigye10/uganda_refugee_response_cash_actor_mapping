@@ -46,10 +46,10 @@ tabPageUI <- function(
                 fluidRow(
                   column(width = 6,
                          # Select Delivery Mechanism
-                         highchartOutput(ns(outp_plotdeliverymechanism) )
+                         wellPanel(highchartOutput(ns(outp_plotdeliverymechanism)))
                   ),
                   column(width = 6,
-                         highchartOutput(ns(outp_plotcashpartner))
+                         wellPanel(highchartOutput(ns(outp_plotcashpartner)))
                   )
                 )
               )

@@ -117,6 +117,22 @@ cbiBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
     })
   })
 }
+# table PSN module ------------------------------------------------------
+cbiTableForPSN <- function(id, input_data, input_field_group, input_field_analysis){
+  moduleServer(id, function(input, output, session){
+    output$tabpsn <-  renderDataTable({
+      input_data %>%
+        group_by({{input_field_group}} ) %>%
+        summarise(
+          total_psn_by_district = sum({{input_field_analysis}}, na.rm = T)
+        ) %>%
+        arrange(-total_psn_by_district) %>% select(Location_District, total_psn_by_district) %>% 
+        datatable(rownames = FALSE , escape = FALSE, 
+                  filter = c(none), options = list(dom = 't', ordering = 0), 
+                  colnames = c("", ""))
+    })
+  })
+}
 # text for selected district on the map chart module ------------------------------------------------------
 cbiTextSelectedDistrict <- function(id, input_text){
   moduleServer(id, function(input, output, session){

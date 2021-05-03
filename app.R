@@ -10,7 +10,6 @@ library(ggreach)
 library(highcharter)
 library(billboarder)
 library(glue)
-library(DT)
 
 # load scripts
 list.files("modules") %>%

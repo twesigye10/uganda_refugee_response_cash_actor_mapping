@@ -38,6 +38,41 @@ cbiClickedDistrictValueServer <- function(id){
   })
 }
 
+# get psn data
+cbiPSNDataServer <- function(id, input_data){
+  moduleServer(id, function(input, output, session){
+    
+    df_data_indicators <- input_data %>%
+      rowwise() %>%
+      mutate( 
+        ps.child_at_risk = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Child_at_risk_,
+                               PSN_households_receiving_voucher_assistance_for_basic_needs__Child_at_risk_, na.rm = T),
+        ps.disability = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Disability_,   
+                            PSN_households_receiving_voucher_assistance_for_basic_needs__Disability_, na.rm = T),
+        ps.Older_person_at_risk = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Older_person_at_risk_,                           
+                                      PSN_households_receiving_voucher_assistance_for_basic_needs__Older_person_at_risk_, na.rm = T),
+        ps.serious_medical_condition = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Serious_medical_condition_,                      
+                                           PSN_households_receiving_voucher_assistance_for_basic_needs__Serious_medical_condition_, na.rm = T),
+        ps.single_parent_or_caregiver = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Single_parent_or_caregiver_,                     
+                                            PSN_households_receiving_voucher_assistance_for_basic_needs__Single_parent_or_caregiver_, na.rm = T),
+        ps.specific_legal_and_physical_protection_needs = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Specific_legal_and_physical_protection_needs_,   
+                                                              PSN_households_receiving_voucher_assistance_for_basic_needs__Specific_legal_and_physical_protection_needs_, na.rm = T),
+        ps.unaccompanied_or_separated_child = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Unaccompanied_or_separated_child_,               
+                                                  PSN_households_receiving_voucher_assistance_for_basic_needs__Unaccompanied_or_separated_child_, na.rm = T),
+        ps.woman_at_risk = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Woman_at_risk_,
+                               PSN_households_receiving_voucher_assistance_for_basic_needs__Woman_at_risk_, na.rm = T)
+      ) %>% 
+      ungroup() %>% 
+      select(starts_with("ps.")) %>% 
+      summarise(
+        across(everything(), ~sum(.x, na.rm = TRUE))
+      ) %>% 
+      rename_with(~gsub("ps.", "", .x, fixed=TRUE))
+    
+    return(df_data_indicators)
+  })
+}
+
 # donut chart module ------------------------------------------------------
 cbiDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
                                       input_field_analysis, input_title, input_beneficiary_vector){
@@ -118,43 +153,31 @@ cbiBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
   })
 }
 # table PSN module ------------------------------------------------------
-cbiDataForPSN <- function(id, input_data, input_field_group, input_field_analysis){
+cbiDataForPSN <- function(id, input_data ){
   moduleServer(id, function(input, output, session){
-    output$tabpsn <-  renderUI({
-      df_data_indicators <- input_data %>%
-        rowwise() %>%
-        mutate( 
-          ps.child_at_risk = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Child_at_risk_,
-                              PSN_households_receiving_voucher_assistance_for_basic_needs__Child_at_risk_, na.rm = T),
-          ps.disability = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Disability_,   
-                           PSN_households_receiving_voucher_assistance_for_basic_needs__Disability_, na.rm = T),
-          ps.Older_person_at_risk = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Older_person_at_risk_,                           
-                                     PSN_households_receiving_voucher_assistance_for_basic_needs__Older_person_at_risk_, na.rm = T),
-          ps.serious_medical_condition = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Serious_medical_condition_,                      
-                                          PSN_households_receiving_voucher_assistance_for_basic_needs__Serious_medical_condition_, na.rm = T),
-          ps.single_parent_or_caregiver = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Single_parent_or_caregiver_,                     
-                                           PSN_households_receiving_voucher_assistance_for_basic_needs__Single_parent_or_caregiver_, na.rm = T),
-          ps.specific_legal_and_physical_protection_needs = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Specific_legal_and_physical_protection_needs_,   
-                                                             PSN_households_receiving_voucher_assistance_for_basic_needs__Specific_legal_and_physical_protection_needs_, na.rm = T),
-          ps.unaccompanied_or_separated_child = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Unaccompanied_or_separated_child_,               
-                                                 PSN_households_receiving_voucher_assistance_for_basic_needs__Unaccompanied_or_separated_child_, na.rm = T),
-          ps.woman_at_risk = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Woman_at_risk_,
-                              PSN_households_receiving_voucher_assistance_for_basic_needs__Woman_at_risk_, na.rm = T)
-        ) %>% 
-        ungroup() %>% 
-        select(starts_with("ps.")) %>% 
-        summarise(
-          across(everything(), ~sum(.x, na.rm = TRUE))
-        ) %>% 
-        rename_with(~gsub("ps.", "", .x, fixed=TRUE))
+    output$psndata <-  renderUI({
+
+      div_data <- paste('<div class=\"table\">', '<h3> PSN Data Values</h3>')
+      thead_data <- paste('<table class=\"table\"> ')
       
-      indicator <- c(colnames(df_data_indicators))
-      indicator_values <- df_data_indicators %>% slice(1) %>% as.numeric()
+      data_child_at_risk <- paste('<tr><td>', '<img src="child_at_risk.png" height="32"></img>'  ,'</td> <td>', "Child at Risk"  ,'</td> <td>', input_data %>% select(child_at_risk) %>% pull()   ,'</td> </tr>')
+      data_disability <- paste('<tr><td>', '<img src="disability.png" height="32"></img>'  ,'</td> <td>', "Disability"  ,'</td> <td>', input_data %>% select(disability) %>% pull()   ,'</td> </tr>')
+      data_Older_person_at_risk <- paste('<tr><td>', '<img src="Older_person_at_risk.png" height="32"></img>'  ,'</td> <td>', "Older Person at Risk"  ,'</td> <td>', input_data %>% select(Older_person_at_risk) %>% pull()   ,'</td> </tr>')
+      data_serious_medical_condition <- paste('<tr><td>', '<img src="serious_medical_condition.png" height="32"></img>'  ,'</td> <td>', "Serious Medical Condition"  ,'</td> <td>', input_data %>% select(serious_medical_condition) %>% pull()   ,'</td> </tr>')
+      data_single_parent_or_caregiver <- paste('<tr><td>', '<img src="single_parent_or_caregiver.png" height="32"></img>'  ,'</td> <td>', "Single Parent or Caregiver"  ,'</td> <td>', input_data %>% select(single_parent_or_caregiver) %>% pull()   ,'</td> </tr>')
+      data_specific_legal_and_physical_protection_needs <- paste('<tr><td>', '<img src="specific_legal_and_physical_protection_needs.png" height="32"></img>'  ,'</td> <td>', "Specific Legal and Physical Protection needs"  ,'</td> <td>', input_data %>% select(specific_legal_and_physical_protection_needs) %>% pull()   ,'</td> </tr>')
+      data_unaccompanied_or_separated_child <- paste('<tr><td>', '<img src="unaccompanied_or_separated_child.png" height="32"></img>'  ,'</td> <td>', "Unaccompanied or Separated Child"  ,'</td> <td>', input_data %>% select(unaccompanied_or_separated_child) %>% pull()   ,'</td> </tr>')
+      data_woman_at_risk <- paste('<tr><td>', '<img src="woman_at_risk.png" height="32"></img>'  ,'</td> <td>', "Woman at Risk"  ,'</td> <td>', input_data %>% select(woman_at_risk) %>% pull()   ,'</td> </tr>')
       
-      df_data_indicators_values <- tibble(indicator, indicator_values) %>% 
-        mutate(indicator_logo = paste(indicator, '.png'))
+      tfooter_data <- paste('</table> </div>')
       
-      
+      HTML(paste(div_data, thead_data, data_child_at_risk, data_disability, 
+                 data_Older_person_at_risk, 
+                 data_serious_medical_condition, 
+                 data_single_parent_or_caregiver, 
+                 data_specific_legal_and_physical_protection_needs, 
+                 data_unaccompanied_or_separated_child, 
+                 data_woman_at_risk, tfooter_data))
 
     })
   })

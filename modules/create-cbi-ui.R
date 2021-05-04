@@ -41,11 +41,11 @@ tabPageCBIUI <- function(
               mainPanel(width = 9,
                         
                         fluidRow(
-                          column(width = 6,
+                          column(width = 7,
                                  # map
                                  leafletOutput(ns(outp_map))
                           ),
-                          column(width = 3,
+                          column(width = 2,
                                  # table
                                  uiOutput(ns(outp_data))
                           )

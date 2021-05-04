@@ -3,7 +3,7 @@
 tabPageCBIUI <- function(
   id, label, inp_yearperiod, inp_yearperiod_choices,
   inp_quarterperiod, inp_mapreset, inp_selecteddistrict, outp_hhreceivingcash,
-  outp_plotcashquarter, outp_map, outp_table, outp_plotdeliverymechanism, outp_plotcashpartner){
+  outp_plotcashquarter, outp_map, outp_data, outp_plotdeliverymechanism, outp_plotcashpartner){
   ns <- NS(id)
   
   tabPanel( label,
@@ -47,7 +47,7 @@ tabPageCBIUI <- function(
                           ),
                           column(width = 3,
                                  # table
-                                 dataTableOutput(ns(outp_table))
+                                 uiOutput(ns(outp_data))
                           )
                         )
                         ,

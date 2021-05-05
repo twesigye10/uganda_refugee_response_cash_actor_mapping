@@ -18,7 +18,7 @@ fs_beneficiary_types <- fs_df_data %>%
   filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique() %>% sort()
 
 # add data: livelihood
-seo_df_data <-dat$els_df_data
+seo_df_data <-dat$seo_df_data
 seo_beneficiary_types <- seo_df_data %>% 
   filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()%>% sort()
 

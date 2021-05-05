@@ -68,10 +68,10 @@ df_emergency_livelihood_support <- janitor::clean_names(df_emergency_livelihood_
     )%>% 
     filter(!is.na(select_quarter))
 
-els_df_data <- df_emergency_livelihood_support %>% 
+seo_df_data <- df_emergency_livelihood_support %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
 
-els_beneficiary_types <- els_df_data %>% 
+seo_beneficiary_types <- seo_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
 # Increased Access Productive Assets
@@ -109,7 +109,7 @@ data_for_saving <- list()
 data_for_saving$cbi_df_data <- cbi_df_data
 data_for_saving$df_shape <- df_shape
 data_for_saving$fs_df_data <- fs_df_data
-data_for_saving$els_df_data <- els_df_data
+data_for_saving$seo_df_data <- seo_df_data
 data_for_saving$apa_df_data <- apa_df_data
 data_for_saving$epr_df_data <- epr_df_data
 
@@ -117,4 +117,4 @@ saveRDS(data_for_saving, file = "data/new_data.rds")
 
 get_new_dat <- read_rds(file = "data/new_data.rds")
 
-get_new_dat$cbi_df_data %>% view()
+get_new_dat$seo_df_data %>% view()

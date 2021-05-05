@@ -65,14 +65,14 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
             "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
         ),
         # combine livelihood components
-        tabPanel("Em Livelihood",
+        tabPanel("Emergency Livelihood Support",
                  tabsetPanel(
                      id = "tabs",
                      # Livelihood --------------------------------------------------------------
                      tabPageUI(
-                         "elspagetab", "Emergency Livelihood Support", "els_yearperiod", els_df_data$Year,
-                         "els_quarterperiod", "els_mapreset", "els_selecteddistrict", "els_hhreceivingcash",
-                         "els_plotcashquarter", "els_map", "els_plotdeliverymechanism", "els_plotcashpartner"
+                         "seopagetab", "Short term Employment", "seo_yearperiod", seo_df_data$Year,
+                         "seo_quarterperiod", "seo_mapreset", "seo_selecteddistrict", "seo_hhreceivingcash",
+                         "seo_plotcashquarter", "seo_map", "seo_plotdeliverymechanism", "seo_plotcashpartner"
                      ),
                      
                      # Access to Productive Assets --------------------------------------------------------------
@@ -367,36 +367,36 @@ server <- function(input, output, session) {
     
     # Emergency Livelihood Support -----------------------------------------------------------
     
-    els_year <- elsYearValueServer("elspagetab")
-    els_quarter <- elsQuarterValueServer("elspagetab")
-    elsDefaultMap("elspagetab")
+    seo_year <- seoYearValueServer("seopagetab")
+    seo_quarter <- seoQuarterValueServer("seopagetab")
+    seoDefaultMap("seopagetab")
     # dynamic charts and map --------------------------------------------------
     observe({
-        req(input$tab_being_displayed == "Em Livelihood")
-        req(input$tabs == "Access to Productive Assets")
+        req(input$tab_being_displayed == "Emergency Livelihood Support")
+        req(input$tabs == "Short term Employment")
         # UI selectors to filter shape data
-        df_by_district_cash_data <- reactive({filterCashData("elspagetab", els_df_data, els_year(), Year, els_quarter(), Quarter )})
-        df_shape_data <- dfShapeDefault("elspagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_for_work_ugx, "location_district")
+        df_by_district_cash_data <- reactive({filterCashData("seopagetab", seo_df_data, seo_year(), Year, seo_quarter(), Quarter )})
+        df_shape_data <- dfShapeDefault("seopagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_for_work_ugx, "location_district")
         df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         ## create all the charts
-        elsCreatingMap("elspagetab", df_shape_data)
-        elsMapLabels("elspagetab", df_point_data)
-        elsDonutChartCashBeneficiary ("elspagetab",
+        seoCreatingMap("seopagetab", df_shape_data)
+        seoMapLabels("seopagetab", df_point_data)
+        seoDonutChartCashBeneficiary ("seopagetab",
                                       df_by_district_cash_data(),
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
                                       "% of Total \nCash Transfer\n by Beneficiary Type",
-                                      els_beneficiary_types)
-        elsLineChartTotalCashQuarter ("elspagetab", df_by_district_cash_data(), 
+                                      seo_beneficiary_types)
+        seoLineChartTotalCashQuarter ("seopagetab", df_by_district_cash_data(), 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
                                       glue("Total Cash Distributed{display_in_title}"))
-        elsBarChartDeliveryMechanism ("elspagetab", df_by_district_cash_data(),
+        seoBarChartDeliveryMechanism ("seopagetab", df_by_district_cash_data(),
                                       delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
                                       glue("Total Cash by Delivery Mechanism{display_in_title}"))
-        elsBarChartCashByPartner ("elspagetab", df_by_district_cash_data(), partner_name,
+        seoBarChartCashByPartner ("seopagetab", df_by_district_cash_data(), partner_name,
                                   total_cash_value_of_cash_for_work_ugx,
                                   glue("Total cash Transfers by Partner{display_in_title}"))
         
@@ -404,92 +404,92 @@ server <- function(input, output, session) {
     
     # observe year change to update quarter -----------------------------------
     observe({
-        if(els_year() != "All"){
-            selected_year <- els_year()
-            filter_cash_data_quarter <- filterYearForQuarters("elspagetab", els_df_data, Year, selected_year ) 
+        if(seo_year() != "All"){
+            selected_year <- seo_year()
+            filter_cash_data_quarter <- filterYearForQuarters("seopagetab", seo_df_data, Year, selected_year ) 
             # update quarter selection
             available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
-            if(els_quarter() %in% available_quarter_choices){
-                elsUpdateQuarter("elspagetab", available_quarter_choices, els_quarter())
+            if(seo_quarter() %in% available_quarter_choices){
+                seoUpdateQuarter("seopagetab", available_quarter_choices, seo_quarter())
             }else{
-                elsUpdateQuarter("elspagetab", available_quarter_choices, "All")
+                seoUpdateQuarter("seopagetab", available_quarter_choices, "All")
             }
         }else{
-            elsUpdateQuarter("elspagetab", "All", "All")
+            seoUpdateQuarter("seopagetab", "All", "All")
         }
     })
     
     # Charts listen to map click ----------------------------------------------
-    observeEvent(elsClickedDistrictValueServer("elspagetab"),{
-        click_district <- elsClickedDistrictValueServer("elspagetab")
+    observeEvent(seoClickedDistrictValueServer("seopagetab"),{
+        click_district <- seoClickedDistrictValueServer("seopagetab")
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
-        filter_cash_data_based_on_map <- filterCashDataByDistrict("elspagetab", els_df_data, location_district, click_district)
+        filter_cash_data_based_on_map <- filterCashDataByDistrict("seopagetab", seo_df_data, location_district, click_district)
         # create all the charts
-        elsDonutChartCashBeneficiary ("elspagetab",
+        seoDonutChartCashBeneficiary ("seopagetab",
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
                                       "% of Total \nCash Transfer\n by Beneficiary Type",
-                                      els_beneficiary_types)
-        elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map, 
+                                      seo_beneficiary_types)
+        seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
                                       glue("Total Cash Distributed{display_in_title}"))
-        elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map,
+        seoBarChartDeliveryMechanism ("seopagetab", filter_cash_data_based_on_map,
                                       delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
                                       glue("Total Cash by Delivery Mechanism{display_in_title}"))
-        elsBarChartCashByPartner ("elspagetab", filter_cash_data_based_on_map, partner_name,
+        seoBarChartCashByPartner ("seopagetab", filter_cash_data_based_on_map, partner_name,
                                   total_cash_value_of_cash_for_work_ugx,
                                   glue("Total cash Transfers by Partner{display_in_title}"))
-        elsTextSelectedDistrict("elspagetab", click_district)
+        seoTextSelectedDistrict("seopagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
         available_year_choices <- unique(as.character(filter_original_cash_data$Year))
-        if (els_year() %in% available_year_choices){
-            elsUpdateYear("elspagetab", available_year_choices, els_year())
+        if (seo_year() %in% available_year_choices){
+            seoUpdateYear("seopagetab", available_year_choices, seo_year())
         }else{
-            elsUpdateYear("elspagetab", available_year_choices, "All")
+            seoUpdateYear("seopagetab", available_year_choices, "All")
         }
         # update quarter selection based on year and district
-        if(els_year() != "All"){
-            selected_year <- els_year()
-            filter_cash_data_quarter <- filterYearDistrictForQuarters ("elspagetab", els_df_data, Year, selected_year,
+        if(seo_year() != "All"){
+            selected_year <- seo_year()
+            filter_cash_data_quarter <- filterYearDistrictForQuarters ("seopagetab", seo_df_data, Year, selected_year,
                                                                        location_district, click_district )
             available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
-            if(els_quarter() %in% available_quarter_choices){
-                elsUpdateQuarter("elspagetab", available_quarter_choices, els_quarter())
+            if(seo_quarter() %in% available_quarter_choices){
+                seoUpdateQuarter("seopagetab", available_quarter_choices, seo_quarter())
             }else{
-                elsUpdateQuarter("elspagetab", available_quarter_choices, "All")
+                seoUpdateQuarter("seopagetab", available_quarter_choices, "All")
             }
         }
     })
     
     # Map reset button --------------------------------------------------------
-    observeEvent(elsResetMapServer("elspagetab"),{
+    observeEvent(seoResetMapServer("seopagetab"),{
         display_in_title <<- " for all Districts"
         
-        elsUpdateYear("elspagetab", unique(as.character(els_df_data$Year)), "All")
-        elsUpdateQuarter("elspagetab", "All", "All")
+        seoUpdateYear("seopagetab", unique(as.character(seo_df_data$Year)), "All")
+        seoUpdateQuarter("seopagetab", "All", "All")
         
-        filter_cash_data_based_on_map <- els_df_data
+        filter_cash_data_based_on_map <- seo_df_data
         
-        elsDonutChartCashBeneficiary ("elspagetab",
+        seoDonutChartCashBeneficiary ("seopagetab",
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
                                       "% of Total \nCash Transfer\n by Beneficiary Type",
-                                      els_beneficiary_types)
-        elsLineChartTotalCashQuarter ("elspagetab", filter_cash_data_based_on_map, 
+                                      seo_beneficiary_types)
+        seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
                                       glue("Total Cash Distributed{display_in_title}"))
-        elsBarChartDeliveryMechanism ("elspagetab", filter_cash_data_based_on_map,
+        seoBarChartDeliveryMechanism ("seopagetab", filter_cash_data_based_on_map,
                                       delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
                                       glue("Total Cash by Delivery Mechanism{display_in_title}"))
-        elsBarChartCashByPartner ("elspagetab", filter_cash_data_based_on_map, partner_name,
+        seoBarChartCashByPartner ("seopagetab", filter_cash_data_based_on_map, partner_name,
                                   total_cash_value_of_cash_for_work_ugx,
                                   glue("Total cash Transfers by Partner{display_in_title}"))
-        elsTextSelectedDistrict("elspagetab", "")
+        seoTextSelectedDistrict("seopagetab", "")
         
     })
     
@@ -629,7 +629,7 @@ server <- function(input, output, session) {
     apaDefaultMap("apapagetab")
     # dynamic charts and map --------------------------------------------------
     observe({
-        req(input$tab_being_displayed == "Em Livelihood")
+        req(input$tab_being_displayed == "Emergency Livelihood Support")
         req(input$tabs == "Access to Productive Assets")
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("apapagetab", apa_df_data, apa_year(), Year, apa_quarter(), Quarter )})

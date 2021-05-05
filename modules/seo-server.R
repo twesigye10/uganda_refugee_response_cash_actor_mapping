@@ -1,38 +1,38 @@
 # Server modules ----------------------------------------------------------
 
 # get year
-elsYearValueServer <- function(id){
+seoYearValueServer <- function(id){
   moduleServer(id, function(input, output, session){
-    return( reactive({input$els_yearperiod})  )
+    return( reactive({input$seo_yearperiod})  )
   })
 }
 # get quarter
-elsQuarterValueServer <- function(id){
+seoQuarterValueServer <- function(id){
   moduleServer(id, function(input, output, session){
-    return( reactive({input$els_quarterperiod})  )
+    return( reactive({input$seo_quarterperiod})  )
   })
 }
 # reset map
-elsResetMapServer <- function(id){
+seoResetMapServer <- function(id){
   moduleServer(id, function(input, output, session){
     return(
-      input$els_mapreset
+      input$seo_mapreset
     )
   })
 }
 # get clicked district
-elsClickedDistrictValueServer <- function(id){
+seoClickedDistrictValueServer <- function(id){
   moduleServer(id, function(input, output, session){
-    click = input$els_map_shape_click
+    click = input$seo_map_shape_click
     click_district <- click$id
     return( click_district )
   })
 }
 # donut chart module ------------------------------------------------------
-elsDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
+seoDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
                                       input_field_analysis, input_title, input_beneficiary_vector){
   moduleServer(id, function(input, output, session){
-    output$els_hhreceivingcash <-  renderBillboarder({
+    output$seo_hhreceivingcash <-  renderBillboarder({
       df_billb_data <- input_data %>% 
         group_by({{input_field_group}} ) %>% 
         summarise(
@@ -49,11 +49,11 @@ elsDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
   })
 }
 # line chart cash transfer module ------------------------------------------------------
-elsLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
+seoLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, input_field_year, 
                                       input_field_quarter, input_field_select_Month, 
                                        input_title){
   moduleServer(id, function(input, output, session){
-    output$els_plotcashquarter <-  renderHighchart({
+    output$seo_plotcashquarter <-  renderHighchart({
       input_data %>%
         group_by({{input_field_year}}, {{input_field_quarter}}, {{input_field_select_Month}} ) %>%
         summarise(
@@ -69,10 +69,10 @@ elsLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, i
   })
 }
 # bar chart delivery mechanism module ------------------------------------------------------
-elsBarChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
+seoBarChartDeliveryMechanism <- function(id, input_data, input_field_group, input_field_analysis,  
                                       input_title){
   moduleServer(id, function(input, output, session){
-    output$els_plotdeliverymechanism <-  renderHighchart({
+    output$seo_plotdeliverymechanism <-  renderHighchart({
       input_data %>%
         group_by({{input_field_group}} ) %>%
         summarise(
@@ -88,10 +88,10 @@ elsBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
   })
 }
 # bar chart cash by partner module ------------------------------------------------------
-elsBarChartCashByPartner <- function(id, input_data, input_field_group, input_field_analysis,  
+seoBarChartCashByPartner <- function(id, input_data, input_field_group, input_field_analysis,  
                                   input_title){
   moduleServer(id, function(input, output, session){
-    output$els_plotcashpartner <-  renderHighchart({
+    output$seo_plotcashpartner <-  renderHighchart({
       input_data %>%
         group_by({{input_field_group}} ) %>%
         summarise(
@@ -108,19 +108,19 @@ elsBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
   })
 }
 # text for selected district on the map chart module ------------------------------------------------------
-elsTextSelectedDistrict <- function(id, input_text){
+seoTextSelectedDistrict <- function(id, input_text){
   moduleServer(id, function(input, output, session){
-    output$els_selecteddistrict <- renderText({
+    output$seo_selecteddistrict <- renderText({
       if(str_length(input_text) < 1){ paste("")
       } else{ paste("Selected District: ", stringr::str_to_title(input_text))  }
     })
     
   })
 }
-# els default map module ------------------------------------------------------
-elsDefaultMap <- function(id){
+# seo default map module ------------------------------------------------------
+seoDefaultMap <- function(id){
   moduleServer(id, function(input, output, session){
-    output$els_map  <-  renderLeaflet({
+    output$seo_map  <-  renderLeaflet({
       leaflet(options = leafletOptions(zoomSnap = 0.25, zoomDelta=0.25)) %>% 
         addProviderTiles(providers$Esri.WorldGrayCanvas, 
                          options = providerTileOptions(minZoom = 5, maxZoom = 10), 
@@ -135,12 +135,12 @@ elsDefaultMap <- function(id){
         addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
         addEasyButton(easyButton(
           icon="fa-globe", title="Home",
-          onClick=JS("function(btn, els_map){ els_map.setView(new L.LatLng(1.3733,32.2903), 7.25) }")))
+          onClick=JS("function(btn, seo_map){ seo_map.setView(new L.LatLng(1.3733,32.2903), 7.25) }")))
     })
   })
 }
-# els dynamic map layer module ------------------------------------------------------
-elsCreatingMap <- function(id, input_data){
+# seo dynamic map layer module ------------------------------------------------------
+seoCreatingMap <- function(id, input_data){
   moduleServer(id, function(input, output, session){
     # Create a continuous palette function
     pal <- colorNumeric(
@@ -161,7 +161,7 @@ elsCreatingMap <- function(id, input_data){
     ) %>% 
       lapply(htmltools::HTML)
     # construct the dynamic map
-    proxy = leafletProxy("els_map", data = input_data) #%>% 
+    proxy = leafletProxy("seo_map", data = input_data) #%>% 
     proxy %>% 
       clearControls() %>% 
       addPolygons(
@@ -199,8 +199,8 @@ elsCreatingMap <- function(id, input_data){
       )
   })
 }
-# els dynamic map labels module ------------------------------------------------------
-elsMapLabels <- function(id, input_data){
+# seo dynamic map labels module ------------------------------------------------------
+seoMapLabels <- function(id, input_data){
   moduleServer(id, function(input, output, session){
     # label districts in the map
     labels_district <- ~sprintf(
@@ -209,7 +209,7 @@ elsMapLabels <- function(id, input_data){
     ) %>% 
       lapply(htmltools::HTML)
     # add labels on the map
-    proxy = leafletProxy("els_map", data=input_data ) 
+    proxy = leafletProxy("seo_map", data=input_data ) 
     proxy %>%
       clearMarkers() %>%
       addLabelOnlyMarkers( label = labels_district, 
@@ -218,18 +218,18 @@ elsMapLabels <- function(id, input_data){
   })
 }
 # update quarter module ------------------------------------------------------
-elsUpdateQuarter <- function(id, input_quarter_choices, input_selected){
+seoUpdateQuarter <- function(id, input_quarter_choices, input_selected){
   moduleServer(id, function(input, output, session){
-    updateSelectInput(session, "els_quarterperiod", 
+    updateSelectInput(session, "seo_quarterperiod", 
                       label = "Select Quarter", 
                       choices = c("All", input_quarter_choices),
                       selected = input_selected)
   })
 }
 # update year module ------------------------------------------------------
-elsUpdateYear <- function(id, input_year_choices, input_selected){
+seoUpdateYear <- function(id, input_year_choices, input_selected){
   moduleServer(id, function(input, output, session){
-    updateSelectInput(session, "els_yearperiod", 
+    updateSelectInput(session, "seo_yearperiod", 
                       label = "Select Year", 
                       choices = c("All", input_year_choices),
                       selected = input_selected)

@@ -42,7 +42,6 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
     Partners continue efforts to establish a common platform for cash transfers and the information is collected through the ",
     tags$a(href="https://www.activityinfo.org/", "Activity Info platform"),
     
-
         tabsetPanel( 
         id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
@@ -59,25 +58,31 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
             "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
         ),
         
-        # Livelihood --------------------------------------------------------------
-        tabPageUI(
-            "elspagetab", "Emergency Livelihood Support", "els_yearperiod", els_df_data$Year,
-            "els_quarterperiod", "els_mapreset", "els_selecteddistrict", "els_hhreceivingcash",
-            "els_plotcashquarter", "els_map", "els_plotdeliverymechanism", "els_plotcashpartner"
-        ),
-        
-        # Access to Productive Assets --------------------------------------------------------------
-        tabPageUI(
-            "apapagetab", "Access to Productive Assets", "apa_yearperiod", apa_df_data$Year,
-            "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
-            "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
-        ),
-        
         # Environmental Protection --------------------------------------------------------------
         tabPageUI(
             "eprpagetab", "Environmental Protection", "epr_yearperiod", epr_df_data$Year,
             "epr_quarterperiod", "epr_mapreset", "epr_selecteddistrict", "epr_hhreceivingcash",
             "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
+        ),
+        # combine livelihood components
+        tabPanel("Em Livelihood",
+                 tabsetPanel(
+                     id = "tabs",
+                     # Livelihood --------------------------------------------------------------
+                     tabPageUI(
+                         "elspagetab", "Emergency Livelihood Support", "els_yearperiod", els_df_data$Year,
+                         "els_quarterperiod", "els_mapreset", "els_selecteddistrict", "els_hhreceivingcash",
+                         "els_plotcashquarter", "els_map", "els_plotdeliverymechanism", "els_plotcashpartner"
+                     ),
+                     
+                     # Access to Productive Assets --------------------------------------------------------------
+                     tabPageUI(
+                         "apapagetab", "Access to Productive Assets", "apa_yearperiod", apa_df_data$Year,
+                         "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
+                         "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
+                     ) 
+                 )
+                    
         )
     )
 )
@@ -367,7 +372,8 @@ server <- function(input, output, session) {
     elsDefaultMap("elspagetab")
     # dynamic charts and map --------------------------------------------------
     observe({
-        req(input$tab_being_displayed == "Emergency Livelihood Support")
+        req(input$tab_being_displayed == "Em Livelihood")
+        req(input$tabs == "Emergency Livelihood Support")
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("elspagetab", els_df_data, els_year(), Year, els_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("elspagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_for_work_ugx, "location_district")
@@ -623,7 +629,8 @@ server <- function(input, output, session) {
     apaDefaultMap("apapagetab")
     # dynamic charts and map --------------------------------------------------
     observe({
-        req(input$tab_being_displayed == "Access to Productive Assets")
+        req(input$tab_being_displayed == "Em Livelihood")
+        req(input$tabs == "Access to Productive Assets")
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("apapagetab", apa_df_data, apa_year(), Year, apa_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("apapagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_grants_distributed_for_productive_assets_ugx, "location_district")

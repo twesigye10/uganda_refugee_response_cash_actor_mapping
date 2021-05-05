@@ -45,22 +45,22 @@ cbiPSNDataServer <- function(id, input_data){
     df_data_indicators <- input_data %>%
       rowwise() %>%
       mutate( 
-        ps.child_at_risk = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Child_at_risk_,
-                               PSN_households_receiving_voucher_assistance_for_basic_needs__Child_at_risk_, na.rm = T),
-        ps.disability = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Disability_,   
-                            PSN_households_receiving_voucher_assistance_for_basic_needs__Disability_, na.rm = T),
-        ps.Older_person_at_risk = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Older_person_at_risk_,                           
-                                      PSN_households_receiving_voucher_assistance_for_basic_needs__Older_person_at_risk_, na.rm = T),
-        ps.serious_medical_condition = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Serious_medical_condition_,                      
-                                           PSN_households_receiving_voucher_assistance_for_basic_needs__Serious_medical_condition_, na.rm = T),
-        ps.single_parent_or_caregiver = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Single_parent_or_caregiver_,                     
-                                            PSN_households_receiving_voucher_assistance_for_basic_needs__Single_parent_or_caregiver_, na.rm = T),
-        ps.specific_legal_and_physical_protection_needs = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Specific_legal_and_physical_protection_needs_,   
-                                                              PSN_households_receiving_voucher_assistance_for_basic_needs__Specific_legal_and_physical_protection_needs_, na.rm = T),
-        ps.unaccompanied_or_separated_child = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Unaccompanied_or_separated_child_,               
-                                                  PSN_households_receiving_voucher_assistance_for_basic_needs__Unaccompanied_or_separated_child_, na.rm = T),
-        ps.woman_at_risk = sum(PSN_households_receiving_cash_assistance_for_basic_needs__Woman_at_risk_,
-                               PSN_households_receiving_voucher_assistance_for_basic_needs__Woman_at_risk_, na.rm = T)
+        ps.child_at_risk = sum(psn_households_receiving_cash_assistance_for_basic_needs_child_at_risk,
+                               psn_households_receiving_voucher_assistance_for_basic_needs_child_at_risk, na.rm = T),
+        ps.disability = sum(psn_households_receiving_cash_assistance_for_basic_needs_disability,   
+                            psn_households_receiving_voucher_assistance_for_basic_needs_disability, na.rm = T),
+        ps.Older_person_at_risk = sum(psn_households_receiving_cash_assistance_for_basic_needs_older_person_at_risk,                           
+                                      psn_households_receiving_voucher_assistance_for_basic_needs_older_person_at_risk, na.rm = T),
+        ps.serious_medical_condition = sum(psn_households_receiving_cash_assistance_for_basic_needs_serious_medical_condition,                      
+                                           psn_households_receiving_voucher_assistance_for_basic_needs_serious_medical_condition, na.rm = T),
+        ps.single_parent_or_caregiver = sum(psn_households_receiving_cash_assistance_for_basic_needs_single_parent_or_caregiver,                     
+                                            psn_households_receiving_voucher_assistance_for_basic_needs_single_parent_or_caregiver, na.rm = T),
+        ps.specific_legal_and_physical_protection_needs = sum(psn_households_receiving_cash_assistance_for_basic_needs_specific_legal_and_physical_protection_needs,   
+                                                              psn_households_receiving_voucher_assistance_for_basic_needs_specific_legal_and_physical_protection_needs, na.rm = T),
+        ps.unaccompanied_or_separated_child = sum(psn_households_receiving_cash_assistance_for_basic_needs_unaccompanied_or_separated_child,               
+                                                  psn_households_receiving_voucher_assistance_for_basic_needs_unaccompanied_or_separated_child, na.rm = T),
+        ps.woman_at_risk = sum(psn_households_receiving_cash_assistance_for_basic_needs_woman_at_risk,
+                               psn_households_receiving_voucher_assistance_for_basic_needs_woman_at_risk, na.rm = T)
       ) %>% 
       ungroup() %>% 
       select(starts_with("ps.")) %>% 
@@ -106,7 +106,7 @@ cbiLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, i
         ) %>%
         arrange(Date) %>% 
         hchart(type = "line",
-               hcaes(x = Select_Month, y = total_amount_of_cash_by_quarter)) %>%  
+               hcaes(x = select_month, y = total_amount_of_cash_by_quarter)) %>%  
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Month") ) %>% 
         hc_yAxis(title = list(text = "Total Cash")) 
@@ -126,7 +126,7 @@ cbiBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
         ) %>%
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
-               hcaes(x = Select_Delivery_Mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
+               hcaes(x = select_delivery_mechanism, y = cash_transfer_by_delivery_mechanism)) %>%  
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
         hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism")) 
@@ -145,7 +145,7 @@ cbiBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
         ) %>%
         arrange(-total_cash_by_parter) %>% 
         hchart(type = "bar",
-               hcaes(x = Partner_Name, y = total_cash_by_parter)) %>%  
+               hcaes(x = partner_name, y = total_cash_by_parter)) %>%  
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Partner") ) %>% 
         hc_yAxis(title = list(text = "Total cash Transfers")) 

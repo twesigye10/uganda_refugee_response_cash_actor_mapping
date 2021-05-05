@@ -46,7 +46,7 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
         id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
         tabPageCBIUI(
-            "cbipagetab", "CBI for Basic Needs", "yearperiod", df_data$Year,
+            "cbipagetab", "CBI for Basic Needs", "yearperiod", cbi_df_data$Year,
             "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
             "plotcashquarter", "map", "psndata", "plotdeliverymechanism", "plotcashpartner"
         ),
@@ -98,8 +98,8 @@ server <- function(input, output, session) {
     # dynamic charts and map --------------------------------------------------
     observe({
         # UI selectors to filter shape data
-        df_by_district_cash_data <- reactive({filterCashData("cbipagetab", df_data, cbi_year(), Year, cbi_quarter(), Quarter )})
-        df_shape_data <- dfShapeDefault("cbipagetab", df_shape, df_by_district_cash_data(), Location_District, Total_amount_of_cash_transfers, "Location_District")
+        df_by_district_cash_data <- reactive({filterCashData("cbipagetab", cbi_df_data, cbi_year(), Year, cbi_quarter(), Quarter )})
+        df_shape_data <- dfShapeDefault("cbipagetab", df_shape, df_by_district_cash_data(), location_district, total_amount_of_cash_transfers, "location_district")
         
         df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
@@ -112,22 +112,22 @@ server <- function(input, output, session) {
         
         cbiDonutChartCashBeneficiary ("cbipagetab",
                                       df_by_district_cash_data(),
-                                      Select_Beneficiary_Type,
-                                      Total_amount_of_cash_transfers,
+                                      select_beneficiary_type,
+                                      total_amount_of_cash_transfers,
                                       "% of Total \nCash Transfer\n by Beneficiary Type",
-                                      beneficiary_types)
+                                      cbi_beneficiary_types)
         
         cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data(), 
-                                      Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
-                                      Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
+                                      total_amount_of_cash_transfers, Year, Quarter, select_month, 
+                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title}"))
         
         cbiBarChartDeliveryMechanism ("cbipagetab", df_by_district_cash_data(),
-                                      Select_Delivery_Mechanism,
-                                      Total_amount_of_cash_transfers,
+                                      select_delivery_mechanism,
+                                      total_amount_of_cash_transfers,
                                       glue("Total Cash by Delivery Mechanism{display_in_title}"))
         
-        cbiBarChartCashByPartner ("cbipagetab", df_by_district_cash_data(), Partner_Name,
-                                  Total_amount_of_cash_transfers,
+        cbiBarChartCashByPartner ("cbipagetab", df_by_district_cash_data(), partner_name,
+                                  total_amount_of_cash_transfers,
                                   glue("Total cash Transfers by Partner{display_in_title}"))
         
         psn_data <- cbiPSNDataServer("cbipagetab", df_by_district_cash_data())
@@ -139,7 +139,7 @@ server <- function(input, output, session) {
     observe({
         if(cbi_year() != "All"){
             selected_year <- cbi_year()
-            filter_cash_data_quarter <- filterYearForQuarters("cbipagetab", df_data, Year, selected_year ) 
+            filter_cash_data_quarter <- filterYearForQuarters("cbipagetab", cbi_df_data, Year, selected_year ) 
             # update quarter selection
             available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
             if(cbi_quarter() %in% available_quarter_choices){
@@ -157,23 +157,23 @@ server <- function(input, output, session) {
         click_district <- cbiClickedDistrictValueServer("cbipagetab")
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         
-        filter_cash_data_based_on_map <- filterCashDataByDistrict("cbipagetab", df_data, Location_District, click_district)
+        filter_cash_data_based_on_map <- filterCashDataByDistrict("cbipagetab", cbi_df_data, location_district, click_district)
         # create all the charts
         cbiDonutChartCashBeneficiary ("cbipagetab",
                                       filter_cash_data_based_on_map,
-                                      Select_Beneficiary_Type,
-                                      Total_amount_of_cash_transfers,
+                                      select_beneficiary_type,
+                                      total_amount_of_cash_transfers,
                                       "% of Total \nCash Transfer\n by Beneficiary Type",
-                                      beneficiary_types)
+                                      cbi_beneficiary_types)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
-                                      Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
-                                      Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
+                                      total_amount_of_cash_transfers, Year, Quarter, select_month, 
+                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title}"))
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
-                                      Select_Delivery_Mechanism,
-                                      Total_amount_of_cash_transfers,
+                                      select_delivery_mechanism,
+                                      total_amount_of_cash_transfers,
                                       glue("Total Cash by Delivery Mechanism{display_in_title}"))
-        cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, Partner_Name,
-                                  Total_amount_of_cash_transfers,
+        cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_amount_of_cash_transfers,
                                   glue("Total cash Transfers by Partner{display_in_title}"))
         cbiTextSelectedDistrict("cbipagetab", click_district)
         
@@ -191,8 +191,8 @@ server <- function(input, output, session) {
         # update quarter selection based on year and district
         if(cbi_year() != "All"){
             selected_year <- cbi_year()
-            filter_cash_data_quarter <- filterYearDistrictForQuarters ("cbipagetab", df_data, Year, selected_year,
-                                                                       Location_District, click_district )
+            filter_cash_data_quarter <- filterYearDistrictForQuarters ("cbipagetab", cbi_df_data, Year, selected_year,
+                                                                       location_district, click_district )
             available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
             if(cbi_quarter() %in% available_quarter_choices){
                 cbiUpdateQuarter("cbipagetab", available_quarter_choices, cbi_quarter())
@@ -207,26 +207,26 @@ server <- function(input, output, session) {
         
         display_in_title <<- " for all Districts"
         
-        cbiUpdateYear("cbipagetab", unique(as.character(df_data$Year)), "All")
+        cbiUpdateYear("cbipagetab", unique(as.character(cbi_df_data$Year)), "All")
         cbiUpdateQuarter("cbipagetab", "All", "All")
         
-        filter_cash_data_based_on_map <- df_data
+        filter_cash_data_based_on_map <- cbi_df_data
         
         cbiDonutChartCashBeneficiary ("cbipagetab",
                                       filter_cash_data_based_on_map,
-                                      Select_Beneficiary_Type,
-                                      Total_amount_of_cash_transfers,
+                                      select_beneficiary_type,
+                                      total_amount_of_cash_transfers,
                                       "% of Total \nCash Transfer\n by Beneficiary Type",
-                                      beneficiary_types)
+                                      cbi_beneficiary_types)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
-                                      Total_amount_of_cash_transfers, Year, Quarter, Select_Month, 
-                                      Date, "Select_Month",  glue("Total Cash Distributed{display_in_title}"))
+                                      total_amount_of_cash_transfers, Year, Quarter, select_month, 
+                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title}"))
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
-                                      Select_Delivery_Mechanism,
-                                      Total_amount_of_cash_transfers,
+                                      select_delivery_mechanism,
+                                      total_amount_of_cash_transfers,
                                       glue("Total Cash by Delivery Mechanism{display_in_title}"))
-        cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, Partner_Name,
-                                  Total_amount_of_cash_transfers,
+        cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_amount_of_cash_transfers,
                                   glue("Total cash Transfers by Partner{display_in_title}"))
         cbiTextSelectedDistrict("cbipagetab", "")
         
@@ -373,7 +373,7 @@ server <- function(input, output, session) {
     # dynamic charts and map --------------------------------------------------
     observe({
         req(input$tab_being_displayed == "Em Livelihood")
-        req(input$tabs == "Emergency Livelihood Support")
+        req(input$tabs == "Access to Productive Assets")
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("elspagetab", els_df_data, els_year(), Year, els_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("elspagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_for_work_ugx, "location_district")

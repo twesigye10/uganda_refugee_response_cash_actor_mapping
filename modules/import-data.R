@@ -8,9 +8,9 @@ dat<-read_rds(file = "data/data.rds")
 df_shape<- dat$df_shape
 
 # add data: CBI
-df_data<- dat$df_data
-beneficiary_types <- df_data %>% 
-  filter(!is.na(Select_Beneficiary_Type)) %>% pull(Select_Beneficiary_Type) %>% unique() %>% sort()
+cbi_df_data<- dat$cbi_df_data
+cbi_beneficiary_types <- cbi_df_data %>% 
+  filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique() %>% sort()
 
 # add data: food security
 fs_df_data <-dat$fs_df_data

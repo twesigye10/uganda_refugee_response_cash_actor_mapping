@@ -126,7 +126,7 @@ cbiBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
         ) %>%
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
-               hcaes(x = select_delivery_mechanism, y = cash_transfer_by_delivery_mechanism), color="red") %>%  
+               hcaes(x = select_delivery_mechanism, y = cash_transfer_by_delivery_mechanism), color="red", dataLabels = list(enabled = TRUE)) %>%  
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
         hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism")) 

@@ -49,16 +49,15 @@ tabPageCBIUI <- function(
                                  # table
                                  uiOutput(ns(outp_data))
                           )
-                        )
-                        ,
+                        ),
                         
                         fluidRow(
                           column(width = 6,
                                  # Select Delivery Mechanism
-                                 highchartOutput(ns(outp_plotdeliverymechanism) )
+                                 highchartOutput(ns(outp_plotdeliverymechanism))
                           ),
                           column(width = 6,
-                                 highchartOutput(ns(outp_plotcashpartner))
+                                highchartOutput(ns(outp_plotcashpartner))
                           )
                         )
               )

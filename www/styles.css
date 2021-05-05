@@ -5,6 +5,7 @@ table, th, td {
 
 th, td {
   border-bottom: 1px solid #ddd;
+  font-weight: bold;
   font-size: 0.75em;
   color: #0f69b6;
 }

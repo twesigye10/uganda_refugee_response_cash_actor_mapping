@@ -34,10 +34,15 @@ ui <- fluidPage(
     theme= reach_theme,
     # Application title
     titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP)", style = "color:#3474A7"), windowTitle = "Cash Based Interventions"),
-    p( "The response seeks to explore opportunities to transition from in-kind to cash-based assistance. The injection of cash, through unconditional multi-purpose, and conditional cash-based interventions will have 
-multiplier effects on food security, social cohesion, reduction of aid dependency, and productive engagement of the youth, among others. The established reference Minimum Expenditure Basket (MEB) tool will ultimately support the cost efficiency and cost effectiveness, and pave the way for coherent multi-purpose cash programming and delivery. Partners continue efforts to establish a common platform for cash transfers. The information is collected through the Activity Info platform." ),
+    "The injection of cash, through unconditional multi-purpose, and conditional cash-based interventions have 
+multiplier effects on food security, social cohesion, reduction of aid dependency, 
+    and productive engagement of the youth, among others. The established 
+    reference Minimum Expenditure Basket (MEB) tool ultimately supports the cost efficiency and cost effectiveness, 
+    and pave the way for coherent multi-purpose cash programming and delivery. 
+    Partners continue efforts to establish a common platform for cash transfers and the information is collected through the ",
     
-    tabsetPanel( 
+
+        tabsetPanel( 
         id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
         tabPageCBIUI(

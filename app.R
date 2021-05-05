@@ -50,7 +50,6 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
             "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
             "plotcashquarter", "map", "psndata", "plotdeliverymechanism", "plotcashpartner"
         ),
-        
         # Environmental Protection --------------------------------------------------------------
         tabPageUI(
             "eprpagetab", "Environmental Protection", "epr_yearperiod", epr_df_data$Year,
@@ -61,13 +60,12 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
         tabPanel("Emergency Livelihood Support",
                  tabsetPanel(
                      id = "tabs",
-                     # Livelihood --------------------------------------------------------------
+                     # Short term Employment --------------------------------------------------------------
                      tabPageUI(
                          "seopagetab", "Short term Employment", "seo_yearperiod", seo_df_data$Year,
                          "seo_quarterperiod", "seo_mapreset", "seo_selecteddistrict", "seo_hhreceivingcash",
                          "seo_plotcashquarter", "seo_map", "seo_plotdeliverymechanism", "seo_plotcashpartner"
                      ),
-                     
                      # Access to Productive Assets --------------------------------------------------------------
                      tabPageUI(
                          "apapagetab", "Access to Productive Assets", "apa_yearperiod", apa_df_data$Year,

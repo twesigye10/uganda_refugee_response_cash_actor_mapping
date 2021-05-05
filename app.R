@@ -40,6 +40,7 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
     reference Minimum Expenditure Basket (MEB) tool ultimately supports the cost efficiency and cost effectiveness, 
     and pave the way for coherent multi-purpose cash programming and delivery. 
     Partners continue efforts to establish a common platform for cash transfers and the information is collected through the ",
+    tags$a(href="https://www.activityinfo.org/", "Activity Info platform"),
     
 
         tabsetPanel( 

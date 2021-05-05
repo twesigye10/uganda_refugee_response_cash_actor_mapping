@@ -51,13 +51,6 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
             "plotcashquarter", "map", "psndata", "plotdeliverymechanism", "plotcashpartner"
         ),
         
-        # Food Security -----------------------------------------------------------
-        tabPageUI(
-            "fspagetab", "Food Security", "fs_yearperiod", fs_df_data$Year,
-            "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
-            "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
-        ),
-        
         # Environmental Protection --------------------------------------------------------------
         tabPageUI(
             "eprpagetab", "Environmental Protection", "epr_yearperiod", epr_df_data$Year,
@@ -83,6 +76,12 @@ multiplier effects on food security, social cohesion, reduction of aid dependenc
                      ) 
                  )
                     
+        ),
+        # Food Security -----------------------------------------------------------
+        tabPageUI(
+            "fspagetab", "Food Security", "fs_yearperiod", fs_df_data$Year,
+            "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
+            "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
         )
     )
 )

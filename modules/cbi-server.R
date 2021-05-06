@@ -106,7 +106,8 @@ cbiLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, i
         ) %>%
         arrange(Date) %>% 
         hchart(type = "line",
-               hcaes(x = select_month, y = total_amount_of_cash_by_quarter)) %>%  
+               hcaes(x = select_month, y = total_amount_of_cash_by_quarter)) %>% 
+        hc_tooltip(pointFormat = "<b>{point.total_amount_of_cash_by_quarter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Month") ) %>% 
         hc_yAxis(title = list(text = "Total Cash")) 
@@ -126,7 +127,9 @@ cbiBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
         ) %>%
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
-               hcaes(x = select_delivery_mechanism, y = cash_transfer_by_delivery_mechanism), color="red", dataLabels = list(enabled = TRUE)) %>%  
+               hcaes(x = select_delivery_mechanism, y = cash_transfer_by_delivery_mechanism), 
+               dataLabels = list(enabled = TRUE, format="{point.cash_transfer_by_delivery_mechanism:,.0f}" )) %>%  
+        hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Delivery Mechanism") ) %>% 
         hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism")) 
@@ -145,7 +148,9 @@ cbiBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
         ) %>%
         arrange(-total_cash_by_parter) %>% 
         hchart(type = "bar",
-               hcaes(x = partner_name, y = total_cash_by_parter)) %>%  
+               hcaes(x = partner_name, y = total_cash_by_parter),
+               dataLabels = list(enabled = TRUE, format="{point.total_cash_by_parter:,.0f}" )) %>%
+        hc_tooltip(pointFormat = "<b>{point.total_cash_by_parter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = "Partner") ) %>% 
         hc_yAxis(title = list(text = "Total cash Transfers")) 

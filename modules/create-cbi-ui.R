@@ -10,7 +10,7 @@ tabPageCBIUI <- function(
             # Sidebar
             sidebarLayout(
               # side panel
-              sidebarPanel(width = 3,
+              sidebarPanel(width = 4,
                            fluidRow(
                              column(width = 4,
                                     selectInput(ns(inp_yearperiod), 
@@ -38,7 +38,7 @@ tabPageCBIUI <- function(
               # end side panel
               
               # main panel
-              mainPanel(width = 9,
+              mainPanel(width = 8,
                         
                         fluidRow(
                           column(width = 8,

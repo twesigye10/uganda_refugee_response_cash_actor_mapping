@@ -8,15 +8,9 @@
 #
 
 # load packages
-library(shiny)
 library(sf)
 library(tidyverse)
 library(lubridate)
-library(leaflet)
-library(bslib)
-library(ggreach)
-library(highcharter)
-library(billboarder)
 library(glue)
 library(janitor)
 
@@ -38,7 +32,12 @@ cbi_df_data <- janitor::clean_names(cbi_df_data) %>%
         Date = my(select_month),
         Year = paste0("20",Year)
     ) %>% 
-    arrange(desc(Year),desc(Quarter))
+    arrange(desc(Year),desc(Quarter)) %>% 
+    filter(
+        !grepl("^[0-9]", select_delivery_mechanism,  ignore.case = FALSE) & 
+            !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
+            total_amount_of_cash_transfers > 0
+    )
 
 cbi_beneficiary_types <- cbi_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
@@ -52,7 +51,12 @@ df_food_security <- janitor::clean_names(df_food_security) %>%
     mutate(
     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers = ifelse(!is.na(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers), (fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers/currency_conversion_factor), NA)
     )%>% 
-    filter(!is.na(select_quarter))
+    filter(!is.na(select_quarter)) %>% 
+    filter(
+        !grepl("^[0-9]", select_delivery_mechanism,  ignore.case = FALSE) & 
+            !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
+            fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers > 0
+    )
 
 fs_df_data <- df_food_security %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
@@ -60,15 +64,20 @@ fs_df_data <- df_food_security %>%
 fs_beneficiary_types <- fs_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
-# Livelihoods data
-df_emergency_livelihood_support <- read_csv("data/ELS_Increased_access_to_short-term_employment_opportunities.csv")
-df_emergency_livelihood_support <- janitor::clean_names(df_emergency_livelihood_support) %>% 
+# Increased access to short-term employment opportunities data
+seo_df_data <- read_csv("data/ELS_Increased_access_to_short-term_employment_opportunities.csv")
+seo_df_data <- janitor::clean_names(seo_df_data) %>% 
     mutate(
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA)
     )%>% 
-    filter(!is.na(select_quarter))
+    filter(!is.na(select_quarter)) %>% 
+    filter(
+        !grepl("^[0-9]", delivery_mechanism,  ignore.case = FALSE) & 
+            !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
+            total_cash_value_of_cash_for_work_ugx > 0
+    )
 
-seo_df_data <- df_emergency_livelihood_support %>% 
+seo_df_data <- seo_df_data %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
 
 seo_beneficiary_types <- seo_df_data %>% 
@@ -80,7 +89,12 @@ df_access_productive_assets <- janitor::clean_names(df_access_productive_assets)
     mutate(
         total_cash_value_of_grants_distributed_for_productive_assets_ugx = ifelse(!is.na(total_cash_value_of_grants_distributed_for_productive_assets_ugx), (total_cash_value_of_grants_distributed_for_productive_assets_ugx/currency_conversion_factor), NA)
     )%>% 
-    filter(!is.na(select_quarter))
+    filter(!is.na(select_quarter)) %>% 
+    filter(
+        !grepl("^[0-9]", delivery_mechanism,  ignore.case = FALSE) & 
+            !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
+            total_cash_value_of_grants_distributed_for_productive_assets_ugx > 0
+    )
 
 apa_df_data <- df_access_productive_assets %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
@@ -96,7 +110,12 @@ df_environment_protection_restoration <- janitor::clean_names(df_environment_pro
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA)
     ) %>% 
     rename(location_district = district_name) %>% 
-    filter(!is.na(select_quarter))
+    filter(!is.na(select_quarter))%>% 
+    filter(
+        !grepl("^[0-9]", delivery_mechanism,  ignore.case = FALSE) & 
+            !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
+            total_cash_value_of_cash_for_work_ugx > 0
+    )
 
 epr_df_data <- df_environment_protection_restoration %>% 
     separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")

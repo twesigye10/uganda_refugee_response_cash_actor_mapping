@@ -109,7 +109,7 @@ cbiLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, i
                hcaes(x = select_month, y = total_amount_of_cash_by_quarter)) %>% 
         hc_tooltip(pointFormat = "<b>{point.total_amount_of_cash_by_quarter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
-        hc_xAxis( title = list(text = NULL) ) %>% 
+        hc_xAxis( title = list(text = "Month") ) %>% 
         hc_yAxis(title = list(text = "Total Cash")) 
     })
     
@@ -131,8 +131,8 @@ cbiBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
                dataLabels = list(enabled = TRUE, format="{point.cash_transfer_by_delivery_mechanism:,.0f}" )) %>%  
         hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
-        hc_xAxis( title = list(text = NULL)) %>% 
-        hc_yAxis(title = list(text = NULL), labels = FALSE ) 
+        hc_xAxis( title = list(text = "Delivery Mechanism")) %>% 
+        hc_yAxis(title = list(text = "Cash Transfer by Delivery Mechanism"), labels = FALSE ) 
     })
   })
 }
@@ -152,8 +152,8 @@ cbiBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
                dataLabels = list(enabled = TRUE, format="{point.total_cash_by_parter:,.0f}" )) %>%
         hc_tooltip(pointFormat = "<b>{point.total_cash_by_parter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
-        hc_xAxis( title = list(text = NULL) ) %>% 
-        hc_yAxis(title = list(text = NULL), labels = FALSE ) 
+        hc_xAxis( title = list(text = "Partner") ) %>% 
+        hc_yAxis(title = list(text = "Total cash Transfers"), labels = FALSE ) 
     })
   })
 }

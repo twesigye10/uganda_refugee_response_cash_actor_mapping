@@ -33,6 +33,7 @@ cbi_df_data <- janitor::clean_names(cbi_df_data) %>%
         Year = paste0("20",Year)
     ) %>% 
     arrange(desc(Year),desc(Quarter)) %>% 
+    filter(!is.na(select_month) & !is.na(select_delivery_mechanism) & !is.na(partner_name)) %>%  
     filter(
         !grepl("^[0-9]", select_delivery_mechanism,  ignore.case = FALSE) & 
             !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
@@ -51,7 +52,7 @@ df_food_security <- janitor::clean_names(df_food_security) %>%
     mutate(
     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers = ifelse(!is.na(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers), (fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers/currency_conversion_factor), NA)
     )%>% 
-    filter(!is.na(select_quarter)) %>% 
+    filter(!is.na(select_quarter) & !is.na(select_delivery_mechanism) & !is.na(partner_name)) %>% 
     filter(
         !grepl("^[0-9]", select_delivery_mechanism,  ignore.case = FALSE) & 
             !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
@@ -70,7 +71,7 @@ seo_df_data <- janitor::clean_names(seo_df_data) %>%
     mutate(
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA)
     )%>% 
-    filter(!is.na(select_quarter)) %>% 
+    filter(!is.na(select_quarter) & !is.na(delivery_mechanism) & !is.na(partner_name)) %>% 
     filter(
         !grepl("^[0-9]", delivery_mechanism,  ignore.case = FALSE) & 
             !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
@@ -89,7 +90,7 @@ df_access_productive_assets <- janitor::clean_names(df_access_productive_assets)
     mutate(
         total_cash_value_of_grants_distributed_for_productive_assets_ugx = ifelse(!is.na(total_cash_value_of_grants_distributed_for_productive_assets_ugx), (total_cash_value_of_grants_distributed_for_productive_assets_ugx/currency_conversion_factor), NA)
     )%>% 
-    filter(!is.na(select_quarter)) %>% 
+    filter(!is.na(select_quarter) & !is.na(delivery_mechanism) & !is.na(partner_name)) %>% 
     filter(
         !grepl("^[0-9]", delivery_mechanism,  ignore.case = FALSE) & 
             !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
@@ -110,7 +111,7 @@ df_environment_protection_restoration <- janitor::clean_names(df_environment_pro
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA)
     ) %>% 
     rename(location_district = district_name) %>% 
-    filter(!is.na(select_quarter))%>% 
+    filter(!is.na(select_quarter) & !is.na(delivery_mechanism) & !is.na(partner_name))%>% 
     filter(
         !grepl("^[0-9]", delivery_mechanism,  ignore.case = FALSE) & 
             !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 

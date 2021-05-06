@@ -162,7 +162,7 @@ cbiDataForPSN <- function(id, input_data ){
   moduleServer(id, function(input, output, session){
     output$psndata <-  renderUI({
 
-      div_data <- paste('<div class=\"table\">', glue("<h4> PSN households{display_in_title}</h4>"))
+      div_data <- paste('<div class=\"table\">', glue("<h5> PSN households{display_in_title}</h5>"))
       thead_data <- paste('<table class=\"table\"> ')
       
       data_child_at_risk <- paste('<tr><td>', '<img src="child_at_risk.png" height="32"></img>'  ,'</td> <td>', "Child at Risk"  ,'</td> <td>', input_data %>% select(child_at_risk) %>% pull()   ,'</td> </tr>')

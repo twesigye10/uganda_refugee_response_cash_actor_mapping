@@ -33,8 +33,8 @@ ui <- fluidPage(
     ),
     theme= reach_theme,
     # Application title
-    titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP)", style = "color:#3474A7"), windowTitle = "Cash Based Interventions"),
-    "A common platform for cash transfers. The information is collected through the ", tags$a(href="https://www.activityinfo.org/", "Activity Info platform"),
+    # titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP)", style = "color:#3474A7"), windowTitle = "Cash Based Interventions"),
+    # "A common platform for cash transfers. The information is collected through the ", tags$a(href="https://www.activityinfo.org/", "Activity Info platform"),
     
         tabsetPanel( 
         id = "tab_being_displayed",

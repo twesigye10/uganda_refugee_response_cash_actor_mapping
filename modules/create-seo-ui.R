@@ -3,7 +3,7 @@
 tabPageSEOUI <- function(
   id, label, inp_yearperiod, inp_yearperiod_choices,
   inp_quarterperiod, inp_mapreset, inp_selecteddistrict, outp_hhreceivingcash,
-  outp_plotcashquarter, outp_map, outp_data, outp_plotdeliverymechanism, outp_plotcashpartner){
+  outp_plotcashquarter, outp_map, outp_data, outp_cvpd, outp_plotdeliverymechanism, outp_plotcashpartner){
   ns <- NS(id)
   
   tabPanel( label,
@@ -46,8 +46,10 @@ tabPageSEOUI <- function(
                                  leafletOutput(ns(outp_map), height = "100%")
                           ),
                           column(width = 4,
-                                 # table
-                                 uiOutput(ns(outp_data))
+                                 # table age groups
+                                 uiOutput(ns(outp_data)),
+                                 # table cash value per day
+                                 uiOutput(ns(outp_cvpd))
                           )
                         ),
                         

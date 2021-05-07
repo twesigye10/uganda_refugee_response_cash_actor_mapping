@@ -58,7 +58,7 @@ ui <- fluidPage(
                      tabPageSEOUI(
                          "seopagetab", "Short term Employment", "seo_yearperiod", seo_df_data$Year,
                          "seo_quarterperiod", "seo_mapreset", "seo_selecteddistrict", "seo_hhreceivingcash",
-                         "seo_plotcashquarter", "seo_map", "seotable", "seo_plotdeliverymechanism", "seo_plotcashpartner"
+                         "seo_plotcashquarter", "seo_map", "seotable", "seocvpdtable", "seo_plotdeliverymechanism", "seo_plotcashpartner"
                      ),
                      # Access to Productive Assets --------------------------------------------------------------
                      tabPageUI(
@@ -394,6 +394,7 @@ server <- function(input, output, session) {
         employment_data <-     seoEmploymentDataServer("seopagetab", df_by_district_cash_data())
         seoTableForEmploy("seopagetab", employment_data)
         
+        seoTableForCVPD("seopagetab", df_by_district_cash_data())
     })
     
     # observe year change to update quarter -----------------------------------
@@ -439,6 +440,8 @@ server <- function(input, output, session) {
         
         employment_data <-     seoEmploymentDataServer("seopagetab", filter_cash_data_based_on_map)
         seoTableForEmploy("seopagetab", employment_data)
+        
+        seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
         
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -491,6 +494,8 @@ server <- function(input, output, session) {
         
         employment_data <-     seoEmploymentDataServer("seopagetab", filter_cash_data_based_on_map)
         seoTableForEmploy("seopagetab", employment_data)
+        
+        seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
         
     })
     

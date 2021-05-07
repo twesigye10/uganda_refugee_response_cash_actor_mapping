@@ -75,18 +75,20 @@ eprBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
   moduleServer(id, function(input, output, session){
     output$epr_plotdeliverymechanism <-  renderHighchart({
       input_data %>%
-        group_by({{input_field_group}} ) %>%
+        mutate(over_all_total_cash = sum({{input_field_analysis}})) %>% 
+        group_by({{input_field_group}}, over_all_total_cash ) %>%
         summarise(
-          cash_transfer_by_delivery_mechanism = sum({{input_field_analysis}}, na.rm = T)
+          cash_transfer_by_delivery_mechanism = sum({{input_field_analysis}}, na.rm = T),
+          cash_transfer_by_delivery_mechanism = (cash_transfer_by_delivery_mechanism/over_all_total_cash)*100
         ) %>%
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
                hcaes(x = delivery_mechanism, y = cash_transfer_by_delivery_mechanism),
-               dataLabels = list(enabled = TRUE, format="{point.cash_transfer_by_delivery_mechanism:,.0f}" )) %>%
-        hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:,.0f}</b>" ) %>%
+               dataLabels = list(enabled = TRUE, format="{point.cash_transfer_by_delivery_mechanism:.1f}%" )) %>%
+        hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:.1f}%</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
-        hc_yAxis(title = list(text = "Cash Transfer (UGX '000)"), labels = FALSE ) 
+        hc_yAxis(title = list(text = ""), labels = FALSE ) 
     })
   })
 }

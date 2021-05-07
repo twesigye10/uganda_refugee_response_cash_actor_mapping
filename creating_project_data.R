@@ -146,7 +146,8 @@ ss_df_data <- janitor::clean_names(ss_df_data) %>%
         Quarter = case_when(Month %in% c("01", "02", "03")~"Q1",
                             Month %in% c("04", "05", "06")~"Q2",
                             Month %in% c("07", "08", "09")~"Q3",
-                            Month %in% c("10", "11", "12")~"Q4"  )
+                            Month %in% c("10", "11", "12")~"Q4"  ),
+        select_quarter = paste(Quarter," ",Year)
     )%>% 
     filter(!is.na(end_date) & !is.na(delivery_mechanism) & !is.na(partner_name)) %>% 
     filter(
@@ -167,7 +168,8 @@ wn_df_data <- janitor::clean_names(wn_df_data) %>%
         Quarter = case_when(Month %in% c("01", "02", "03")~"Q1",
                             Month %in% c("04", "05", "06")~"Q2",
                             Month %in% c("07", "08", "09")~"Q3",
-                            Month %in% c("10", "11", "12")~"Q4"  )
+                            Month %in% c("10", "11", "12")~"Q4"  ),
+        select_quarter = paste(Quarter," ",Year)
     )%>% 
     filter(!is.na(end_date) & !is.na(delivery_mechanism) & !is.na(partner_name)) %>% 
     filter(
@@ -195,4 +197,4 @@ saveRDS(data_for_saving, file = "data/new_data.rds")
 
 get_new_dat <- read_rds(file = "data/new_data.rds")
 
-get_new_dat$seo_df_data %>% view()
+get_new_dat$wn_df_data %>% view()

@@ -28,7 +28,7 @@ seoClickedDistrictValueServer <- function(id){
     return( click_district )
   })
 }
-# get psn data
+# get employment data
 seoEmploymentDataServer <- function(id, input_data){
   moduleServer(id, function(input, output, session){
     
@@ -154,6 +154,33 @@ seoTableForEmploy <- function(id, input_data ){
       HTML(paste(div_data, thead_data, data_employ_0_14, data_employ_15_17, 
                  data_employ_18_35, data_employ_36_59,  data_employ_60_plus, 
                  tfooter_data))
+      
+    })
+  })
+}
+# table Cash value of transfer per individual per day module ------------------------------------------------------
+seoTableForCVPD <- function(id, input_data ){
+  moduleServer(id, function(input, output, session){
+    output$seocvpdtable <-  renderUI({
+      
+      df_data_cvpd <- input_data %>%
+        summarise( 
+          cash_value_transfer_m = median(cash_value_of_transfer_per_individual_per_day_male_ugx, na.rm = T),
+          cash_value_transfer_f = median(cash_value_of_transfer_per_individual_per_day_female_ugx, na.rm = T),
+        )
+      
+      div_data <- paste('<div class=\"table\">', glue("<h5> Median Cash transfer per individual per day{display_in_title}</h5>"))
+      thead_data <- paste('<table class=\"table\"> ')
+      
+      data_cvpd <- paste('<tr><td>', '<img src="cash_value_transfer_f.png" height="32"></img>', "UGX ", 
+                         scales::comma_format()(df_data_cvpd %>% select(cash_value_transfer_f) %>% pull()) ,
+                         '</td> <td>','<img src="cash_value_transfer_m.png" height="32"></img>',  "UGX ",
+                         scales::comma_format()(df_data_cvpd %>% select(cash_value_transfer_m) %>% pull()) ,
+                         '</td> </tr>')
+
+      tfooter_data <- paste('</table> </div>')
+      
+      HTML(paste(div_data, thead_data, data_cvpd, tfooter_data))
       
     })
   })

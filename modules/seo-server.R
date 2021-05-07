@@ -66,7 +66,7 @@ seoDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
         bb_legend(position = 'bottom') %>%
         bb_donut(title = input_title, width = 70) %>% 
         bb_colors_manual(
-          setNames(c('#5D69B1','#52BCA3','#99C945'), c(input_beneficiary_vector))
+          setNames(c('#E58606','#5D69B1','#52BCA3','#99C945'), c(input_beneficiary_vector))
         )
     })
   })

@@ -130,13 +130,13 @@ wnDefaultMap <- function(id){
     output$wn_map  <-  renderLeaflet({
       leaflet(options = leafletOptions(zoomSnap = 0.25, zoomDelta=0.25)) %>% 
         addProviderTiles(providers$Esri.WorldGrayCanvas, 
-                         options = providerTileOptions(minZoom = 5, maxZoom = 10), 
+                         options = providerTileOptions(minZoom = 7, maxZoom = 8), 
                          group="Esri Gray Canvas") %>% 
         addProviderTiles(providers$Stamen.Toner, 
-                         options = providerTileOptions(minZoom = 5, maxZoom = 10), 
+                         options = providerTileOptions(minZoom = 7, maxZoom = 8), 
                          group="Stamen Toner") %>% 
         addProviderTiles(providers$CartoDB.Voyager, 
-                         options = providerTileOptions(minZoom = 5, maxZoom = 10), 
+                         options = providerTileOptions(minZoom = 7, maxZoom = 8), 
                          group="CartoDB Voyager") %>% 
         setView(lng = 32.2903, lat= 1.3733, zoom = 7.25) %>% 
         addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 

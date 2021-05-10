@@ -128,7 +128,7 @@ server <- function(input, output, session) {
         
         cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data(), 
                                       total_amount_of_cash_transfers, Year, Quarter, select_month, 
-                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title}"))
+                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title} (UGX '000)"))
         
         cbiBarChartDeliveryMechanism ("cbipagetab", df_by_district_cash_data(),
                                       select_delivery_mechanism,
@@ -137,7 +137,7 @@ server <- function(input, output, session) {
         
         cbiBarChartCashByPartner ("cbipagetab", df_by_district_cash_data(), partner_name,
                                   total_amount_of_cash_transfers,
-                                  glue("Total cash Transfers by Partner{display_in_title}"))
+                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
         
         psn_data <- cbiPSNDataServer("cbipagetab", df_by_district_cash_data())
         cbiDataForPSN ("cbipagetab", psn_data)
@@ -176,14 +176,14 @@ server <- function(input, output, session) {
                                       cbi_beneficiary_types)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
                                       total_amount_of_cash_transfers, Year, Quarter, select_month, 
-                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title}"))
+                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title} (UGX '000)"))
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
                                       select_delivery_mechanism,
                                       total_amount_of_cash_transfers,
                                       glue("Total Cash by Delivery Mechanism{display_in_title}"))
         cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, partner_name,
                                   total_amount_of_cash_transfers,
-                                  glue("Total cash Transfers by Partner{display_in_title}"))
+                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
         cbiTextSelectedDistrict("cbipagetab", click_district)
         
         psn_data <- cbiPSNDataServer("cbipagetab", filter_cash_data_based_on_map)

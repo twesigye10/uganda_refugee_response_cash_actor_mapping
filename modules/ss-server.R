@@ -65,7 +65,7 @@ ssLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, in
         hc_tooltip(pointFormat = "<b>{point.total_amount_of_cash_by_quarter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
-        hc_yAxis(title = list(text = "Total Cash (UGX '000)")) 
+        hc_yAxis(title = list(text = "")) 
     })
   })
 }
@@ -109,7 +109,7 @@ ssBarChartCashByPartner <- function(id, input_data, input_field_group, input_fie
         hc_tooltip(pointFormat = "<b>{point.total_cash_by_parter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
-        hc_yAxis(title = list(text = "Total cash Transfers (UGX '000)"), labels = FALSE ) 
+        hc_yAxis(title = list(text = ""), labels = FALSE ) 
     })
     
   })

@@ -6,7 +6,7 @@ seoYearValueServer <- function(id){
     return( reactive({input$seo_yearperiod})  )
   })
 }
-0# get quarter
+# get quarter
 seoQuarterValueServer <- function(id){
   moduleServer(id, function(input, output, session){
     return( reactive({input$seo_quarterperiod})  )

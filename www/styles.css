@@ -20,3 +20,11 @@ table {
   overflow: hidden;
 }
 
+
+ /**       
+.navbar-nav li a:hover, .navbar-nav > .active > a {
+color: #fff !important;
+background-color:##000 !important;
+background-image: none !important;
+}**/
+

@@ -206,12 +206,6 @@ cbiDefaultMap <- function(id){
         addProviderTiles(providers$Esri.WorldGrayCanvas, 
                          options = providerTileOptions(minZoom = 7, maxZoom = 8), 
                          group="Esri Gray Canvas") %>% 
-        addProviderTiles(providers$Stamen.Toner, 
-                         options = providerTileOptions(minZoom = 7, maxZoom = 8), 
-                         group="Stamen Toner") %>% 
-        addProviderTiles(providers$CartoDB.Voyager, 
-                         options = providerTileOptions(minZoom = 7, maxZoom = 8), 
-                         group="CartoDB Voyager") %>% 
         setView(lng = 32.2903, lat= 1.3733, zoom = 7.25) %>% 
         addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
         addEasyButton(easyButton(
@@ -242,7 +236,7 @@ cbiCreatingMap <- function(id, input_data){
     ) %>% 
       lapply(htmltools::HTML)
     # construct the dynamic map
-    proxy = leafletProxy("map", data = input_data) #%>% 
+    proxy = leafletProxy("map", data = input_data)  
     proxy %>% 
       clearControls() %>% 
       addPolygons(
@@ -272,11 +266,6 @@ cbiCreatingMap <- function(id, input_data){
                 title = "Total cash<br>(UGX '000)",
                 opacity  = 1,
                 na.label = "Not Assessed"
-      )%>% 
-      addLayersControl(
-        baseGroups = c("Esri Gray Canvas", "Stamen Toner", "CartoDB Voyager"),
-        overlayGroups = c("Districts Assessed"),
-        options = layersControlOptions(collapsed = FALSE)
       )
   })
 }

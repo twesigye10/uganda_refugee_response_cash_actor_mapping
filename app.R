@@ -31,12 +31,14 @@ ui <- fluidPage(
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
     ),
+    windowTitle = "Cash Based Interventions",
+    
     theme= reach_theme,
     # Application title
-    # titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP)", style = "color:#3474A7"), windowTitle = "Cash Based Interventions"),
+    # titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP)", style = "color:#3474A7")),
     # "A common platform for cash transfers. The information is collected through the ", tags$a(href="https://www.activityinfo.org/", "Activity Info platform"),
     
-        tabsetPanel( 
+    tabsetPanel( 
         id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
         tabPageCBIUI(
@@ -188,7 +190,7 @@ server <- function(input, output, session) {
         
         psn_data <- cbiPSNDataServer("cbipagetab", filter_cash_data_based_on_map)
         cbiDataForPSN ("cbipagetab", psn_data)
-
+        
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
         available_year_choices <- unique(as.character(filter_original_cash_data$Year))
@@ -241,7 +243,7 @@ server <- function(input, output, session) {
         
         psn_data <- cbiPSNDataServer("cbipagetab", filter_cash_data_based_on_map)
         cbiDataForPSN ("cbipagetab", psn_data)
-
+        
     })
     
     # Food Security -----------------------------------------------------------

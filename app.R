@@ -24,22 +24,18 @@ reach_theme <- bs_theme(
 
 # Define UI for application -----------------------------------------------
 
-ui <- fluidPage(
+ui <- navbarPage(title = div( "Cash-Based Interventions. Uganda Refugee Response Plan (RRP)") ,
     # theme
     # theme = bslib::bs_theme(bootswatch = "darkly"),
     # theme = bslib::bs_theme(bootswatch = "cyborg"),
-    tags$head(
-        tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
-    ),
-    windowTitle = "Cash Based Interventions",
     
-    theme= reach_theme,
+    
     # Application title
     # titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP)", style = "color:#3474A7")),
     # "A common platform for cash transfers. The information is collected through the ", tags$a(href="https://www.activityinfo.org/", "Activity Info platform"),
-    
-    tabsetPanel( 
-        id = "tab_being_displayed",
+    id = "tab_being_displayed",
+    # tabsetPanel( 
+        # id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
         tabPageCBIUI(
             "cbipagetab", "CBI for Basic Needs", "yearperiod", cbi_df_data$Year,
@@ -93,9 +89,20 @@ ui <- fluidPage(
                          "wn_plotcashquarter", "wn_map", "wn_plotdeliverymechanism", "wn_plotcashpartner"
                      ) 
                  )
-        )
+        # )
         
-    )
+    ),
+    tags$head(
+        tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
+    ),
+    windowTitle = "Cash Based Interventions",
+    footer = div(img(height = 50, width = 40, src="LogoOPM.png"), 
+                 img(height = 40, width = 100, src="reach-logo-informing.png"), 
+                 img(height = 40, width = 100, src="UNHCR-visibility-horizontal-White-CMYK-v2015.png"), 
+                 img(height = 40, width = 100, src="USAID logo white.png"), 
+                 img(height = 40, width = 100, src="wfp-logo-standard-white-en_transparent.png")),
+    
+    theme= reach_theme
 )
 
 # Define server logic required --------------------------------------------
@@ -108,6 +115,7 @@ server <- function(input, output, session) {
     cbiDefaultMap("cbipagetab")
     # dynamic charts and map --------------------------------------------------
     observe({
+        req(input$tab_being_displayed == "CBI for Basic Needs")
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("cbipagetab", cbi_df_data, cbi_year(), Year, cbi_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("cbipagetab", df_shape, df_by_district_cash_data(), location_district, total_amount_of_cash_transfers, "location_district")

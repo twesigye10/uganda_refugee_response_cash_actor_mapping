@@ -96,7 +96,7 @@ ui <- navbarPage(title = div( "Cash-Based Interventions. Uganda Refugee Response
         tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
     ),
     windowTitle = "Cash Based Interventions",
-    footer = div(img(height = 50, width = 40, src="LogoOPM.png"), 
+    footer = div(class = "page-footer", img(height = 50, width = 40, src="LogoOPM.png"), 
                  img(height = 40, width = 100, src="reach-logo-informing.png"), 
                  img(height = 40, width = 100, src="UNHCR-visibility-horizontal-White-CMYK-v2015.png"), 
                  img(height = 40, width = 100, src="USAID logo white.png"), 

@@ -94,3 +94,9 @@ table {
     background-color: #3E3E3F !important;
     font-size: 15px;
 }
+
+/*page footer*/
+.page-footer{
+  background-color: #3E3E3F !important;
+  width: 100%;
+}

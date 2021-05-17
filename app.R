@@ -121,6 +121,9 @@ server <- function(input, output, session) {
         
         cbiMapLabels("cbipagetab", df_point_data)
         
+        # psn_data <- cbiPSNDataServer("cbipagetab", df_by_district_cash_data())
+        cbiDataForPSN ("cbipagetab", df_by_district_cash_data())
+        
         cbiDonutChartCashBeneficiary ("cbipagetab",
                                       df_by_district_cash_data(),
                                       select_beneficiary_type,
@@ -141,8 +144,6 @@ server <- function(input, output, session) {
                                   total_amount_of_cash_transfers,
                                   glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
         
-        psn_data <- cbiPSNDataServer("cbipagetab", df_by_district_cash_data())
-        cbiDataForPSN ("cbipagetab", psn_data)
         
     })
     
@@ -169,6 +170,10 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         
         filter_cash_data_based_on_map <- filterCashDataByDistrict("cbipagetab", cbi_df_data, location_district, click_district)
+        
+        # psn_data <- cbiPSNDataServer("cbipagetab", filter_cash_data_based_on_map)
+        cbiDataForPSN ("cbipagetab", filter_cash_data_based_on_map)
+        
         # create all the charts
         cbiDonutChartCashBeneficiary ("cbipagetab",
                                       filter_cash_data_based_on_map,
@@ -188,9 +193,7 @@ server <- function(input, output, session) {
                                   glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
         cbiTextSelectedDistrict("cbipagetab", click_district)
         
-        psn_data <- cbiPSNDataServer("cbipagetab", filter_cash_data_based_on_map)
-        cbiDataForPSN ("cbipagetab", psn_data)
-        
+
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
         available_year_choices <- unique(as.character(filter_original_cash_data$Year))
@@ -223,6 +226,9 @@ server <- function(input, output, session) {
         
         filter_cash_data_based_on_map <- cbi_df_data
         
+        # psn_data <- cbiPSNDataServer("cbipagetab", filter_cash_data_based_on_map)
+        cbiDataForPSN ("cbipagetab", filter_cash_data_based_on_map)
+        
         cbiDonutChartCashBeneficiary ("cbipagetab",
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
@@ -241,8 +247,7 @@ server <- function(input, output, session) {
                                   glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
         cbiTextSelectedDistrict("cbipagetab", "")
         
-        psn_data <- cbiPSNDataServer("cbipagetab", filter_cash_data_based_on_map)
-        cbiDataForPSN ("cbipagetab", psn_data)
+        
         
     })
     

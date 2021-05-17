@@ -121,7 +121,6 @@ server <- function(input, output, session) {
         
         cbiMapLabels("cbipagetab", df_point_data)
         
-        # psn_data <- cbiPSNDataServer("cbipagetab", df_by_district_cash_data())
         cbiDataForPSN ("cbipagetab", df_by_district_cash_data())
         
         cbiDonutChartCashBeneficiary ("cbipagetab",
@@ -171,7 +170,6 @@ server <- function(input, output, session) {
         
         filter_cash_data_based_on_map <- filterCashDataByDistrict("cbipagetab", cbi_df_data, location_district, click_district)
         
-        # psn_data <- cbiPSNDataServer("cbipagetab", filter_cash_data_based_on_map)
         cbiDataForPSN ("cbipagetab", filter_cash_data_based_on_map)
         
         # create all the charts
@@ -226,7 +224,6 @@ server <- function(input, output, session) {
         
         filter_cash_data_based_on_map <- cbi_df_data
         
-        # psn_data <- cbiPSNDataServer("cbipagetab", filter_cash_data_based_on_map)
         cbiDataForPSN ("cbipagetab", filter_cash_data_based_on_map)
         
         cbiDonutChartCashBeneficiary ("cbipagetab",
@@ -399,6 +396,11 @@ server <- function(input, output, session) {
         ## create all the charts
         seoCreatingMap("seopagetab", df_shape_data)
         seoMapLabels("seopagetab", df_point_data)
+        
+        seoTableForEmploy("seopagetab", df_by_district_cash_data())
+        
+        seoTableForCVPD("seopagetab", df_by_district_cash_data())
+        
         seoDonutChartCashBeneficiary ("seopagetab",
                                       df_by_district_cash_data(),
                                       select_beneficiary_type,
@@ -416,10 +418,6 @@ server <- function(input, output, session) {
                                   total_cash_value_of_cash_for_work_ugx,
                                   glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
         
-        employment_data <-     seoEmploymentDataServer("seopagetab", df_by_district_cash_data())
-        seoTableForEmploy("seopagetab", employment_data)
-        
-        seoTableForCVPD("seopagetab", df_by_district_cash_data())
     })
     
     # observe year change to update quarter -----------------------------------
@@ -445,6 +443,10 @@ server <- function(input, output, session) {
         display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
         filter_cash_data_based_on_map <- filterCashDataByDistrict("seopagetab", seo_df_data, location_district, click_district)
         # create all the charts
+        seoTableForEmploy("seopagetab", filter_cash_data_based_on_map)
+        
+        seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
+        
         seoDonutChartCashBeneficiary ("seopagetab",
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
@@ -463,10 +465,6 @@ server <- function(input, output, session) {
                                   glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
         seoTextSelectedDistrict("seopagetab", click_district)
         
-        employment_data <-     seoEmploymentDataServer("seopagetab", filter_cash_data_based_on_map)
-        seoTableForEmploy("seopagetab", employment_data)
-        
-        seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
         
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -499,6 +497,10 @@ server <- function(input, output, session) {
         
         filter_cash_data_based_on_map <- seo_df_data
         
+        seoTableForEmploy("seopagetab", filter_cash_data_based_on_map)
+        
+        seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
+        
         seoDonutChartCashBeneficiary ("seopagetab",
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
@@ -517,10 +519,6 @@ server <- function(input, output, session) {
                                   glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
         seoTextSelectedDistrict("seopagetab", "")
         
-        employment_data <-     seoEmploymentDataServer("seopagetab", filter_cash_data_based_on_map)
-        seoTableForEmploy("seopagetab", employment_data)
-        
-        seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
         
     })
     

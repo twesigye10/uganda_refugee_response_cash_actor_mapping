@@ -38,41 +38,6 @@ cbiClickedDistrictValueServer <- function(id){
   })
 }
 
-# get psn data
-cbiPSNDataServer <- function(id, input_data){
-  moduleServer(id, function(input, output, session){
-    
-    df_data_indicators <- input_data %>%
-      rowwise() %>%
-      mutate( 
-        ps.child_at_risk = sum(psn_households_receiving_cash_assistance_for_basic_needs_child_at_risk,
-                               psn_households_receiving_voucher_assistance_for_basic_needs_child_at_risk, na.rm = T),
-        ps.disability = sum(psn_households_receiving_cash_assistance_for_basic_needs_disability,   
-                            psn_households_receiving_voucher_assistance_for_basic_needs_disability, na.rm = T),
-        ps.Older_person_at_risk = sum(psn_households_receiving_cash_assistance_for_basic_needs_older_person_at_risk,                           
-                                      psn_households_receiving_voucher_assistance_for_basic_needs_older_person_at_risk, na.rm = T),
-        ps.serious_medical_condition = sum(psn_households_receiving_cash_assistance_for_basic_needs_serious_medical_condition,                      
-                                           psn_households_receiving_voucher_assistance_for_basic_needs_serious_medical_condition, na.rm = T),
-        ps.single_parent_or_caregiver = sum(psn_households_receiving_cash_assistance_for_basic_needs_single_parent_or_caregiver,                     
-                                            psn_households_receiving_voucher_assistance_for_basic_needs_single_parent_or_caregiver, na.rm = T),
-        ps.specific_legal_and_physical_protection_needs = sum(psn_households_receiving_cash_assistance_for_basic_needs_specific_legal_and_physical_protection_needs,   
-                                                              psn_households_receiving_voucher_assistance_for_basic_needs_specific_legal_and_physical_protection_needs, na.rm = T),
-        ps.unaccompanied_or_separated_child = sum(psn_households_receiving_cash_assistance_for_basic_needs_unaccompanied_or_separated_child,               
-                                                  psn_households_receiving_voucher_assistance_for_basic_needs_unaccompanied_or_separated_child, na.rm = T),
-        ps.woman_at_risk = sum(psn_households_receiving_cash_assistance_for_basic_needs_woman_at_risk,
-                               psn_households_receiving_voucher_assistance_for_basic_needs_woman_at_risk, na.rm = T)
-      ) %>% 
-      ungroup() %>% 
-      select(starts_with("ps.")) %>% 
-      summarise(
-        across(everything(), ~sum(.x, na.rm = TRUE))
-      ) %>% 
-      rename_with(~gsub("ps.", "", .x, fixed=TRUE))
-    
-    return(df_data_indicators)
-  })
-}
-
 # donut chart module ------------------------------------------------------
 cbiDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
                                       input_field_analysis, input_title, input_beneficiary_vector){

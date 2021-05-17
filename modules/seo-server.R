@@ -28,29 +28,6 @@ seoClickedDistrictValueServer <- function(id){
     return( click_district )
   })
 }
-# get employment data
-seoEmploymentDataServer <- function(id, input_data){
-  moduleServer(id, function(input, output, session){
-    
-    df_data_indicators <- input_data %>%
-      summarise( 
-        em.employ_0_14_m = sum(people_engaged_in_short_term_employment_opportunities_male_0_14, na.rm = T),
-        em.employ_0_14_f = sum(people_engaged_in_short_term_employment_opportunities_female_0_14, na.rm = T),
-        em.employ_15_17_m = sum(people_engaged_in_short_term_employment_opportunities_male_15_17, na.rm = T),
-        em.employ_15_17_f = sum(people_engaged_in_short_term_employment_opportunities_female_15_17, na.rm = T),
-        em.employ_18_35_m = sum(people_engaged_in_short_term_employment_opportunities_male_18_35, na.rm = T),
-        em.employ_18_35_f = sum(people_engaged_in_short_term_employment_opportunities_female_18_35, na.rm = T),
-        em.employ_36_59_m = sum(people_engaged_in_short_term_employment_opportunities_male_36_59, na.rm = T),
-        em.employ_36_59_f = sum(people_engaged_in_short_term_employment_opportunities_female_36_59, na.rm = T),
-        em.employ_60_plus_m = sum(people_engaged_in_short_term_employment_opportunities_male_60, na.rm = T),
-        em.employ_60_plus_f = sum(people_engaged_in_short_term_employment_opportunities_female_60, na.rm = T)
-      ) %>% 
-      select(starts_with("em.")) %>% 
-      rename_with(~gsub("em.", "", .x, fixed=TRUE))
-    
-    return(df_data_indicators)
-  })
-}
 # donut chart module ------------------------------------------------------
 seoDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
                                       input_field_analysis, input_title, input_beneficiary_vector){
@@ -142,14 +119,30 @@ seoTableForEmploy <- function(id, input_data ){
   moduleServer(id, function(input, output, session){
     output$seotable <-  renderUI({
       
+      df_data_indicators <- input_data %>%
+        summarise( 
+          em.employ_0_14_m = sum(people_engaged_in_short_term_employment_opportunities_male_0_14, na.rm = T),
+          em.employ_0_14_f = sum(people_engaged_in_short_term_employment_opportunities_female_0_14, na.rm = T),
+          em.employ_15_17_m = sum(people_engaged_in_short_term_employment_opportunities_male_15_17, na.rm = T),
+          em.employ_15_17_f = sum(people_engaged_in_short_term_employment_opportunities_female_15_17, na.rm = T),
+          em.employ_18_35_m = sum(people_engaged_in_short_term_employment_opportunities_male_18_35, na.rm = T),
+          em.employ_18_35_f = sum(people_engaged_in_short_term_employment_opportunities_female_18_35, na.rm = T),
+          em.employ_36_59_m = sum(people_engaged_in_short_term_employment_opportunities_male_36_59, na.rm = T),
+          em.employ_36_59_f = sum(people_engaged_in_short_term_employment_opportunities_female_36_59, na.rm = T),
+          em.employ_60_plus_m = sum(people_engaged_in_short_term_employment_opportunities_male_60, na.rm = T),
+          em.employ_60_plus_f = sum(people_engaged_in_short_term_employment_opportunities_female_60, na.rm = T)
+        ) %>% 
+        select(starts_with("em.")) %>% 
+        rename_with(~gsub("em.", "", .x, fixed=TRUE))
+      
       div_data <- paste('<div class=\"table\">', glue("<h5> Employment by Age{display_in_title}</h5>"))
       thead_data <- paste('<table class=\"table\"> ')
       
-      data_employ_0_14 <- paste('<tr><td>',  '0 - 14' ,'</td> <td>', '<img src="employ_0_14_f.png" height="32"></img>', input_data %>% select(employ_0_14_f) %>% pull() ,'</td> <td>','<img src="employ_0_14_m.png" height="32"></img>', input_data %>% select(employ_0_14_m) %>% pull() ,'</td> </tr>')
-      data_employ_15_17 <- paste('<tr><td>', '15 - 17'  ,'</td> <td>', '<img src="employ_15_17_f.png" height="32"></img>', input_data %>% select(employ_15_17_f) %>% pull() ,'</td> <td>','<img src="employ_15_17_m.png" height="32"></img>', input_data %>% select(employ_15_17_m) %>% pull() ,'</td> </tr>')
-      data_employ_18_35 <- paste('<tr><td>', '18 - 35'  ,'</td> <td>', '<img src="employ_18_35_f.png" height="32"></img>', input_data %>% select(employ_18_35_f) %>% pull() ,'</td> <td>','<img src="employ_18_35_m.png" height="32"></img>', input_data %>% select(employ_18_35_m) %>% pull() ,'</td> </tr>')
-      data_employ_36_59 <- paste('<tr><td>',  '36 - 59' ,'</td> <td>', '<img src="employ_36_59_f.png" height="32"></img>', input_data %>% select(employ_36_59_f) %>% pull() ,'</td> <td>','<img src="employ_36_59_m.png" height="32"></img>', input_data %>% select(employ_36_59_m) %>% pull() ,'</td> </tr>')
-      data_employ_60_plus <- paste('<tr><td>', '60 +'  ,'</td> <td>', '<img src="employ_60_plus_f.png" height="32"></img>', input_data %>% select(employ_60_plus_f) %>% pull() ,'</td> <td>','<img src="employ_60_plus_m.png" height="32"></img>', input_data %>% select(employ_60_plus_m) %>% pull() ,'</td> </tr>')
+      data_employ_0_14 <- paste('<tr><td>',  '0 - 14' ,'</td> <td>', '<img src="employ_0_14_f.png" height="32"></img>', df_data_indicators %>% select(employ_0_14_f) %>% pull() ,'</td> <td>','<img src="employ_0_14_m.png" height="32"></img>', df_data_indicators %>% select(employ_0_14_m) %>% pull() ,'</td> </tr>')
+      data_employ_15_17 <- paste('<tr><td>', '15 - 17'  ,'</td> <td>', '<img src="employ_15_17_f.png" height="32"></img>', df_data_indicators %>% select(employ_15_17_f) %>% pull() ,'</td> <td>','<img src="employ_15_17_m.png" height="32"></img>', df_data_indicators %>% select(employ_15_17_m) %>% pull() ,'</td> </tr>')
+      data_employ_18_35 <- paste('<tr><td>', '18 - 35'  ,'</td> <td>', '<img src="employ_18_35_f.png" height="32"></img>', df_data_indicators %>% select(employ_18_35_f) %>% pull() ,'</td> <td>','<img src="employ_18_35_m.png" height="32"></img>', df_data_indicators %>% select(employ_18_35_m) %>% pull() ,'</td> </tr>')
+      data_employ_36_59 <- paste('<tr><td>',  '36 - 59' ,'</td> <td>', '<img src="employ_36_59_f.png" height="32"></img>', df_data_indicators %>% select(employ_36_59_f) %>% pull() ,'</td> <td>','<img src="employ_36_59_m.png" height="32"></img>', df_data_indicators %>% select(employ_36_59_m) %>% pull() ,'</td> </tr>')
+      data_employ_60_plus <- paste('<tr><td>', '60 +'  ,'</td> <td>', '<img src="employ_60_plus_f.png" height="32"></img>', df_data_indicators %>% select(employ_60_plus_f) %>% pull() ,'</td> <td>','<img src="employ_60_plus_m.png" height="32"></img>', df_data_indicators %>% select(employ_60_plus_m) %>% pull() ,'</td> </tr>')
       
       tfooter_data <- paste('</table> </div>')
       

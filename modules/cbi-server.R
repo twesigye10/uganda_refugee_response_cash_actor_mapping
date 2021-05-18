@@ -75,7 +75,10 @@ cbiLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, i
         hc_tooltip(pointFormat = "<b>{point.total_amount_of_cash_by_quarter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
-        hc_yAxis(title = list(text = "")) 
+        hc_yAxis(title = list(text = "")) %>% 
+        hc_navigator(
+          enabled = TRUE
+        )
     })
     
   })

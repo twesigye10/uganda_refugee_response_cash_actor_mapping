@@ -61,7 +61,7 @@ apaLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, i
         ) %>%
         # arrange(select_quarter) %>% 
         hchart(type = "line",
-               hcaes(x = select_quarter, y = total_amount_of_cash_by_quarter)) %>%  
+               hcaes(x = select_quarter, y = total_amount_of_cash_by_quarter), color = "#7cb5ec") %>%  
         hc_tooltip(pointFormat = "<b>{point.total_amount_of_cash_by_quarter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
@@ -84,7 +84,7 @@ apaBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
                hcaes(x = delivery_mechanism, y = cash_transfer_by_delivery_mechanism),
-               dataLabels = list(enabled = TRUE, format="{point.cash_transfer_by_delivery_mechanism:.1f}%" )) %>%
+               dataLabels = list(enabled = TRUE, format="{point.cash_transfer_by_delivery_mechanism:.1f}%" ), color = "#7cb5ec") %>%
         hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:.1f}%</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
@@ -105,7 +105,7 @@ apaBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
         arrange(-total_cash_by_parter) %>% 
         hchart(type = "bar",
                hcaes(x = partner_name, y = total_cash_by_parter),
-               dataLabels = list(enabled = TRUE, format="{point.total_cash_by_parter:,.0f}" )) %>%
+               dataLabels = list(enabled = TRUE, format="{point.total_cash_by_parter:,.0f}" ), color = "#7cb5ec") %>%
         hc_tooltip(pointFormat = "<b>{point.total_cash_by_parter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left" )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 

@@ -27,7 +27,7 @@ tabPageCBIUI <- function(
                                     )
                              ),
                              column(width = 4,
-                                    actionButton(ns(inp_mapreset), "Reset Map"),
+                                    actionButton(ns(inp_mapreset), label = img(src="refresh_white.png", width = 25, heigt=25) ),
                                     textOutput(ns(inp_selecteddistrict))
                              ),
                              

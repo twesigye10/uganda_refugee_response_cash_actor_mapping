@@ -41,6 +41,10 @@ seoDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
       billboarder(data = df_billb_data) %>%
         bb_donutchart() %>% 
         bb_legend(position = 'bottom') %>%
+        bb_tooltip(format = list(
+          name =  htmlwidgets::JS("function(name, ratio, id, index) {return name;}"),
+          value = htmlwidgets::JS("function(value, ratio, id, index) {return 'UGX(000) '+value;}")
+        )) %>%
         bb_donut(title = input_title, width = 70) %>% 
         bb_colors_manual(
           setNames(c('#F69E61','#0067A9','#A5C9A1','#72966E'), c(input_beneficiary_vector))

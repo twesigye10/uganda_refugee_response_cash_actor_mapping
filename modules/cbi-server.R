@@ -93,16 +93,16 @@ cbiBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
         group_by({{input_field_group}}, over_all_total_cash ) %>%
         summarise(
           cash_transfer_by_delivery_mechanism = sum({{input_field_analysis}}, na.rm = T),
-          cash_transfer_by_delivery_mechanism = (cash_transfer_by_delivery_mechanism/over_all_total_cash)*100
+          p_cash_transfer_by_delivery_mechanism = (cash_transfer_by_delivery_mechanism/over_all_total_cash)*100
         ) %>%
         arrange(-cash_transfer_by_delivery_mechanism) %>% 
         hchart(type = "bar",
-               hcaes(x = select_delivery_mechanism, y = cash_transfer_by_delivery_mechanism),
-               dataLabels = list(enabled = TRUE, format="{point.cash_transfer_by_delivery_mechanism:.1f}%" ), color = "#7cb5ec") %>%  
-        hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:.1f}%</b>" ) %>%
+               hcaes(x = select_delivery_mechanism, y = p_cash_transfer_by_delivery_mechanism),
+               dataLabels = list(enabled = TRUE, format="{point.p_cash_transfer_by_delivery_mechanism:.1f}%" ), color = "#7cb5ec") %>%  
+        hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:.0f} ({point.p_cash_transfer_by_delivery_mechanism:.1f}%)</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL)) %>% 
-        hc_yAxis(title = list(text = "") ) 
+        hc_yAxis(title = list(text = ""), labels = list(format = "{value}%") ) 
     })
   })
 }

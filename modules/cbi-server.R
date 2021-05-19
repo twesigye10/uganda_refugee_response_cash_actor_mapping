@@ -102,7 +102,7 @@ cbiBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
         hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:.1f}%</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL)) %>% 
-        hc_yAxis(title = list(text = ""), labels = FALSE ) 
+        hc_yAxis(title = list(text = "") ) 
     })
   })
 }
@@ -123,7 +123,7 @@ cbiBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
         hc_tooltip(pointFormat = "<b>{point.total_cash_by_parter:,.0f}</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
-        hc_yAxis(title = list(text = ""), labels = FALSE ) 
+        hc_yAxis(title = list(text = "") ) 
     })
   })
 }

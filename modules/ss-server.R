@@ -36,7 +36,8 @@ ssDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
       df_billb_data <- input_data %>% 
         group_by({{input_field_group}} ) %>% 
         summarise(
-          cash_assistance_by_beneficiary_type = sum({{input_field_analysis}}, na.rm = T)
+          cash_assistance_by_beneficiary_type = sum({{input_field_analysis}}, na.rm = T),
+          cash_assistance_by_beneficiary_type = round(cash_assistance_by_beneficiary_type,0)
         ) 
       billboarder(data = df_billb_data) %>%
         bb_donutchart() %>% 

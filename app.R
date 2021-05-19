@@ -24,7 +24,7 @@ reach_theme <- bs_theme(
 
 # Define UI for application -----------------------------------------------
 
-ui <- navbarPage(title = div(img(height = 40, width = 100, src="reach-logo-informing.png"), "Cash-Based Interventions. Uganda RRP") ,
+ui <- navbarPage(title = div(class = "page-header", img(height = 40, width = 100, src="reach-logo-informing.png"), "Cash-Based Interventions. Uganda RRP") ,
     # theme
     # theme = bslib::bs_theme(bootswatch = "darkly"),
     # theme = bslib::bs_theme(bootswatch = "cyborg"),
@@ -92,6 +92,7 @@ ui <- navbarPage(title = div(img(height = 40, width = 100, src="reach-logo-infor
         # )
         
     ),
+    tabPanel("About"),
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
     ),

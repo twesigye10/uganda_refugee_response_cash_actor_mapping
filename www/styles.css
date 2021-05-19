@@ -95,8 +95,18 @@ table {
     font-size: 15px;
 }
 
+
+/*page header*/
+
+.page-header:hover {
+    background-color: #3E3E3F;
+    color: #FFFFFF;
+}
+
+
 /*page footer*/
-.page-footer{
-  background-color: #3E3E3F !important;
-  width: 100%;
+
+.page-footer {
+    background-color: #3E3E3F !important;
+    width: 100%;
 }

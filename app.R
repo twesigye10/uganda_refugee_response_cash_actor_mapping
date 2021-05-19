@@ -24,7 +24,7 @@ reach_theme <- bs_theme(
 
 # Define UI for application -----------------------------------------------
 
-ui <- navbarPage(title = div( "Cash-Based Interventions. Uganda Refugee Response Plan (RRP)") ,
+ui <- navbarPage(title = div(img(height = 40, width = 100, src="reach-logo-informing.png"), "Cash-Based Interventions. Uganda RRP") ,
     # theme
     # theme = bslib::bs_theme(bootswatch = "darkly"),
     # theme = bslib::bs_theme(bootswatch = "cyborg"),
@@ -96,11 +96,11 @@ ui <- navbarPage(title = div( "Cash-Based Interventions. Uganda Refugee Response
         tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
     ),
     windowTitle = "Cash Based Interventions",
-    footer = div(class = "page-footer", img(height = 50, width = 40, src="LogoOPM.png"), 
-                 img(height = 40, width = 100, src="reach-logo-informing.png"), 
-                 img(height = 40, width = 100, src="UNHCR-visibility-horizontal-White-CMYK-v2015.png"), 
-                 img(height = 40, width = 100, src="USAID logo white.png"), 
-                 img(height = 40, width = 100, src="wfp-logo-standard-white-en_transparent.png")),
+    # footer = div(class = "page-footer", img(height = 50, width = 40, src="LogoOPM.png"), 
+    #              img(height = 40, width = 100, src="reach-logo-informing.png"), 
+    #              img(height = 40, width = 100, src="UNHCR-visibility-horizontal-White-CMYK-v2015.png"), 
+    #              img(height = 40, width = 100, src="USAID logo white.png"), 
+    #              img(height = 40, width = 100, src="wfp-logo-standard-white-en_transparent.png")),
     
     theme= reach_theme
 )

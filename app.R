@@ -121,12 +121,20 @@ server <- function(input, output, session) {
         df_by_district_cash_data <- reactive({filterCashData("cbipagetab", cbi_df_data, cbi_year(), Year, cbi_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("cbipagetab", df_shape, df_by_district_cash_data(), location_district, total_amount_of_cash_transfers, "location_district")
         
-        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+        df_point_data <- df_shape_data %>% filter(cash_transfers_by_district > 0) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         
+        refugee_districts <- c("ADJUMANI", "ISINGIRO", "KAMPALA", "KAMWENGE", "KIKUUBE", "KIRYANDONGO", "KYEGEGWA", "LAMWO", "OBONGI", "YUMBE","KOBOKO", "MADI OKOLLO & TEREGO"  )
+        refugee_districts_cash <-  df_shape_data%>% filter(cash_transfers_by_district > 0) %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>% filter((ADM2_EN %in% refugee_districts) & !(ADM2_EN %in% refugee_districts_cash) )
+        df_refugee_host_data <- df_other_refugee_host_dist %>% pull(ADM2_EN)
+        df_shape_data_map <- df_shape_data %>% filter(!ADM2_EN %in% df_refugee_host_data)
+        p
         ## create all the charts
-        cbiCreatingMap("cbipagetab", df_shape_data)
+        cbiCreatingMap("cbipagetab", df_shape_data_map)
+        cbiRefugeeMap("cbipagetab", df_other_refugee_host_dist)
         
         cbiMapLabels("cbipagetab", df_point_data)
         

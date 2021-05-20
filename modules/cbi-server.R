@@ -228,11 +228,6 @@ cbiCreatingMap <- function(id, input_data){
     ) %>% 
       lapply(htmltools::HTML)
     
-    labels_district <- ~sprintf(
-      "<strong>%s</strong>",
-      ifelse(!is.na(cash_transfers_by_district), ADM2_EN, "" ) 
-    ) %>% 
-      lapply(htmltools::HTML)
     # construct the dynamic map
     proxy = leafletProxy("map", data = input_data)  
     proxy %>% 
@@ -267,67 +262,13 @@ cbiCreatingMap <- function(id, input_data){
       )
   })
 }
-cbiRefugeeMap <- function(id, input_data){
-  moduleServer(id, function(input, output, session){
-    # Create a continuous palette function
-    pal <- colorNumeric(
-      c("Yellow", "Purple"),
-      domain = c(0,1),
-      na.color = "blue"
-    )
-    # label districts in the map
-    labels_v1 <- ~sprintf(
-      "<strong>%s</strong><br/>Cash Transfers : %s ",
-      stringr::str_to_title(ADM2_EN), cash_transfers_by_district
-    ) %>% 
-      lapply(htmltools::HTML)
-    
-    labels_district <- ~sprintf(
-      "<strong>%s</strong>",
-      ifelse(!is.na(cash_transfers_by_district), ADM2_EN, "No Cash" ) 
-    ) %>% 
-      lapply(htmltools::HTML)
-    # construct the dynamic map
-    proxy = leafletProxy("map", data = input_data)  
-    proxy %>% 
-      # clearControls() %>% 
-      addPolygons(
-        color = "white",
-        options = pathOptions(
-          clickable = ~ifelse(!is.na(cash_transfers_by_district), TRUE, FALSE)),
-        fillColor = "blue",
-        fillOpacity = 1,
-        weight = 1,
-        opacity = 1,
-        label = labels_v1,
-        labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"),
-                                    textsize = "15px",
-                                    direction = "auto", opacity =0.75),
-        layerId = ~ADM2_EN,
-        dashArray = "3",
-        highlight = highlightOptions(weight = 3,
-                                     color = "#666",
-                                     dashArray = "",
-                                     fillOpacity = 0.7,
-                                     bringToFront = TRUE),
-        group="Other Districts "
-      ) %>% 
-      addLegend(position ="bottomright",
-                pal = pal,
-                values = ~cash_transfers_by_district,
-                title = "",
-                opacity  = 1,
-                na.label = "Other refugee <br> hosting <br>districts"
-      )
-  })
-}
 # cbi dynamic map labels module ------------------------------------------------------
 cbiMapLabels <- function(id, input_data){
   moduleServer(id, function(input, output, session){
     # label districts in the map
     labels_district <- ~sprintf(
       "<strong>%s</strong>",
-      ifelse(!is.na(cash_transfers_by_district),  stringr::str_to_title(ADM2_EN), "" ) 
+      stringr::str_to_title(ADM2_EN)
     ) %>% 
       lapply(htmltools::HTML)
     # add labels on the map

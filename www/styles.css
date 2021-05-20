@@ -110,3 +110,10 @@ table {
     background-color: #3E3E3F !important;
     width: 100%;
 }
+
+
+/* legend oneline text */
+
+.nowrap {
+    white-space: nowrap;
+}

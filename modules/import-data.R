@@ -2,6 +2,8 @@
 
 display_in_title <- " for all Districts"
 all_beneficiary_types <- c("Burundian refugees", "Congolese & other refugees", "Host community", "South Sudanese refugees")
+refugee_districts <- c("ADJUMANI", "ISINGIRO", "KAMPALA", "KAMWENGE", "KIKUUBE", "KIRYANDONGO", "KYEGEGWA", "LAMWO", "OBONGI", "YUMBE","KOBOKO", "MADI OKOLLO & TEREGO"  )
+
 # add data: All
 dat<-read_rds(file = "data/data.rds")
 

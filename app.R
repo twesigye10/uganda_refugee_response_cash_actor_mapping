@@ -121,22 +121,21 @@ server <- function(input, output, session) {
         df_by_district_cash_data <- reactive({filterCashData("cbipagetab", cbi_df_data, cbi_year(), Year, cbi_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("cbipagetab", df_shape, df_by_district_cash_data(), location_district, total_amount_of_cash_transfers, "location_district")
         
-        df_point_data <- df_shape_data %>% filter(cash_transfers_by_district > 0) %>% sf::st_transform(crs = 32636 ) %>%
+        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         
-        refugee_districts <- c("ADJUMANI", "ISINGIRO", "KAMPALA", "KAMWENGE", "KIKUUBE", "KIRYANDONGO", "KYEGEGWA", "LAMWO", "OBONGI", "YUMBE","KOBOKO", "MADI OKOLLO & TEREGO"  )
-        refugee_districts_cash <-  df_shape_data%>% filter(cash_transfers_by_district > 0) %>% pull(ADM2_EN)
+        df_shape_data_map <- df_shape_data %>% filter(cash_transfers_by_district > 0)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
         
-        df_other_refugee_host_dist <- df_shape_data %>% filter((ADM2_EN %in% refugee_districts) & !(ADM2_EN %in% refugee_districts_cash) )
-        df_refugee_host_data <- df_other_refugee_host_dist %>% pull(ADM2_EN)
-        df_shape_data_map <- df_shape_data %>% filter(!ADM2_EN %in% df_refugee_host_data)
-        p
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+        
         ## create all the charts
-        cbiCreatingMap("cbipagetab", df_shape_data_map)
-        cbiRefugeeMap("cbipagetab", df_other_refugee_host_dist)
-        
-        cbiMapLabels("cbipagetab", df_point_data)
+        dynamicMapLayer("cbipagetab", "map", df_shape_data_map)
+        refugeeHostLayer("cbipagetab", "map",df_other_refugee_host_dist)
+        dynamicMapLabels("cbipagetab", "map", df_point_data)
         
         cbiDataForPSN ("cbipagetab", df_by_district_cash_data())
         
@@ -276,7 +275,7 @@ server <- function(input, output, session) {
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("fspagetab", fs_df_data, fs_year(), Year, fs_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("fspagetab", df_shape, df_by_district_cash_data(), location_district, fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, "location_district")
-        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+        df_point_data <- df_shape_data %>%filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         ## create all the charts
@@ -407,7 +406,7 @@ server <- function(input, output, session) {
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("seopagetab", seo_df_data, seo_year(), Year, seo_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("seopagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_for_work_ugx, "location_district")
-        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         ## create all the charts
@@ -551,7 +550,7 @@ server <- function(input, output, session) {
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("eprpagetab", epr_df_data, epr_year(), Year, epr_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("eprpagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_for_work_ugx, "location_district")
-        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         ## create all the charts
@@ -680,7 +679,7 @@ server <- function(input, output, session) {
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("apapagetab", apa_df_data, apa_year(), Year, apa_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("apapagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_grants_distributed_for_productive_assets_ugx, "location_district")
-        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         ## create all the charts
@@ -808,7 +807,7 @@ server <- function(input, output, session) {
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("sspagetab", ss_df_data, ss_year(), Year, ss_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("sspagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_grants_ugx, "location_district")
-        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         ## create all the charts
@@ -936,7 +935,7 @@ server <- function(input, output, session) {
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("wnpagetab", wn_df_data, wn_year(), Year, wn_quarter(), Quarter )})
         df_shape_data <- dfShapeDefault("wnpagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_grants_ugx, "location_district")
-        df_point_data <- df_shape_data %>% sf::st_transform(crs = 32636 ) %>%
+        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
         ## create all the charts

@@ -278,9 +278,19 @@ server <- function(input, output, session) {
         df_point_data <- df_shape_data %>%filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+        
+        df_shape_data_map <- df_shape_data %>% filter(cash_transfers_by_district > 0)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+        
         ## create all the charts
-        fsCreatingMap("fspagetab", df_shape_data)
-        fsMapLabels("fspagetab", df_point_data)
+        dynamicMapLayer("fspagetab", "fs_map", df_shape_data_map)
+        refugeeHostLayer("fspagetab", "fs_map",df_other_refugee_host_dist)
+        dynamicMapLabels("fspagetab", "fs_map", df_point_data)
+        
         fsDonutChartCashBeneficiary ("fspagetab",
                                      df_by_district_cash_data(),
                                      select_beneficiary_type,
@@ -409,9 +419,18 @@ server <- function(input, output, session) {
         df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+       
+        df_shape_data_map <- df_shape_data %>% filter(cash_transfers_by_district > 0)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+        
         ## create all the charts
-        seoCreatingMap("seopagetab", df_shape_data)
-        seoMapLabels("seopagetab", df_point_data)
+        dynamicMapLayer("seopagetab", "seo_map", df_shape_data_map)
+        refugeeHostLayer("seopagetab", "seo_map",df_other_refugee_host_dist)
+        dynamicMapLabels("seopagetab", "seo_map", df_point_data)
         
         seoTableForEmploy("seopagetab", df_by_district_cash_data())
         
@@ -553,9 +572,19 @@ server <- function(input, output, session) {
         df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+        
+        df_shape_data_map <- df_shape_data %>% filter(cash_transfers_by_district > 0)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+        
         ## create all the charts
-        eprCreatingMap("eprpagetab", df_shape_data)
-        eprMapLabels("eprpagetab", df_point_data)
+        dynamicMapLayer("eprpagetab", "epr_map", df_shape_data_map)
+        refugeeHostLayer("eprpagetab", "epr_map",df_other_refugee_host_dist)
+        dynamicMapLabels("eprpagetab", "epr_map", df_point_data)
+        
         eprDonutChartCashBeneficiary ("eprpagetab",
                                       df_by_district_cash_data(),
                                       select_beneficiary_type,
@@ -682,9 +711,19 @@ server <- function(input, output, session) {
         df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+        
+        df_shape_data_map <- df_shape_data %>% filter(cash_transfers_by_district > 0)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+        
         ## create all the charts
-        apaCreatingMap("apapagetab", df_shape_data)
-        apaMapLabels("apapagetab", df_point_data)
+        dynamicMapLayer("apapagetab", "apa_map", df_shape_data_map)
+        refugeeHostLayer("apapagetab", "apa_map",df_other_refugee_host_dist)
+        dynamicMapLabels("apapagetab", "apa_map", df_point_data)
+        
         apaDonutChartCashBeneficiary ("apapagetab",
                                       df_by_district_cash_data(),
                                       select_beneficiary_type,
@@ -810,9 +849,19 @@ server <- function(input, output, session) {
         df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+        
+        df_shape_data_map <- df_shape_data %>% filter(cash_transfers_by_district > 0)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+        
         ## create all the charts
-        ssCreatingMap("sspagetab", df_shape_data)
-        ssMapLabels("sspagetab", df_point_data)
+        dynamicMapLayer("sspagetab", "ss_map", df_shape_data_map)
+        refugeeHostLayer("sspagetab", "ss_map",df_other_refugee_host_dist)
+        dynamicMapLabels("sspagetab", "ss_map", df_point_data)
+        
         ssDonutChartCashBeneficiary ("sspagetab",
                                      df_by_district_cash_data(),
                                      select_beneficiary_type,
@@ -938,9 +987,19 @@ server <- function(input, output, session) {
         df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+        
+        df_shape_data_map <- df_shape_data %>% filter(cash_transfers_by_district > 0)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+        
         ## create all the charts
-        wnCreatingMap("wnpagetab", df_shape_data)
-        wnMapLabels("wnpagetab", df_point_data)
+        dynamicMapLayer("wnpagetab", "wn_map", df_shape_data_map)
+        refugeeHostLayer("wnpagetab", "wn_map",df_other_refugee_host_dist)
+        dynamicMapLabels("wnpagetab", "wn_map", df_point_data)
+        
         wnDonutChartCashBeneficiary ("wnpagetab",
                                      df_by_district_cash_data(),
                                      select_beneficiary_type,

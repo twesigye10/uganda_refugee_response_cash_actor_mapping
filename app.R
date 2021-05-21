@@ -25,18 +25,10 @@ reach_theme <- bs_theme(
 
 # Define UI for application -----------------------------------------------
 
-ui <- navbarPage(title = div(class = "page-header", img(height = 40, width = 100, src="reach-logo-informing.png"), "Cash-Based Interventions. Uganda RRP") ,
-    # theme
-    # theme = bslib::bs_theme(bootswatch = "darkly"),
-    # theme = bslib::bs_theme(bootswatch = "cyborg"),
-    
-    
-    # Application title
-    # titlePanel(p("Cash-Based Interventions. Uganda Refugee Response Plan (RRP)", style = "color:#3474A7")),
-    # "A common platform for cash transfers. The information is collected through the ", tags$a(href="https://www.activityinfo.org/", "Activity Info platform"),
+ui <- navbarPage(
+    title = div(class = "page-header", img(height = 40, width = 100, src="reach-logo-informing.png"), "Cash-Based Interventions. Uganda RRP") ,
+
     id = "tab_being_displayed",
-    # tabsetPanel( 
-        # id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
         tabPageCBIUI(
             "cbipagetab", "CBI for Basic Needs", "yearperiod", cbi_df_data$Year,
@@ -90,10 +82,9 @@ ui <- navbarPage(title = div(class = "page-header", img(height = 40, width = 100
                          "wn_plotcashquarter", "wn_map", "wn_plotdeliverymechanism", "wn_plotcashpartner"
                      ) 
                  )
-        # )
-        
     ),
-    tabPanel("About"),
+    # tabPanel("About"),
+    tabPageReadmeUI("rdmpagetab", "Read Me"),
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
     ),
@@ -105,11 +96,6 @@ ui <- navbarPage(title = div(class = "page-header", img(height = 40, width = 100
         color = "#FFF",
         background = "#3E3E3F"
     ),
-    # footer = div(class = "page-footer", img(height = 50, width = 40, src="LogoOPM.png"), 
-    #              img(height = 40, width = 100, src="reach-logo-informing.png"), 
-    #              img(height = 40, width = 100, src="UNHCR-visibility-horizontal-White-CMYK-v2015.png"), 
-    #              img(height = 40, width = 100, src="USAID logo white.png"), 
-    #              img(height = 40, width = 100, src="wfp-logo-standard-white-en_transparent.png")),
     
     theme= reach_theme
 )

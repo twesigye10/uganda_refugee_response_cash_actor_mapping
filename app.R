@@ -1,6 +1,7 @@
 
 # load packages
 library(shiny)
+library(shinybusy)
 library(sf)
 library(tidyverse)
 library(lubridate)
@@ -97,6 +98,13 @@ ui <- navbarPage(title = div(class = "page-header", img(height = 40, width = 100
         tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
     ),
     windowTitle = "Cash Based Interventions",
+    header = busy_start_up(
+        loader = spin_epic("orbit", color = "#FFF"),
+        text = "Loading...",
+        timeout = 1500,
+        color = "#FFF",
+        background = "#3E3E3F"
+    ),
     # footer = div(class = "page-footer", img(height = 50, width = 40, src="LogoOPM.png"), 
     #              img(height = 40, width = 100, src="reach-logo-informing.png"), 
     #              img(height = 40, width = 100, src="UNHCR-visibility-horizontal-White-CMYK-v2015.png"), 

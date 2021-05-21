@@ -117,3 +117,29 @@ table {
 .nowrap {
     white-space: nowrap;
 }
+
+
+/* readme */
+
+div.read-me-div {
+    width: 100%;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+div.page-text {
+    color: #333;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: justify;
+}
+
+.page-partners {
+    padding: 5px;
+    background-color: #3E3E3F !important;
+    width: 100%;
+}
+
+.page-partners>img {
+    margin: 5px;
+}

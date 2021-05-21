@@ -84,7 +84,7 @@ ui <- navbarPage(
                  )
     ),
     # tabPanel("About"),
-    tabPageReadmeUI("rdmpagetab", "Read Me"),
+    tabPanel("Read Me", readmeUI("rdmpagetab")),
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
     ),
@@ -103,6 +103,16 @@ ui <- navbarPage(
 # Define server logic required --------------------------------------------
 
 server <- function(input, output, session) {
+    showModal(modalDialog(
+        title = NULL,
+        size = "l",
+        easyClose = TRUE,
+        fade = TRUE,
+        div(class="read-me-div",
+            readmeUI("rdmpagetab")
+            
+        )
+    ))
     # Cash Based Intervention  -----------------------------------------------------------
     cbi_year <- cbiYearValueServer("cbipagetab")
     cbi_quarter <- cbiQuarterValueServer("cbipagetab")

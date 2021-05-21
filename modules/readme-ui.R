@@ -1,7 +1,7 @@
 # Readme UI module -------------------------------------------------------------
 
-tabPageReadmeUI <- function(id, label){
-  tabPanel( label,
+readmeUI <- function(id){
+  
               div(class="read-me-div",
                   h2("About"),
                   div(class="page-text",
@@ -39,6 +39,6 @@ tabPageReadmeUI <- function(id, label){
                   
               )
 
-  )
+  
 }
 

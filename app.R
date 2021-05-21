@@ -152,16 +152,16 @@ server <- function(input, output, session) {
         
         cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data(), 
                                       total_amount_of_cash_transfers, Year, Quarter, select_month, 
-                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      Date, "select_month",  glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         
         cbiBarChartDeliveryMechanism ("cbipagetab", df_by_district_cash_data(),
                                       select_delivery_mechanism,
                                       total_amount_of_cash_transfers,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         
         cbiBarChartCashByPartner ("cbipagetab", df_by_district_cash_data(), partner_name,
                                   total_amount_of_cash_transfers,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         
         
     })
@@ -201,14 +201,14 @@ server <- function(input, output, session) {
                                       cbi_beneficiary_types)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
                                       total_amount_of_cash_transfers, Year, Quarter, select_month, 
-                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      Date, "select_month",  glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
                                       select_delivery_mechanism,
                                       total_amount_of_cash_transfers,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, partner_name,
                                   total_amount_of_cash_transfers,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         cbiTextSelectedDistrict("cbipagetab", click_district)
         
 
@@ -237,7 +237,7 @@ server <- function(input, output, session) {
     # Map reset button --------------------------------------------------------
     observeEvent(cbiResetMapServer("cbipagetab"),{
         
-        display_in_title <<- " for all Districts"
+        display_in_title <<- " across all Districts"
         
         cbiUpdateYear("cbipagetab", unique(as.character(cbi_df_data$Year)), "All")
         cbiUpdateQuarter("cbipagetab", "All", "All")
@@ -254,14 +254,14 @@ server <- function(input, output, session) {
                                       cbi_beneficiary_types)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
                                       total_amount_of_cash_transfers, Year, Quarter, select_month, 
-                                      Date, "select_month",  glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      Date, "select_month",  glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         cbiBarChartDeliveryMechanism ("cbipagetab", filter_cash_data_based_on_map,
                                       select_delivery_mechanism,
                                       total_amount_of_cash_transfers,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         cbiBarChartCashByPartner ("cbipagetab", filter_cash_data_based_on_map, partner_name,
                                   total_amount_of_cash_transfers,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         cbiTextSelectedDistrict("cbipagetab", "")
         
         
@@ -303,14 +303,14 @@ server <- function(input, output, session) {
                                      fs_beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", df_by_district_cash_data(), 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
-                                     glue("Total Cash Distributed{display_in_title}  (UGX '000)"))
+                                     glue("Total cash distributed per month{display_in_title}  (UGX '000)"))
         fsBarChartDeliveryMechanism ("fspagetab", df_by_district_cash_data(),
                                      select_delivery_mechanism,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
-                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                     glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         fsBarChartCashByPartner ("fspagetab", df_by_district_cash_data(), partner_name,
                                  fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
-                                 glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                 glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         
     })
     
@@ -345,14 +345,14 @@ server <- function(input, output, session) {
                                      fs_beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
-                                     glue("Total Cash Distributed{display_in_title}  (UGX '000)"))
+                                     glue("Total cash distributed per month{display_in_title}  (UGX '000)"))
         fsBarChartDeliveryMechanism ("fspagetab", filter_cash_data_based_on_map,
                                      select_delivery_mechanism,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
-                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                     glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         fsBarChartCashByPartner ("fspagetab", filter_cash_data_based_on_map, partner_name,
                                  fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
-                                 glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                 glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         fsTextSelectedDistrict("fspagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -379,7 +379,7 @@ server <- function(input, output, session) {
     # Map reset button --------------------------------------------------------
     observeEvent(fsResetMapServer("fspagetab"),{
         
-        display_in_title <<- " for all Districts"
+        display_in_title <<- " across all Districts"
         
         fsUpdateYear("fspagetab", unique(as.character(fs_df_data$Year)), "All")
         fsUpdateQuarter("fspagetab", "All", "All")
@@ -394,14 +394,14 @@ server <- function(input, output, session) {
                                      fs_beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
-                                     glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                     glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         fsBarChartDeliveryMechanism ("fspagetab", filter_cash_data_based_on_map,
                                      select_delivery_mechanism,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
-                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                     glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         fsBarChartCashByPartner ("fspagetab", filter_cash_data_based_on_map, partner_name,
                                  fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
-                                 glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                 glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         fsTextSelectedDistrict("fspagetab", "")
     })
     
@@ -448,14 +448,14 @@ server <- function(input, output, session) {
                                       seo_beneficiary_types)
         seoLineChartTotalCashQuarter ("seopagetab", df_by_district_cash_data(), 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         seoBarChartDeliveryMechanism ("seopagetab", df_by_district_cash_data(),
                                       delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         seoBarChartCashByPartner ("seopagetab", df_by_district_cash_data(), partner_name,
                                   total_cash_value_of_cash_for_work_ugx,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         
     })
     
@@ -494,14 +494,14 @@ server <- function(input, output, session) {
                                       seo_beneficiary_types)
         seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         seoBarChartDeliveryMechanism ("seopagetab", filter_cash_data_based_on_map,
                                       delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         seoBarChartCashByPartner ("seopagetab", filter_cash_data_based_on_map, partner_name,
                                   total_cash_value_of_cash_for_work_ugx,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         seoTextSelectedDistrict("seopagetab", click_district)
         
         
@@ -529,7 +529,7 @@ server <- function(input, output, session) {
     
     # Map reset button --------------------------------------------------------
     observeEvent(seoResetMapServer("seopagetab"),{
-        display_in_title <<- " for all Districts"
+        display_in_title <<- " across all Districts"
         
         seoUpdateYear("seopagetab", unique(as.character(seo_df_data$Year)), "All")
         seoUpdateQuarter("seopagetab", "All", "All")
@@ -548,14 +548,14 @@ server <- function(input, output, session) {
                                       seo_beneficiary_types)
         seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         seoBarChartDeliveryMechanism ("seopagetab", filter_cash_data_based_on_map,
                                       delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         seoBarChartCashByPartner ("seopagetab", filter_cash_data_based_on_map, partner_name,
                                   total_cash_value_of_cash_for_work_ugx,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         seoTextSelectedDistrict("seopagetab", "")
         
         
@@ -597,14 +597,14 @@ server <- function(input, output, session) {
                                       epr_beneficiary_types)
         eprLineChartTotalCashQuarter ("eprpagetab", df_by_district_cash_data(), 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         eprBarChartDeliveryMechanism ("eprpagetab", df_by_district_cash_data(),
                                       delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         eprBarChartCashByPartner ("eprpagetab", df_by_district_cash_data(), partner_name,
                                   total_cash_value_of_cash_for_work_ugx,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         
     })
     
@@ -639,14 +639,14 @@ server <- function(input, output, session) {
                                       epr_beneficiary_types)
         eprLineChartTotalCashQuarter ("eprpagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         eprBarChartDeliveryMechanism ("eprpagetab", filter_cash_data_based_on_map,
                                       delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         eprBarChartCashByPartner ("eprpagetab", filter_cash_data_based_on_map, partner_name,
                                   total_cash_value_of_cash_for_work_ugx,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         eprTextSelectedDistrict("eprpagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -672,7 +672,7 @@ server <- function(input, output, session) {
     
     # Map reset button --------------------------------------------------------
     observeEvent(eprResetMapServer("eprpagetab"),{
-        display_in_title <<- " for all Districts"
+        display_in_title <<- " across all Districts"
         
         eprUpdateYear("eprpagetab", unique(as.character(epr_df_data$Year)), "All")
         eprUpdateQuarter("eprpagetab", "All", "All")
@@ -687,14 +687,14 @@ server <- function(input, output, session) {
                                       epr_beneficiary_types)
         eprLineChartTotalCashQuarter ("eprpagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         eprBarChartDeliveryMechanism ("eprpagetab", filter_cash_data_based_on_map,
                                       delivery_mechanism,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         eprBarChartCashByPartner ("eprpagetab", filter_cash_data_based_on_map, partner_name,
                                   total_cash_value_of_cash_for_work_ugx,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         eprTextSelectedDistrict("eprpagetab", "")
         
     })
@@ -736,14 +736,14 @@ server <- function(input, output, session) {
                                       apa_beneficiary_types)
         apaLineChartTotalCashQuarter ("apapagetab", df_by_district_cash_data(), 
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         apaBarChartDeliveryMechanism ("apapagetab", df_by_district_cash_data(),
                                       delivery_mechanism,
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         apaBarChartCashByPartner ("apapagetab", df_by_district_cash_data(), partner_name,
                                   total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         
     })
     
@@ -778,14 +778,14 @@ server <- function(input, output, session) {
                                       apa_beneficiary_types)
         apaLineChartTotalCashQuarter ("apapagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         apaBarChartDeliveryMechanism ("apapagetab", filter_cash_data_based_on_map,
                                       delivery_mechanism,
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         apaBarChartCashByPartner ("apapagetab", filter_cash_data_based_on_map, partner_name,
                                   total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         apaTextSelectedDistrict("apapagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -811,7 +811,7 @@ server <- function(input, output, session) {
     
     # Map reset button --------------------------------------------------------
     observeEvent(apaResetMapServer("apapagetab"),{
-        display_in_title <<- " for all Districts"
+        display_in_title <<- " across all Districts"
         
         apaUpdateYear("apapagetab", unique(as.character(apa_df_data$Year)), "All")
         apaUpdateQuarter("apapagetab", "All", "All")
@@ -826,14 +826,14 @@ server <- function(input, output, session) {
                                       apa_beneficiary_types)
         apaLineChartTotalCashQuarter ("apapagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                      glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         apaBarChartDeliveryMechanism ("apapagetab", filter_cash_data_based_on_map,
                                       delivery_mechanism,
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         apaBarChartCashByPartner ("apapagetab", filter_cash_data_based_on_map, partner_name,
                                   total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                  glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         apaTextSelectedDistrict("apapagetab", "")
         
     })
@@ -874,14 +874,14 @@ server <- function(input, output, session) {
                                      ss_beneficiary_types)
         ssLineChartTotalCashQuarter ("sspagetab", df_by_district_cash_data(), 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
-                                     glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                     glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         ssBarChartDeliveryMechanism ("sspagetab", df_by_district_cash_data(),
                                      delivery_mechanism,
                                      total_cash_value_of_cash_grants_ugx,
-                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                     glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         ssBarChartCashByPartner ("sspagetab", df_by_district_cash_data(), partner_name,
                                  total_cash_value_of_cash_grants_ugx,
-                                 glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                 glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         
     })
     
@@ -916,14 +916,14 @@ server <- function(input, output, session) {
                                      ss_beneficiary_types)
         ssLineChartTotalCashQuarter ("sspagetab", filter_cash_data_based_on_map, 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
-                                     glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                     glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         ssBarChartDeliveryMechanism ("sspagetab", filter_cash_data_based_on_map,
                                      delivery_mechanism,
                                      total_cash_value_of_cash_grants_ugx,
-                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                     glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         ssBarChartCashByPartner ("sspagetab", filter_cash_data_based_on_map, partner_name,
                                  total_cash_value_of_cash_grants_ugx,
-                                 glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                 glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         ssTextSelectedDistrict("sspagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -950,7 +950,7 @@ server <- function(input, output, session) {
     # Map reset button --------------------------------------------------------
     observeEvent(ssResetMapServer("sspagetab"),{
         
-        display_in_title <<- " for all Districts"
+        display_in_title <<- " across all Districts"
         
         ssUpdateYear("sspagetab", unique(as.character(ss_df_data$Year)), "All")
         ssUpdateQuarter("sspagetab", "All", "All")
@@ -965,14 +965,14 @@ server <- function(input, output, session) {
                                      ss_beneficiary_types)
         ssLineChartTotalCashQuarter ("sspagetab", filter_cash_data_based_on_map, 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
-                                     glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                     glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         ssBarChartDeliveryMechanism ("sspagetab", filter_cash_data_based_on_map,
                                      delivery_mechanism,
                                      total_cash_value_of_cash_grants_ugx,
-                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                     glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         ssBarChartCashByPartner ("sspagetab", filter_cash_data_based_on_map, partner_name,
                                  total_cash_value_of_cash_grants_ugx,
-                                 glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                 glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         ssTextSelectedDistrict("sspagetab", "")
     })
     
@@ -1012,14 +1012,14 @@ server <- function(input, output, session) {
                                      wn_beneficiary_types)
         wnLineChartTotalCashQuarter ("wnpagetab", df_by_district_cash_data(), 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
-                                     glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                     glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         wnBarChartDeliveryMechanism ("wnpagetab", df_by_district_cash_data(),
                                      delivery_mechanism,
                                      total_cash_value_of_cash_grants_ugx,
-                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                     glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         wnBarChartCashByPartner ("wnpagetab", df_by_district_cash_data(), partner_name,
                                  total_cash_value_of_cash_grants_ugx,
-                                 glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                 glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         
     })
     
@@ -1054,14 +1054,14 @@ server <- function(input, output, session) {
                                      wn_beneficiary_types)
         wnLineChartTotalCashQuarter ("wnpagetab", filter_cash_data_based_on_map, 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
-                                     glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                     glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         wnBarChartDeliveryMechanism ("wnpagetab", filter_cash_data_based_on_map,
                                      delivery_mechanism,
                                      total_cash_value_of_cash_grants_ugx,
-                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                     glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         wnBarChartCashByPartner ("wnpagetab", filter_cash_data_based_on_map, partner_name,
                                  total_cash_value_of_cash_grants_ugx,
-                                 glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                 glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         wnTextSelectedDistrict("wnpagetab", click_district)
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
@@ -1088,7 +1088,7 @@ server <- function(input, output, session) {
     # Map reset button --------------------------------------------------------
     observeEvent(wnResetMapServer("wnpagetab"),{
         
-        display_in_title <<- " for all Districts"
+        display_in_title <<- " across all Districts"
         
         wnUpdateYear("wnpagetab", unique(as.character(wn_df_data$Year)), "All")
         wnUpdateQuarter("wnpagetab", "All", "All")
@@ -1103,14 +1103,14 @@ server <- function(input, output, session) {
                                      wn_beneficiary_types)
         wnLineChartTotalCashQuarter ("wnpagetab", filter_cash_data_based_on_map, 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
-                                     glue("Total Cash Distributed{display_in_title} (UGX '000)"))
+                                     glue("Total cash distributed per month{display_in_title} (UGX '000)"))
         wnBarChartDeliveryMechanism ("wnpagetab", filter_cash_data_based_on_map,
                                      delivery_mechanism,
                                      total_cash_value_of_cash_grants_ugx,
-                                     glue("Total Cash by Delivery Mechanism{display_in_title}"))
+                                     glue("Total cash transfer value by delivery mechanism{display_in_title}"))
         wnBarChartCashByPartner ("wnpagetab", filter_cash_data_based_on_map, partner_name,
                                  total_cash_value_of_cash_grants_ugx,
-                                 glue("Total cash Transfers by Partner{display_in_title} (UGX '000)"))
+                                 glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         wnTextSelectedDistrict("wnpagetab", "")
     })
     

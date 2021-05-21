@@ -169,7 +169,7 @@ seoTableForCVPD <- function(id, input_data ){
           cash_value_transfer_f = median(cash_value_of_transfer_per_individual_per_day_female_ugx, na.rm = T),
         )
       
-      div_data <- paste('<div class=\"table\">', glue("<h5> Median Cash transfer per individual per day{display_in_title}</h5>"))
+      div_data <- paste('<div class=\"table\">', glue("<h5> Median cash transfer per individual per day{display_in_title}</h5>"))
       thead_data <- paste('<table class=\"table\"> ')
       
       data_cvpd <- paste('<tr><td>', '<img src="cash_value_transfer_f.png" height="32"></img>', "UGX ", 

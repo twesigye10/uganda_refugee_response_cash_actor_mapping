@@ -162,7 +162,7 @@ cbiDataForPSN <- function(id, input_data ){
         rename_with(~gsub("ps.", "", .x, fixed=TRUE))
       
 
-      div_data <- paste('<div class=\"table\">', glue("<h5> PSN households{display_in_title}</h5>"))
+      div_data <- paste('<div class=\"table\">', glue("<h5> PSN households reported as receiving some form of cash assistance{display_in_title}</h5>"))
       thead_data <- paste('<table class=\"table\"> ')
       
       data_child_at_risk <- paste('<tr><td>', '<img src="child_at_risk.png" height="32"></img>'  ,'</td> <td>', "Child at Risk"  ,'</td> <td>', df_data_indicators %>% select(child_at_risk) %>% pull()   ,'</td> </tr>')

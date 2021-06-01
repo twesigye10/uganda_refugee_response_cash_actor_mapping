@@ -119,7 +119,7 @@ dynamicMapLayer <- function(id, input_map, input_data){
 refugeeHostLayer <- function(id, input_map, input_data){
   moduleServer(id, function(input, output, session){
     # Create a continuous palette function
-    pal <- colorFactor( c("#A1BCD7", "#b6b6b7"), levels = c("Host", "None Host")
+    pal <- colorFactor( c("#F3F3F3", "#b6b6b7"), levels = c("Other Host", "None Host")
     )
     # construct the dynamic map
     proxy = leafletProxy(input_map, data = input_data)  
@@ -138,8 +138,8 @@ refugeeHostLayer <- function(id, input_map, input_data){
       addLegend(position ="bottomright",
                 pal = pal,
                 values = ~col_legenend_factor,
-                title = "Refugee<br>Host Status",
-                opacity  = 0.7
+                title = "Other Districsts",
+                opacity  = 1
       )
   })
 }

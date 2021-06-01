@@ -134,7 +134,7 @@ server <- function(input, output, session) {
         
         df_other_refugee_host_dist <- df_shape_data %>%
             filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
-            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Other Host", "None Host" ) )
         
         ## create all the charts
         dynamicMapLayer("cbipagetab", "map", df_shape_data_map)
@@ -288,7 +288,7 @@ server <- function(input, output, session) {
         
         df_other_refugee_host_dist <- df_shape_data %>%
             filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
-            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Other Host", "None Host" ) )
         
         ## create all the charts
         dynamicMapLayer("fspagetab", "fs_map", df_shape_data_map)
@@ -429,7 +429,7 @@ server <- function(input, output, session) {
         
         df_other_refugee_host_dist <- df_shape_data %>%
             filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
-            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Other Host", "None Host" ) )
         
         ## create all the charts
         dynamicMapLayer("seopagetab", "seo_map", df_shape_data_map)
@@ -582,7 +582,7 @@ server <- function(input, output, session) {
         
         df_other_refugee_host_dist <- df_shape_data %>%
             filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
-            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Other Host", "None Host" ) )
         
         ## create all the charts
         dynamicMapLayer("eprpagetab", "epr_map", df_shape_data_map)
@@ -721,7 +721,7 @@ server <- function(input, output, session) {
         
         df_other_refugee_host_dist <- df_shape_data %>%
             filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
-            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Other Host", "None Host" ) )
         
         ## create all the charts
         dynamicMapLayer("apapagetab", "apa_map", df_shape_data_map)
@@ -859,7 +859,7 @@ server <- function(input, output, session) {
         
         df_other_refugee_host_dist <- df_shape_data %>%
             filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
-            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Other Host", "None Host" ) )
         
         ## create all the charts
         dynamicMapLayer("sspagetab", "ss_map", df_shape_data_map)
@@ -997,7 +997,7 @@ server <- function(input, output, session) {
         
         df_other_refugee_host_dist <- df_shape_data %>%
             filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
-            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Host", "None Host" ) )
+            mutate(col_legenend_factor = ifelse(ADM2_EN %in% refugee_districts, "Other Host", "None Host" ) )
         
         ## create all the charts
         dynamicMapLayer("wnpagetab", "wn_map", df_shape_data_map)

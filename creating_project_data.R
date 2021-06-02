@@ -22,7 +22,7 @@ display_in_title <- " For All districts"
 
 # CBI data ----------------------------------------------------------------
 
-cbi_df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs_20210305_055004_UTC.csv")
+cbi_df_data <- read_csv(file = "data/RRP_5W_CBI_for_basic_needs.csv")
 cbi_df_data <- janitor::clean_names(cbi_df_data) %>% 
     separate(select_month, c("Month", "Year"), "-", remove= FALSE, extra = "drop") %>% 
     mutate(

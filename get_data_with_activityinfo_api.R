@@ -1,5 +1,13 @@
 library(activityinfo)
+library(tidyverse)
+
 source("support_data/credentials.R")
+
+# input credentials
+account <- account
+password <- password
+
+# connect to activityInfo using the credentials
 activityInfoLogin(account, password)
 
 
@@ -10,8 +18,6 @@ activityInfoLogin(account, password)
 # see example below
 
 ?activityinfo::queryTable()
-
-
 
 
 # parent form -------------------------------------------------------------
@@ -121,6 +127,8 @@ df_cash_basic_needs <- queryTable("cjtzz3ez62",
                                   "Total amount of cash transfers" = "i1557624695",
                                   "Comments" = "i1547044100")
 
+# write out the dataset
+write_csv(x = df_cash_basic_needs, file = "data/api_cbi_CBI_for_basic_needs.csv")
 
 # financial_inclusion
 # "Select Month"= "[Select Month]",
@@ -143,6 +151,9 @@ df_financial_inclusion <- queryTable("cjtzyydbt3",
                                      "Households enrolled in mobile money" = "i0399939063",
                                      "Please specify financial service provider (mobile money)" = "i0400516186",
                                      "Comments" = "i0400323812")
+
+# write out the dataset
+write_csv(x = df_financial_inclusion, file = "data/api_cbi_financial_inclusions.csv")
 
 # Environment & Energy (Partners) ----------------------------------
 # Environment Protection and Restoration
@@ -179,6 +190,8 @@ df_environment_protection_and_restoration <- queryTable("cjtzjhzf4c",
                                                         "Comments" = "i1480156916",
                                                         "Record change/comment log (please indicate date, name and comment e.g. 01/07/2019 - John Doe - Record validated)" = "i1545148342")
 
+# write out the dataset
+write_csv(x = df_environment_protection_and_restoration, file = "data/api_env_Forests_wetlands_shorelines_protected_and_restored.csv")
 
 # Access to sufficient & sustainable basic energy - Household
 
@@ -223,9 +236,12 @@ df_households_using_alternative_and_or_renewable_energy <- queryTable("cjtzjlyom
                                                                       "Comments" = "i0289381234",
                                                                       "Record change/comment log (please indicate date, name and comment e.g. 01/07/2019 - John Doe - Record validated)" = "i2091544592")
 
-# households_that_self-report_using_fuel-efficient_cook-stove_to_cook_the_main_meal
+# write out the dataset
+write_csv(x = df_households_using_alternative_and_or_renewable_energy , file = "data/api_env_households_using_alternative_and_or_renewable_energy.csv")
+
+# households_that_self_report_using_fuel_efficient_cook_stove_to_cook_the_main_meal
 # "Select Month"= "[Select Month]",
-df_households_using_fuel-efficient_cook-stove_to_cook <- queryTable("cjtzjlyoes",
+df_households_using_fuel_efficient_cook_stove_to_cook <- queryTable("cjtzjlyoes",
                                                                     "Partner Name" = "a12499717150000000007.P00000102950000000001",
                                                                     "Location District" = "i0422696728.i0219912987",
                                                                     "Location Type" = "i0422696728.i0610240747",
@@ -264,6 +280,8 @@ df_households_using_fuel-efficient_cook-stove_to_cook <- queryTable("cjtzjlyoes"
                                                                     "Comments" = "i0453861389",
                                                                     "Record change/comment log (please indicate date, name and comment e.g. 01/07/2019 - John Doe - Record validated)" = "i1089351973")
 
+# write out the dataset
+write_csv(x = df_households_using_fuel_efficient_cook_stove_to_cook, file = "data/api_env_households_that_self_report_using_fuel_efficient_cook_stove_to_cook_the_main_meal.csv")
 
 
 # LIVELIHOODS & RESILIENCE (PARTNERS) --------------------------------------------------------------
@@ -307,9 +325,13 @@ df_increased_access_to_productive_assets <- queryTable("cjtx2djzd4",
                                                        "Comments" = "i1439394044")
 
 
-# increased_access_to_short-term_employment_opportunities
+# write out the dataset
+write_csv(x = df_increased_access_to_productive_assets, file = "data/api_live_ELS_Increased_access_to_productive_assetss.csv")
 
-df_access_to_short-term_employment_opportunities <- queryTable("cjtx2dk056",
+
+# increased_access_to_short_term_employment_opportunities
+
+df_access_to_short_term_employment_opportunities <- queryTable("cjtx2dk056",
                                                                "Partner Name" = "a19646060330000000007.P00000102950000000001",
                                                                "Location District" = "i1410730250.i0219912987",
                                                                "Location Type" = "i1410730250.i0610240747",
@@ -352,6 +374,9 @@ df_access_to_short-term_employment_opportunities <- queryTable("cjtx2dk056",
                                                                "WASH public work activity" = "i1257984937",
                                                                "Comments" = "i1258562060")
 
+
+# write out the dataset
+write_csv(x = df_access_to_short_term_employment_opportunities, file = "data/api_live_ELS_Increased_access_to_short_term_employment_opportunities.csv")
 
 
 # Shelter, Settlement & NFI (Partners) ------------------------------------
@@ -409,6 +434,10 @@ df_refugee_hh_assisted_with_semi_permanent_shelters <- queryTable("ck53qjaq37",
                                                                   "Total amount of semi-permanent PSN shelter cash transfers" = "i1975649492",
                                                                   "Comments" = "i1976034241")
 
+# write out the dataset
+write_csv(x = df_refugee_hh_assisted_with_semi_permanent_shelters, file = "data/api_shel_refugee_hh_assisted_with_semi_permanent_shelters.csv")
+
+
 # newly_arrived_refugee_households_provided_with_minimum_emergency_shelter_support
 # "Select Month"= "[Select Month]",
 ########## ########## ########## ########## cash fields empty
@@ -436,76 +465,91 @@ df_newly_arrived_refugee_hh_with_minimum_emergency_shelter <- queryTable("ck53qj
                                                                          "Total amount of emergency shelter-earmarked cash transfers" = "i1961413783",
                                                                          "Comments" = "i1954295928")
 
+# write out the dataset
+write_csv(x = df_newly_arrived_refugee_hh_with_minimum_emergency_shelter, file = "data/api_shel_newly_arrived_refugee_hh_with_minimum_emergency_shelter.csv")
+
+
 # WASH --------------------------------------------------------------------
 # CBI_approach_in_sanitation_services
 
 df_CBI_approach_in_sanitation_services <- queryTable("cjtxwsbul8",
-                 "Partner Name" = "a00824189710000000007.P00000102950000000001",
-                 "Location District" = "i1288780922.i0219912987",
-                 "Location Type" = "i1288780922.i0610240747",
-                 "Location Name" = "i1288780922.i0098724746",
-                 "Please specify location (if needed)" = "i0426642098",
-                 "Parent ID" = "@parent",
-                 "Start Date" = "i1325716816",
-                 "End Date" = "i1326293940",
-                 "Select Activity Status" = "Q1325139693",
-                 "Select Implementation Type" = "Q1324370195",
-                 "Select Funding Source(s)" = "Q1329756680",
-                 "Please specify funding source(s):" = "i1327832935",
-                 "Select Beneficiary Type" = "Q1327640561",
-                 "Select Modality" = "Q1319560834",
-                 "Please specify other modality" = "i1788644606",
-                 "Select Assistance Type" = "Q1319176085",
-                 "Delivery mechanism" = "Q1318598962",
-                 "Financial service provider" = "i1322638825",
-                 "Households receiving cash assistance for sanitation services" = "i1323215949",
-                 "Cash value of transfer per HH (UGX)" = "i1323023574",
-                 "Total cash value of cash grants (UGX)" = "i1322061702",
-                 "Comments" = "i1322446451")
+                                                     "Partner Name" = "a00824189710000000007.P00000102950000000001",
+                                                     "Location District" = "i1288780922.i0219912987",
+                                                     "Location Type" = "i1288780922.i0610240747",
+                                                     "Location Name" = "i1288780922.i0098724746",
+                                                     "Please specify location (if needed)" = "i0426642098",
+                                                     "Parent ID" = "@parent",
+                                                     "Start Date" = "i1325716816",
+                                                     "End Date" = "i1326293940",
+                                                     "Select Activity Status" = "Q1325139693",
+                                                     "Select Implementation Type" = "Q1324370195",
+                                                     "Select Funding Source(s)" = "Q1329756680",
+                                                     "Please specify funding source(s):" = "i1327832935",
+                                                     "Select Beneficiary Type" = "Q1327640561",
+                                                     "Select Modality" = "Q1319560834",
+                                                     "Please specify other modality" = "i1788644606",
+                                                     "Select Assistance Type" = "Q1319176085",
+                                                     "Delivery mechanism" = "Q1318598962",
+                                                     "Financial service provider" = "i1322638825",
+                                                     "Households receiving cash assistance for sanitation services" = "i1323215949",
+                                                     "Cash value of transfer per HH (UGX)" = "i1323023574",
+                                                     "Total cash value of cash grants (UGX)" = "i1322061702",
+                                                     "Comments" = "i1322446451")
+
+
+# write out the dataset
+write_csv(x = df_CBI_approach_in_sanitation_services, file = "data/api_wash_CBI_approach_in_sanitation_services.csv")
 
 
 # CBI_approach_in_WASH_NFI
 
 df_CBI_approach_in_WASH_NFI <- queryTable("cjtxwsbub6",
-                 "Parent ID" = "@parent",
-                 "Start Date" = "i1304940376",
-                 "End Date" = "i1305517499",
-                 "Select Activity Status" = "Q1304363252",
-                 "Select Implementation Type" = "Q1303593755",
-                 "Select Funding Source(s)" = "Q1302824257",
-                 "Please specify funding source(s):" = "i1294167407",
-                 "Select Beneficiary Type" = "Q1294744530",
-                 "Select Modality" = "Q1298976768",
-                 "Please specify other modality" = "i0002987473",
-                 "Select Assistance Type" = "Q1298014896",
-                 "Delivery mechanism" = "Q1297437772",
-                 "Financial service provider" = "i1296860649",
-                 "Households receiving cash assistance for WASH NFI" = "i1289742794",
-                 "Cash value of transfer per HH (UGX)" = "i1289550420",
-                 "Total cash value of cash grants (UGX)" = "i1289935169",
-                 "Comments" = "i1288973296")
+                                          "Parent ID" = "@parent",
+                                          "Start Date" = "i1304940376",
+                                          "End Date" = "i1305517499",
+                                          "Select Activity Status" = "Q1304363252",
+                                          "Select Implementation Type" = "Q1303593755",
+                                          "Select Funding Source(s)" = "Q1302824257",
+                                          "Please specify funding source(s):" = "i1294167407",
+                                          "Select Beneficiary Type" = "Q1294744530",
+                                          "Select Modality" = "Q1298976768",
+                                          "Please specify other modality" = "i0002987473",
+                                          "Select Assistance Type" = "Q1298014896",
+                                          "Delivery mechanism" = "Q1297437772",
+                                          "Financial service provider" = "i1296860649",
+                                          "Households receiving cash assistance for WASH NFI" = "i1289742794",
+                                          "Cash value of transfer per HH (UGX)" = "i1289550420",
+                                          "Total cash value of cash grants (UGX)" = "i1289935169",
+                                          "Comments" = "i1288973296")
+
+# write out the dataset
+write_csv(x = df_CBI_approach_in_WASH_NFI, file = "data/api_wash_CBI_approach_in_WASH_NFI.csv")
 
 
 # Food Security -----------------------------------------------------------
 
 df_food_security <- queryTable("a1695644495",
-                 "Partner Name" = "a16956444950000000007.P00000102950000000001",
-                 "Location District" = "i0608101100.i0219912987",
-                 "Location Type" = "i0608101100.i0610240747",
-                 "Location Name" = "i0608101100.i0098724746",
-                 "Select Quarter" = "Q0606946853",
-                 "Select Beneficiary Type" = "Q0599636624",
-                 "Select Modality" = "Q1777032217",
-                 "Select Assistance Type" = "Q1369521836",
-                 "Select Delivery Mechanism" = "Q1430709506",
-                 "FS.I.1.1: Refugees receiving in-kind food assistance" = "i0597712879",
-                 "FS.I.1.2: Refugees receiving cash" = "i0598097628",
-                 "FS.I.1.2: Refugees receiving cash (cash value per transfer)" = "i0306098862",
-                 "FS.I.1.2: Refugees receiving cash (total amount of cash transfers)" = "i0085837779",
-                 "FS.I.1.3: HH with poor or borderline Food Consumption Score (<20%)" = "i2136535729",
-                 "FS.I.2.1: Refugee households receiving targeted assistance" = "i0597905254",
-                 "FS.I.2.2: HH with poor or borderline Food Consumption Score (PSN)" = "i0795116351",
-                 "FS.I.2.3: Coping Strategy Score of targeted refugee households (EVIs, PSN)" = "i1177126036",
-                 "FS.I.3.1: Refugees receiving food assistance and participating in livelihood programmes" = "i0596943381",
-                 "FS.I.3.2: Host population participating in refugee livelihood activities" = "i0596751007",
-                 "Comments" = "i0597328130")
+                               "Partner Name" = "a16956444950000000007.P00000102950000000001",
+                               "Location District" = "i0608101100.i0219912987",
+                               "Location Type" = "i0608101100.i0610240747",
+                               "Location Name" = "i0608101100.i0098724746",
+                               "Select Quarter" = "Q0606946853",
+                               "Select Beneficiary Type" = "Q0599636624",
+                               "Select Modality" = "Q1777032217",
+                               "Select Assistance Type" = "Q1369521836",
+                               "Select Delivery Mechanism" = "Q1430709506",
+                               "FS.I.1.1: Refugees receiving in-kind food assistance" = "i0597712879",
+                               "FS.I.1.2: Refugees receiving cash" = "i0598097628",
+                               "FS.I.1.2: Refugees receiving cash (cash value per transfer)" = "i0306098862",
+                               "FS.I.1.2: Refugees receiving cash (total amount of cash transfers)" = "i0085837779",
+                               "FS.I.1.3: HH with poor or borderline Food Consumption Score (<20%)" = "i2136535729",
+                               "FS.I.2.1: Refugee households receiving targeted assistance" = "i0597905254",
+                               "FS.I.2.2: HH with poor or borderline Food Consumption Score (PSN)" = "i0795116351",
+                               "FS.I.2.3: Coping Strategy Score of targeted refugee households (EVIs, PSN)" = "i1177126036",
+                               "FS.I.3.1: Refugees receiving food assistance and participating in livelihood programmes" = "i0596943381",
+                               "FS.I.3.2: Host population participating in refugee livelihood activities" = "i0596751007",
+                               "Comments" = "i0597328130")
+
+# write out the dataset
+write_csv(x = df_food_security, file = "data/api_fs_Food_Security.csv")
+

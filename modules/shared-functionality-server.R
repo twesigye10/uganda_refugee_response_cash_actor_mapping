@@ -75,8 +75,8 @@ dynamicMapLayer <- function(id, input_map, input_data){
     )
     # label districts in the map
     labels_v1 <- ~sprintf(
-      "<strong>%s</strong><br/>Cash Transfers : %s ",
-      stringr::str_to_title(ADM2_EN), cash_transfers_by_district
+      "<strong>%s</strong><br/>Cash Transfers (UGX '000) :<br> <strong>%s</strong> ",
+      stringr::str_to_title(ADM2_EN), scales::comma(cash_transfers_by_district, scale = 1, big.mark = ",")
     ) %>% 
       lapply(htmltools::HTML)
     

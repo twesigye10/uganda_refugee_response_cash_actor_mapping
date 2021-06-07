@@ -41,7 +41,7 @@ fsDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
         ) 
       billboarder(data = df_billb_data) %>%
         bb_donutchart() %>% 
-        bb_legend(position = 'bottom') %>%
+        bb_legend(position = 'bottom', item = list(onclick = htmlwidgets::JS("function(e) {e.stopPropagation();}"))) %>%
         bb_tooltip(format = list(
           name =  htmlwidgets::JS("function(name, ratio, id, index) {return name;}"),
           value = htmlwidgets::JS("function(value) {return \"UGX('000) \"+ d3.format(',')(value);}")

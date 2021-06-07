@@ -126,16 +126,16 @@ seoTableForEmploy <- function(id, input_data ){
       
       df_data_indicators <- input_data %>%
         summarise( 
-          em.employ_0_14_m = sum(people_engaged_in_short_term_employment_opportunities_male_0_14, na.rm = T),
-          em.employ_0_14_f = sum(people_engaged_in_short_term_employment_opportunities_female_0_14, na.rm = T),
-          em.employ_15_17_m = sum(people_engaged_in_short_term_employment_opportunities_male_15_17, na.rm = T),
-          em.employ_15_17_f = sum(people_engaged_in_short_term_employment_opportunities_female_15_17, na.rm = T),
-          em.employ_18_35_m = sum(people_engaged_in_short_term_employment_opportunities_male_18_35, na.rm = T),
-          em.employ_18_35_f = sum(people_engaged_in_short_term_employment_opportunities_female_18_35, na.rm = T),
-          em.employ_36_59_m = sum(people_engaged_in_short_term_employment_opportunities_male_36_59, na.rm = T),
-          em.employ_36_59_f = sum(people_engaged_in_short_term_employment_opportunities_female_36_59, na.rm = T),
-          em.employ_60_plus_m = sum(people_engaged_in_short_term_employment_opportunities_male_60, na.rm = T),
-          em.employ_60_plus_f = sum(people_engaged_in_short_term_employment_opportunities_female_60, na.rm = T)
+          em.employ_0_14_m = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_male_0_14, na.rm = T), scale = 1, big.mark = ","),
+          em.employ_0_14_f = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_female_0_14, na.rm = T), scale = 1, big.mark = ","),
+          em.employ_15_17_m = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_male_15_17, na.rm = T), scale = 1, big.mark = ","),
+          em.employ_15_17_f = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_female_15_17, na.rm = T), scale = 1, big.mark = ","),
+          em.employ_18_35_m = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_male_18_35, na.rm = T), scale = 1, big.mark = ","),
+          em.employ_18_35_f = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_female_18_35, na.rm = T), scale = 1, big.mark = ","),
+          em.employ_36_59_m = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_male_36_59, na.rm = T), scale = 1, big.mark = ","),
+          em.employ_36_59_f = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_female_36_59, na.rm = T), scale = 1, big.mark = ","),
+          em.employ_60_plus_m = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_male_60, na.rm = T), scale = 1, big.mark = ","),
+          em.employ_60_plus_f = scales::comma(sum(people_engaged_in_short_term_employment_opportunities_female_60, na.rm = T), scale = 1, big.mark = ",")
         ) %>% 
         select(starts_with("em.")) %>% 
         rename_with(~gsub("em.", "", .x, fixed=TRUE))

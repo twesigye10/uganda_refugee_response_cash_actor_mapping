@@ -157,7 +157,7 @@ cbiDataForPSN <- function(id, input_data ){
         ungroup() %>% 
         select(starts_with("ps.")) %>% 
         summarise(
-          across(everything(), ~sum(.x, na.rm = TRUE))
+          across(everything(), ~scales::comma(sum(.x, na.rm = TRUE), scale = 1, big.mark = ","))
         ) %>% 
         rename_with(~gsub("ps.", "", .x, fixed=TRUE))
       

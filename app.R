@@ -12,6 +12,11 @@ library(highcharter)
 library(billboarder)
 library(glue)
 
+hcoptslang <- getOption("highcharter.lang")
+hcoptslang$thousandsSep <- ","
+options(highcharter.lang = hcoptslang)
+
+
 # load scripts
 list.files("modules") %>%
     purrr::map(~ source(paste0("modules/", .)))

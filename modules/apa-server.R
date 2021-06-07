@@ -90,7 +90,7 @@ apaBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
         hchart(type = "bar",
                hcaes(x = delivery_mechanism, y = p_cash_transfer_by_delivery_mechanism),
                dataLabels = list(enabled = TRUE, format="{point.p_cash_transfer_by_delivery_mechanism:.1f}%" ), color = "#7cb5ec") %>%
-        hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:.0f} ({point.p_cash_transfer_by_delivery_mechanism:.1f}%)</b>" ) %>%
+        hc_tooltip(pointFormat = "<b>{point.cash_transfer_by_delivery_mechanism:,.0f} ({point.p_cash_transfer_by_delivery_mechanism:.1f}%)</b>" ) %>%
         hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
         hc_yAxis(title = list(text = ""), labels = list(format = "{value}%") ) 

@@ -165,14 +165,14 @@ cbiDataForPSN <- function(id, input_data ){
       div_data <- paste('<div class=\"table\">', glue("<h5> PSN households reported as receiving some form of cash assistance{display_in_title}</h5>"))
       thead_data <- paste('<table class=\"table\"> ')
       
-      data_child_at_risk <- paste('<tr><td>', '<img src="child_at_risk.png" height="32"></img>'  ,'</td> <td>', "Child at Risk"  ,'</td> <td>', df_data_indicators %>% select(child_at_risk) %>% pull()   ,'</td> </tr>')
-      data_disability <- paste('<tr><td>', '<img src="disability.png" height="32"></img>'  ,'</td> <td>', "Disability"  ,'</td> <td>', df_data_indicators %>% select(disability) %>% pull()   ,'</td> </tr>')
-      data_Older_person_at_risk <- paste('<tr><td>', '<img src="Older_person_at_risk.png" height="32"></img>'  ,'</td> <td>', "Older Person at Risk"  ,'</td> <td>', df_data_indicators %>% select(Older_person_at_risk) %>% pull()   ,'</td> </tr>')
-      data_serious_medical_condition <- paste('<tr><td>', '<img src="serious_medical_condition.png" height="32"></img>'  ,'</td> <td>', "Serious Medical Condition"  ,'</td> <td>', df_data_indicators %>% select(serious_medical_condition) %>% pull()   ,'</td> </tr>')
-      data_single_parent_or_caregiver <- paste('<tr><td>', '<img src="single_parent_or_caregiver.png" height="32"></img>'  ,'</td> <td>', "Single Parent or Caregiver"  ,'</td> <td>', df_data_indicators %>% select(single_parent_or_caregiver) %>% pull()   ,'</td> </tr>')
-      data_specific_legal_and_physical_protection_needs <- paste('<tr><td>', '<img src="specific_legal_and_physical_protection_needs.png" height="32"></img>'  ,'</td> <td>', "Specific Legal and Physical Protection needs"  ,'</td> <td>', df_data_indicators %>% select(specific_legal_and_physical_protection_needs) %>% pull()   ,'</td> </tr>')
-      data_unaccompanied_or_separated_child <- paste('<tr><td>', '<img src="unaccompanied_or_separated_child.png" height="32"></img>'  ,'</td> <td>', "Unaccompanied or Separated Child"  ,'</td> <td>', df_data_indicators %>% select(unaccompanied_or_separated_child) %>% pull()   ,'</td> </tr>')
-      data_woman_at_risk <- paste('<tr><td>', '<img src="woman_at_risk.png" height="32"></img>'  ,'</td> <td>', "Woman at Risk"  ,'</td> <td>', df_data_indicators %>% select(woman_at_risk) %>% pull()   ,'</td> </tr>')
+      data_child_at_risk <- paste('<tr><td>', '<img src="child_at_risk.png" height="32"></img>'  ,'</td> <td>', "Child at Risk"  ,'</td> <td>', df_data_indicators %>% pull(child_at_risk)   ,'</td> </tr>')
+      data_disability <- paste('<tr><td>', '<img src="disability.png" height="32"></img>'  ,'</td> <td>', "Disability"  ,'</td> <td>', df_data_indicators %>% pull(disability)   ,'</td> </tr>')
+      data_Older_person_at_risk <- paste('<tr><td>', '<img src="Older_person_at_risk.png" height="32"></img>'  ,'</td> <td>', "Older Person at Risk"  ,'</td> <td>', df_data_indicators %>% pull(Older_person_at_risk)   ,'</td> </tr>')
+      data_serious_medical_condition <- paste('<tr><td>', '<img src="serious_medical_condition.png" height="32"></img>'  ,'</td> <td>', "Serious Medical Condition"  ,'</td> <td>', df_data_indicators %>% pull(serious_medical_condition)   ,'</td> </tr>')
+      data_single_parent_or_caregiver <- paste('<tr><td>', '<img src="single_parent_or_caregiver.png" height="32"></img>'  ,'</td> <td>', "Single Parent or Caregiver"  ,'</td> <td>', df_data_indicators %>% pull(single_parent_or_caregiver)   ,'</td> </tr>')
+      data_specific_legal_and_physical_protection_needs <- paste('<tr><td>', '<img src="specific_legal_and_physical_protection_needs.png" height="32"></img>'  ,'</td> <td>', "Specific Legal and Physical Protection needs"  ,'</td> <td>', df_data_indicators %>% pull(specific_legal_and_physical_protection_needs)   ,'</td> </tr>')
+      data_unaccompanied_or_separated_child <- paste('<tr><td>', '<img src="unaccompanied_or_separated_child.png" height="32"></img>'  ,'</td> <td>', "Unaccompanied or Separated Child"  ,'</td> <td>', df_data_indicators %>% pull(unaccompanied_or_separated_child)   ,'</td> </tr>')
+      data_woman_at_risk <- paste('<tr><td>', '<img src="woman_at_risk.png" height="32"></img>'  ,'</td> <td>', "Woman at Risk"  ,'</td> <td>', df_data_indicators %>% pull(woman_at_risk)   ,'</td> </tr>')
       
       tfooter_data <- paste('</table> </div>')
       

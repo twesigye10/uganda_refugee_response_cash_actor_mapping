@@ -143,11 +143,11 @@ seoTableForEmploy <- function(id, input_data ){
       div_data <- paste('<div class=\"table\">', glue("<h5> Employment by Age{display_in_title}</h5>"))
       thead_data <- paste('<table class=\"table\"> ')
       
-      data_employ_0_14 <- paste('<tr><td>',  '0 - 14' ,'</td> <td>', '<img src="employ_0_14_f.png" height="32"></img>', df_data_indicators %>% select(employ_0_14_f) %>% pull() ,'</td> <td>','<img src="employ_0_14_m.png" height="32"></img>', df_data_indicators %>% select(employ_0_14_m) %>% pull() ,'</td> </tr>')
-      data_employ_15_17 <- paste('<tr><td>', '15 - 17'  ,'</td> <td>', '<img src="employ_15_17_f.png" height="32"></img>', df_data_indicators %>% select(employ_15_17_f) %>% pull() ,'</td> <td>','<img src="employ_15_17_m.png" height="32"></img>', df_data_indicators %>% select(employ_15_17_m) %>% pull() ,'</td> </tr>')
-      data_employ_18_35 <- paste('<tr><td>', '18 - 35'  ,'</td> <td>', '<img src="employ_18_35_f.png" height="32"></img>', df_data_indicators %>% select(employ_18_35_f) %>% pull() ,'</td> <td>','<img src="employ_18_35_m.png" height="32"></img>', df_data_indicators %>% select(employ_18_35_m) %>% pull() ,'</td> </tr>')
-      data_employ_36_59 <- paste('<tr><td>',  '36 - 59' ,'</td> <td>', '<img src="employ_36_59_f.png" height="32"></img>', df_data_indicators %>% select(employ_36_59_f) %>% pull() ,'</td> <td>','<img src="employ_36_59_m.png" height="32"></img>', df_data_indicators %>% select(employ_36_59_m) %>% pull() ,'</td> </tr>')
-      data_employ_60_plus <- paste('<tr><td>', '60 +'  ,'</td> <td>', '<img src="employ_60_plus_f.png" height="32"></img>', df_data_indicators %>% select(employ_60_plus_f) %>% pull() ,'</td> <td>','<img src="employ_60_plus_m.png" height="32"></img>', df_data_indicators %>% select(employ_60_plus_m) %>% pull() ,'</td> </tr>')
+      data_employ_0_14 <- paste('<tr><td>',  '0 - 14' ,'</td> <td>', '<img src="employ_0_14_f.png" height="32"></img>', df_data_indicators %>% pull(employ_0_14_f) ,'</td> <td>','<img src="employ_0_14_m.png" height="32"></img>', df_data_indicators %>% pull(employ_0_14_m) ,'</td> </tr>')
+      data_employ_15_17 <- paste('<tr><td>', '15 - 17'  ,'</td> <td>', '<img src="employ_15_17_f.png" height="32"></img>', df_data_indicators %>% pull(employ_15_17_f) ,'</td> <td>','<img src="employ_15_17_m.png" height="32"></img>', df_data_indicators %>% pull(employ_15_17_m) ,'</td> </tr>')
+      data_employ_18_35 <- paste('<tr><td>', '18 - 35'  ,'</td> <td>', '<img src="employ_18_35_f.png" height="32"></img>', df_data_indicators %>% pull(employ_18_35_f) ,'</td> <td>','<img src="employ_18_35_m.png" height="32"></img>', df_data_indicators %>% pull(employ_18_35_m) ,'</td> </tr>')
+      data_employ_36_59 <- paste('<tr><td>',  '36 - 59' ,'</td> <td>', '<img src="employ_36_59_f.png" height="32"></img>', df_data_indicators %>% pull(employ_36_59_f) ,'</td> <td>','<img src="employ_36_59_m.png" height="32"></img>', df_data_indicators %>% pull(employ_36_59_m) ,'</td> </tr>')
+      data_employ_60_plus <- paste('<tr><td>', '60 +'  ,'</td> <td>', '<img src="employ_60_plus_f.png" height="32"></img>', df_data_indicators %>% pull(employ_60_plus_f) ,'</td> <td>','<img src="employ_60_plus_m.png" height="32"></img>', df_data_indicators %>% pull(employ_60_plus_m) ,'</td> </tr>')
       
       tfooter_data <- paste('</table> </div>')
       
@@ -173,9 +173,9 @@ seoTableForCVPD <- function(id, input_data ){
       thead_data <- paste('<table class=\"table\"> ')
       
       data_cvpd <- paste('<tr><td>', '<img src="cash_value_transfer_f.png" height="32"></img>', "UGX ", 
-                         scales::comma_format()(df_data_cvpd %>% select(cash_value_transfer_f) %>% pull()) ,
+                         scales::comma_format()(df_data_cvpd %>% pull(cash_value_transfer_f)) ,
                          '</td> <td>','<img src="cash_value_transfer_m.png" height="32"></img>',  "UGX ",
-                         scales::comma_format()(df_data_cvpd %>% select(cash_value_transfer_m) %>% pull()) ,
+                         scales::comma_format()(df_data_cvpd %>% pull(cash_value_transfer_m)) ,
                          '</td> </tr>')
 
       tfooter_data <- paste('</table> </div>')

@@ -71,7 +71,7 @@ dynamicMapLayer <- function(id, input_map, input_data){
     pal <- colorNumeric(
       palette = "Reds",
       domain = input_data$cash_transfers_by_district,
-      na.color = "#b6b6b7"
+      na.color = NA
     )
     # label districts in the map
     labels_v1 <- ~sprintf(

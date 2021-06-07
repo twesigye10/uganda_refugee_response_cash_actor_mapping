@@ -68,9 +68,10 @@ dfShapeDefault <- function(id, input_shape_data, input_cash_data, input_field_di
 dynamicMapLayer <- function(id, input_map, input_data){
   moduleServer(id, function(input, output, session){
     # Create a continuous palette function
-    pal <- colorNumeric(
+    pal <- colorBin(
       palette = "Reds",
       domain = input_data$cash_transfers_by_district,
+      bins = 5,
       na.color = NA
     )
     # label districts in the map

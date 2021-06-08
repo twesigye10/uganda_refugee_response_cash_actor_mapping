@@ -1,12 +1,13 @@
 # UI module -------------------------------------------------------------
 
 tabPageSEOUI <- function(
-  id, label, inp_yearperiod, inp_yearperiod_choices,
+  id, label, inp_intro, inp_yearperiod, inp_yearperiod_choices,
   inp_quarterperiod, inp_mapreset, inp_selecteddistrict, outp_hhreceivingcash,
   outp_plotcashquarter, outp_map, outp_data, outp_cvpd, outp_plotdeliverymechanism, outp_plotcashpartner){
   ns <- NS(id)
   
   tabPanel( label,
+            inp_intro,
             # Sidebar
             sidebarLayout(
               # side panel

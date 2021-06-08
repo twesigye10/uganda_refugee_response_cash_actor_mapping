@@ -36,29 +36,29 @@ ui <- navbarPage(
     id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------
         tabPageCBIUI(
-            "cbipagetab", "CBI for Basic Needs", "yearperiod", cbi_df_data$Year,
+            "cbipagetab", "CBI for Basic Needs", cbiInfoUI(), "yearperiod", cbi_df_data$Year,
             "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
             "plotcashquarter", "map", "psndata", "plotdeliverymechanism", "plotcashpartner"
         ),
         # Environmental Protection --------------------------------------------------------------
         tabPageUI(
-            "eprpagetab", "Environmental Protection", "epr_yearperiod", epr_df_data$Year,
+            "eprpagetab", "Environmental Protection", eaeInfoUI(), "epr_yearperiod", epr_df_data$Year,
             "epr_quarterperiod", "epr_mapreset", "epr_selecteddistrict", "epr_hhreceivingcash",
             "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
         ),
         # combine livelihood components
-        tabPanel("Emergency Livelihood Support",
+        tabPanel("Emergency Livelihood Support", elsInfoUI(),
                  tabsetPanel(
                      id = "tabs",
                      # Short term Employment --------------------------------------------------------------
                      tabPageSEOUI(
-                         "seopagetab", "Short term Employment", "seo_yearperiod", seo_df_data$Year,
+                         "seopagetab", "Short term Employment", NULL, "seo_yearperiod", seo_df_data$Year,
                          "seo_quarterperiod", "seo_mapreset", "seo_selecteddistrict", "seo_hhreceivingcash",
-                         "seo_plotcashquarter", "seo_map", "seotable", "seocvpdtable", "seo_plotdeliverymechanism", "seo_plotcashpartner"
+                          "seo_plotcashquarter", "seo_map", "seotable", "seocvpdtable", "seo_plotdeliverymechanism", "seo_plotcashpartner"
                      ),
                      # Access to Productive Assets --------------------------------------------------------------
                      tabPageUI(
-                         "apapagetab", "Access to Productive Assets", "apa_yearperiod", apa_df_data$Year,
+                         "apapagetab", "Access to Productive Assets", NULL, "apa_yearperiod", apa_df_data$Year,
                          "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
                          "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
                      ) 
@@ -66,23 +66,23 @@ ui <- navbarPage(
         ),
         # Food Security -----------------------------------------------------------
         tabPageUI(
-            "fspagetab", "Food Security", "fs_yearperiod", fs_df_data$Year,
+            "fspagetab", "Food Security", fsInfoUI(), "fs_yearperiod", fs_df_data$Year,
             "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
             "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
         ),
         # combine WASH components
-        tabPanel("WASH",
+        tabPanel("WASH", wsInfoUI(),
                  tabsetPanel(
                      id = "wash_tabs",
                      # Short term Employment --------------------------------------------------------------
                      tabPageUI(
-                         "sspagetab", "CBI Approach in Sanitation Services", "ss_yearperiod", ss_df_data$Year,
+                         "sspagetab", "CBI Approach in Sanitation Services", NULL, "ss_yearperiod", ss_df_data$Year,
                          "ss_quarterperiod", "ss_mapreset", "ss_selecteddistrict", "ss_hhreceivingcash",
                          "ss_plotcashquarter", "ss_map", "ss_plotdeliverymechanism", "ss_plotcashpartner"
                      ),
                      # Access to Productive Assets --------------------------------------------------------------
                      tabPageUI(
-                         "wnpagetab", "CBI approach in WASH NFI", "wn_yearperiod", wn_df_data$Year,
+                         "wnpagetab", "CBI approach in WASH NFI", NULL, "wn_yearperiod", wn_df_data$Year,
                          "wn_quarterperiod", "wn_mapreset", "wn_selecteddistrict", "wn_hhreceivingcash",
                          "wn_plotcashquarter", "wn_map", "wn_plotdeliverymechanism", "wn_plotcashpartner"
                      ) 
@@ -101,7 +101,7 @@ ui <- navbarPage(
         color = "#FFF",
         background = "#3E3E3F"
     ),
-    
+    # absolutePanel(cbiInfoUI("cbipagetab"), right = 10, top = 10, draggable = TRUE, width = 2000, height = 50),
     theme= reach_theme
 )
 

@@ -152,7 +152,7 @@ server <- function(input, output, session) {
                                       df_by_district_cash_data(),
                                       select_beneficiary_type,
                                       total_amount_of_cash_transfers,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       cbi_beneficiary_types)
         
         cbiLineChartTotalCashQuarter ("cbipagetab", df_by_district_cash_data(), 

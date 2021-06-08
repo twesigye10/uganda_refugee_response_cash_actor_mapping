@@ -22,8 +22,6 @@ eaeInfoUI <- function(){
          prepare tree nurseries, clear woodlots in and around the settlements, 
          make briquettes, heat retaining baskets and the provision of energy-saving stoves.")
   )
-  
-  
 }
 
 

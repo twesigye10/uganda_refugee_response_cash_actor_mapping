@@ -23,7 +23,9 @@ display_in_title <- " For All districts"
 # shapefile ---------------------------------------------------------------
 
 df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2020.shp", crs=4326 ) %>% 
-    mutate(ADM2_EN = toupper(ADM2_EN))
+    mutate(ADM2_EN = toupper(ADM2_EN))%>% 
+    select(ADM2_EN) %>% st_transform(crs = 32636) %>% 
+    st_simplify(dTolerance = 800) %>% st_transform(crs=4326)
 
 
 # CBI data ----------------------------------------------------------------

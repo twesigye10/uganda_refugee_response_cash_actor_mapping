@@ -51,12 +51,12 @@ cbiDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
         ) 
       billboarder(data = df_billb_data) %>%
         bb_donutchart() %>% 
-        bb_legend(position = 'bottom', item = list(onclick = htmlwidgets::JS("function(e) {e.stopPropagation();}")) ) %>%
+        bb_legend(position = 'right', item = list(onclick = htmlwidgets::JS("function(e) {e.stopPropagation();}")) ) %>%
         bb_tooltip(format = list(
           name =  htmlwidgets::JS("function(name, ratio, id, index) {return name;}"),
           value = htmlwidgets::JS("function(value) {return \"UGX('000) \"+ d3.format(',')(value);}")
         )) %>% 
-        bb_donut(title = input_title, width = 70) %>% 
+        bb_donut(title = input_title, padding = list(top = 10, bottom = 10, left = 10, right = 10) , style = list(fontSize = "12px", color = "#EE6768")) %>% 
         bb_colors_manual(
           setNames(c('#F69E61','#0067A9','#A5C9A1','#72966E'), c(input_beneficiary_vector))
         )
@@ -78,7 +78,7 @@ cbiLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, i
         hchart(type = "line",
                hcaes(x = select_month, y = total_amount_of_cash_by_quarter), color = "#7cb5ec") %>% 
         hc_tooltip(pointFormat = "<b>{point.total_amount_of_cash_by_quarter:,.0f}</b>" ) %>%
-        hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
+        hc_title( text = input_title, margin = 5, align = "left", style = list(fontSize = "12px", color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
         hc_yAxis(title = list(text = ""))
     })
@@ -102,7 +102,7 @@ cbiBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
                hcaes(x = select_delivery_mechanism, y = p_cash_transfer_by_delivery_mechanism),
                dataLabels = list(enabled = TRUE, format="{point.p_cash_transfer_by_delivery_mechanism:.1f}%" ), color = "#7cb5ec") %>%  
         hc_tooltip(pointFormat = "<b>(UGX'000) {point.cash_transfer_by_delivery_mechanism:,.0f}</b>" ) %>%
-        hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
+        hc_title( text = input_title, margin = 5, align = "left", style = list(fontSize = "12px", color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL)) %>% 
         hc_yAxis(title = list(text = ""), labels = list(format = "{value}%") ) 
     })
@@ -123,7 +123,7 @@ cbiBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
                hcaes(x = partner_name, y = total_cash_by_parter),
                dataLabels = list(enabled = TRUE, format="{point.total_cash_by_parter:,.0f}" ), color = "#7cb5ec") %>%
         hc_tooltip(pointFormat = "<b>{point.total_cash_by_parter:,.0f}</b>" ) %>%
-        hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
+        hc_title( text = input_title, margin = 5, align = "left", style = list(fontSize = "12px", color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
         hc_yAxis(title = list(text = "") ) 
     })
@@ -162,17 +162,17 @@ cbiDataForPSN <- function(id, input_data ){
         rename_with(~gsub("ps.", "", .x, fixed=TRUE))
       
 
-      div_data <- paste('<div class=\"table\">', glue("<h5> PSN households reported as receiving some form of cash assistance{display_in_title}</h5>"))
+      div_data <- paste('<div class=\"table\">', glue("<h6> PSN households reported as receiving some form of cash assistance{display_in_title}</h6>"))
       thead_data <- paste('<table class=\"table\"> ')
       
-      data_child_at_risk <- paste('<tr><td>', '<img src="child_at_risk.png" height="32"></img>'  ,'</td> <td>', "Child at Risk"  ,'</td> <td>', df_data_indicators %>% pull(child_at_risk)   ,'</td> </tr>')
-      data_disability <- paste('<tr><td>', '<img src="disability.png" height="32"></img>'  ,'</td> <td>', "Disability"  ,'</td> <td>', df_data_indicators %>% pull(disability)   ,'</td> </tr>')
-      data_Older_person_at_risk <- paste('<tr><td>', '<img src="Older_person_at_risk.png" height="32"></img>'  ,'</td> <td>', "Older Person at Risk"  ,'</td> <td>', df_data_indicators %>% pull(Older_person_at_risk)   ,'</td> </tr>')
-      data_serious_medical_condition <- paste('<tr><td>', '<img src="serious_medical_condition.png" height="32"></img>'  ,'</td> <td>', "Serious Medical Condition"  ,'</td> <td>', df_data_indicators %>% pull(serious_medical_condition)   ,'</td> </tr>')
-      data_single_parent_or_caregiver <- paste('<tr><td>', '<img src="single_parent_or_caregiver.png" height="32"></img>'  ,'</td> <td>', "Single Parent or Caregiver"  ,'</td> <td>', df_data_indicators %>% pull(single_parent_or_caregiver)   ,'</td> </tr>')
-      data_specific_legal_and_physical_protection_needs <- paste('<tr><td>', '<img src="specific_legal_and_physical_protection_needs.png" height="32"></img>'  ,'</td> <td>', "Specific Legal and Physical Protection needs"  ,'</td> <td>', df_data_indicators %>% pull(specific_legal_and_physical_protection_needs)   ,'</td> </tr>')
-      data_unaccompanied_or_separated_child <- paste('<tr><td>', '<img src="unaccompanied_or_separated_child.png" height="32"></img>'  ,'</td> <td>', "Unaccompanied or Separated Child"  ,'</td> <td>', df_data_indicators %>% pull(unaccompanied_or_separated_child)   ,'</td> </tr>')
-      data_woman_at_risk <- paste('<tr><td>', '<img src="woman_at_risk.png" height="32"></img>'  ,'</td> <td>', "Woman at Risk"  ,'</td> <td>', df_data_indicators %>% pull(woman_at_risk)   ,'</td> </tr>')
+      data_child_at_risk <- paste('<tr><td>', "Child at Risk"  ,'</td> <td>', df_data_indicators %>% pull(child_at_risk)   ,'</td> </tr>')
+      data_disability <- paste('<tr><td>', "Disability"  ,'</td> <td>', df_data_indicators %>% pull(disability)   ,'</td> </tr>')
+      data_Older_person_at_risk <- paste('<tr><td>', "Older Person at Risk"  ,'</td> <td>', df_data_indicators %>% pull(Older_person_at_risk)   ,'</td> </tr>')
+      data_serious_medical_condition <- paste('<tr><td>', "Serious Medical Condition"  ,'</td> <td>', df_data_indicators %>% pull(serious_medical_condition)   ,'</td> </tr>')
+      data_single_parent_or_caregiver <- paste('<tr><td>', "Single Parent or Caregiver"  ,'</td> <td>', df_data_indicators %>% pull(single_parent_or_caregiver)   ,'</td> </tr>')
+      data_specific_legal_and_physical_protection_needs <- paste('<tr><td>', "Specific Legal and Physical Protection needs"  ,'</td> <td>', df_data_indicators %>% pull(specific_legal_and_physical_protection_needs)   ,'</td> </tr>')
+      data_unaccompanied_or_separated_child <- paste('<tr><td>', "Unaccompanied or Separated Child"  ,'</td> <td>', df_data_indicators %>% pull(unaccompanied_or_separated_child)   ,'</td> </tr>')
+      data_woman_at_risk <- paste('<tr><td>', "Woman at Risk"  ,'</td> <td>', df_data_indicators %>% pull(woman_at_risk)   ,'</td> </tr>')
       
       tfooter_data <- paste('</table> </div>')
       
@@ -202,13 +202,13 @@ cbiDefaultMap <- function(id){
     output$map  <-  renderLeaflet({
       leaflet(options = leafletOptions(zoomSnap = 0.25, zoomDelta=0.25)) %>% 
         addProviderTiles(providers$Esri.WorldGrayCanvas, 
-                         options = providerTileOptions(minZoom = 7, maxZoom = 8), 
+                         options = providerTileOptions(minZoom = 6.75, maxZoom = 7.5), 
                          group="Esri Gray Canvas") %>% 
-        setView(lng = 32.2903, lat= 1.3733, zoom = 7.25) %>% 
-        addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
+        setView(lng = 32.2903, lat= 1.3733, zoom = 7) %>% 
+        addMiniMap( width = 80, height = 80, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
         addEasyButton(easyButton(
           icon="fa-globe", title="Home",
-          onClick=JS("function(btn, map){ map.setView(new L.LatLng(1.3733,32.2903), 7.25) }")))
+          onClick=JS("function(btn, map){ map.setView(new L.LatLng(1.3733,32.2903), 7) }")))
     })
   })
 }

@@ -16,7 +16,7 @@ eaeInfoUI <- function(){
     p( "Cash Based Interventions (CBI) in energy and environmental sector 
          provide assistance in areas of household and institutional 
          sustainable basic energy supply, protection and restoration 
-         of refugees’ and host communities’ affected environments. 
+         of refugees' and host communities' affected environments. 
          Cash based initiatives in this sector also include cash-for-work 
          projects that engage refugees and local communities to mark trees, 
          prepare tree nurseries, clear woodlots in and around the settlements, 

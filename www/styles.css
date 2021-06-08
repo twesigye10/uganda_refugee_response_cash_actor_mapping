@@ -2,6 +2,18 @@
   background-color: #f2e8e8;
 } */
 
+p {
+    font-size: 12px;
+    /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+    /* font-weight: lighter; */
+}
+
+h6 {
+    font-size: 12px;
+    /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+    /* font-weight: lighter; */
+}
+
 table,
 th,
 td {
@@ -11,9 +23,10 @@ td {
 th,
 td {
     border-bottom: 1px solid #ddd;
-    font-weight: bold;
+    /* font-weight: bold; */
     font-size: 0.75em;
     color: #0f69b6;
+    padding: 3px;
 }
 
 tr:hover {
@@ -123,8 +136,8 @@ table {
 
 div.read-me-div {
     width: 100%;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 5%;
+    padding-right: 5%;
 }
 
 div.page-text {

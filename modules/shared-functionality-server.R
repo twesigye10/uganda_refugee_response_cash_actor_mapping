@@ -150,7 +150,7 @@ dynamicMapLabels <- function(id, input_map, input_data){
   moduleServer(id, function(input, output, session){
     # label districts in the map
     labels_district <- ~sprintf(
-      "<strong>%s</strong>",
+      "%s",
       stringr::str_to_title(ADM2_EN)
     ) %>% 
       lapply(htmltools::HTML)

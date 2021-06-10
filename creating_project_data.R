@@ -145,6 +145,54 @@ epr_df_data <- df_environment_protection_restoration %>%
 epr_beneficiary_types <- epr_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
+# households_using_alternative_and_or_renewable_energy
+df_alternative_and_or_renewable_energy <- read_csv("data/api_env_households_using_alternative_and_or_renewable_energy.csv")
+df_alternative_and_or_renewable_energy <- janitor::clean_names(df_alternative_and_or_renewable_energy) %>% 
+    mutate(
+        total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA),
+        select_quarter = ifelse(is.na(select_quarter), case_when(substr(select_month, 1, 3) %in% c("Jan", "Feb", "Mar") ~ paste0("Q1 20", substr(select_month, 5, 6)),
+                                                                 substr(select_month, 1, 3) %in% c("Apr", "May", "Jun")~ paste0("Q2 20", substr(select_month, 5, 6)),
+                                                                 substr(select_month, 1, 3) %in% c("Jul", "Aug", "Sep")~ paste0("Q3 20", substr(select_month, 5, 6)),
+                                                                 substr(select_month, 1, 3) %in% c("Oct", "Nov", "Dec")~ paste0("Q4 20", substr(select_month, 5, 6))  ), select_quarter)
+    ) %>% 
+    # rename(location_district = district_name) %>% 
+    filter(!is.na(select_quarter) & !is.na(delivery_mechanism) & !is.na(partner_name))%>% 
+    filter(
+        !grepl("^[0-9]", delivery_mechanism,  ignore.case = FALSE) & 
+            !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
+            total_cash_value_of_cash_for_work_ugx > 0
+    )
+
+aor_df_data <- df_alternative_and_or_renewable_energy %>% 
+    separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
+
+aor_beneficiary_types <- aor_df_data %>% 
+    filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
+
+# using_fuel_efficient_cook_stove
+df_fuel_efficient_cook_stove <- read_csv("data/api_env_households_that_self_report_using_fuel_efficient_cook_stove_to_cook_the_main_meal.csv")
+df_fuel_efficient_cook_stove <- janitor::clean_names(df_fuel_efficient_cook_stove) %>% 
+    mutate(
+        total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA),
+        select_quarter = ifelse(is.na(select_quarter), case_when(substr(select_month, 1, 3) %in% c("Jan", "Feb", "Mar") ~ paste0("Q1 20", substr(select_month, 5, 6)),
+                                                                 substr(select_month, 1, 3) %in% c("Apr", "May", "Jun")~ paste0("Q2 20", substr(select_month, 5, 6)),
+                                                                 substr(select_month, 1, 3) %in% c("Jul", "Aug", "Sep")~ paste0("Q3 20", substr(select_month, 5, 6)),
+                                                                 substr(select_month, 1, 3) %in% c("Oct", "Nov", "Dec")~ paste0("Q4 20", substr(select_month, 5, 6))  ), select_quarter)
+    ) %>% 
+    # rename(location_district = district_name) %>% 
+    filter(!is.na(select_quarter) & !is.na(delivery_mechanism) & !is.na(partner_name))%>% 
+    filter(
+        !grepl("^[0-9]", delivery_mechanism,  ignore.case = FALSE) & 
+            !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
+            total_cash_value_of_cash_for_work_ugx > 0
+    )
+
+ecs_df_data <- df_fuel_efficient_cook_stove %>% 
+    separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
+
+ecs_beneficiary_types <- ecs_df_data %>% 
+    filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
+
 
 
 # WASH data ---------------------------------------------------------------
@@ -202,6 +250,8 @@ data_for_saving$fs_df_data <- fs_df_data
 data_for_saving$seo_df_data <- seo_df_data
 data_for_saving$apa_df_data <- apa_df_data
 data_for_saving$epr_df_data <- epr_df_data
+data_for_saving$aor_df_data <- aor_df_data
+data_for_saving$ecs_df_data <- ecs_df_data
 data_for_saving$ss_df_data <- ss_df_data
 data_for_saving$wn_df_data <- wn_df_data
 

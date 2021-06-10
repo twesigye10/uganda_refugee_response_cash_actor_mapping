@@ -41,12 +41,12 @@ seoDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
         ) 
       billboarder(data = df_billb_data) %>%
         bb_donutchart() %>% 
-        bb_legend(position = 'bottom', item = list(onclick = htmlwidgets::JS("function(e) {e.stopPropagation();}"))) %>%
+        bb_legend(position = 'right', item = list(onclick = htmlwidgets::JS("function(e) {e.stopPropagation();}"))) %>%
         bb_tooltip(format = list(
           name =  htmlwidgets::JS("function(name, ratio, id, index) {return name;}"),
           value = htmlwidgets::JS("function(value) {return \"UGX('000) \"+ d3.format(',')(value);}")
         )) %>%
-        bb_donut(title = input_title, width = 70) %>% 
+        bb_donut(title = input_title) %>% 
         bb_colors_manual(
           setNames(c('#F69E61','#0067A9','#A5C9A1','#72966E'), c(input_beneficiary_vector))
         )
@@ -68,7 +68,7 @@ seoLineChartTotalCashQuarter <- function(id, input_data, input_field_analysis, i
         hchart(type = "line",
                hcaes(x = select_quarter, y = total_amount_of_cash_by_quarter), color = "#7cb5ec") %>%  
         hc_tooltip(pointFormat = "<b>{point.total_amount_of_cash_by_quarter:,.0f}</b>" ) %>%
-        hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
+        hc_title( text = input_title, margin = 5, align = "left", style = list(fontSize = "12px", color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
         hc_yAxis(title = list(text = "")) 
     })
@@ -91,7 +91,7 @@ seoBarChartDeliveryMechanism <- function(id, input_data, input_field_group, inpu
                hcaes(x = delivery_mechanism, y = p_cash_transfer_by_delivery_mechanism),
                dataLabels = list(enabled = TRUE, format="{point.p_cash_transfer_by_delivery_mechanism:.1f}%" ), color = "#7cb5ec") %>%
         hc_tooltip(pointFormat = "<b>(UGX'000) {point.cash_transfer_by_delivery_mechanism:,.0f}</b>" ) %>%
-        hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
+        hc_title( text = input_title, margin = 5, align = "left", style = list(fontSize = "12px", color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
         hc_yAxis(title = list(text = ""), labels = list(format = "{value}%") ) 
     })
@@ -112,7 +112,7 @@ seoBarChartCashByPartner <- function(id, input_data, input_field_group, input_fi
                hcaes(x = partner_name, y = total_cash_by_parter),
                dataLabels = list(enabled = TRUE, format="{point.total_cash_by_parter:,.0f}" ), color = "#7cb5ec") %>%
         hc_tooltip(pointFormat = "<b>{point.total_cash_by_parter:,.0f}</b>" ) %>%
-        hc_title( text = input_title, margin = 5, align = "left", style = list(color = "#EE6768", useHTML = TRUE) )%>% 
+        hc_title( text = input_title, margin = 5, align = "left", style = list(fontSize = "12px", color = "#EE6768", useHTML = TRUE) )%>% 
         hc_xAxis( title = list(text = NULL) ) %>% 
         hc_yAxis(title = list(text = "") ) 
     })
@@ -140,14 +140,14 @@ seoTableForEmploy <- function(id, input_data ){
         select(starts_with("em.")) %>% 
         rename_with(~gsub("em.", "", .x, fixed=TRUE))
       
-      div_data <- paste('<div class=\"table\">', glue("<h5> Employment by Age{display_in_title}</h5>"))
+      div_data <- paste('<div class=\"table\">', glue("<h6> Employment by Age{display_in_title}</h6>"))
       thead_data <- paste('<table class=\"table\"> ')
       
-      data_employ_0_14 <- paste('<tr><td>',  '0 - 14' ,'</td> <td>', '<img src="employ_0_14_f.png" height="32"></img>', df_data_indicators %>% pull(employ_0_14_f) ,'</td> <td>','<img src="employ_0_14_m.png" height="32"></img>', df_data_indicators %>% pull(employ_0_14_m) ,'</td> </tr>')
-      data_employ_15_17 <- paste('<tr><td>', '15 - 17'  ,'</td> <td>', '<img src="employ_15_17_f.png" height="32"></img>', df_data_indicators %>% pull(employ_15_17_f) ,'</td> <td>','<img src="employ_15_17_m.png" height="32"></img>', df_data_indicators %>% pull(employ_15_17_m) ,'</td> </tr>')
-      data_employ_18_35 <- paste('<tr><td>', '18 - 35'  ,'</td> <td>', '<img src="employ_18_35_f.png" height="32"></img>', df_data_indicators %>% pull(employ_18_35_f) ,'</td> <td>','<img src="employ_18_35_m.png" height="32"></img>', df_data_indicators %>% pull(employ_18_35_m) ,'</td> </tr>')
-      data_employ_36_59 <- paste('<tr><td>',  '36 - 59' ,'</td> <td>', '<img src="employ_36_59_f.png" height="32"></img>', df_data_indicators %>% pull(employ_36_59_f) ,'</td> <td>','<img src="employ_36_59_m.png" height="32"></img>', df_data_indicators %>% pull(employ_36_59_m) ,'</td> </tr>')
-      data_employ_60_plus <- paste('<tr><td>', '60 +'  ,'</td> <td>', '<img src="employ_60_plus_f.png" height="32"></img>', df_data_indicators %>% pull(employ_60_plus_f) ,'</td> <td>','<img src="employ_60_plus_m.png" height="32"></img>', df_data_indicators %>% pull(employ_60_plus_m) ,'</td> </tr>')
+      data_employ_0_14 <- paste('<tr><td>',  '0 - 14' ,'</td> <td>', 'Female: ', df_data_indicators %>% pull(employ_0_14_f) ,'</td> <td>','Male: ', df_data_indicators %>% pull(employ_0_14_m) ,'</td> </tr>')
+      data_employ_15_17 <- paste('<tr><td>', '15 - 17'  ,'</td> <td>', 'Female: ', df_data_indicators %>% pull(employ_15_17_f) ,'</td> <td>','Male: ', df_data_indicators %>% pull(employ_15_17_m) ,'</td> </tr>')
+      data_employ_18_35 <- paste('<tr><td>', '18 - 35'  ,'</td> <td>', 'Female: ', df_data_indicators %>% pull(employ_18_35_f) ,'</td> <td>','Male: ', df_data_indicators %>% pull(employ_18_35_m) ,'</td> </tr>')
+      data_employ_36_59 <- paste('<tr><td>',  '36 - 59' ,'</td> <td>', 'Female: ', df_data_indicators %>% pull(employ_36_59_f) ,'</td> <td>','Male: ', df_data_indicators %>% pull(employ_36_59_m) ,'</td> </tr>')
+      data_employ_60_plus <- paste('<tr><td>', '60 +'  ,'</td> <td>', 'Female: ', df_data_indicators %>% pull(employ_60_plus_f) ,'</td> <td>','Male: ', df_data_indicators %>% pull(employ_60_plus_m) ,'</td> </tr>')
       
       tfooter_data <- paste('</table> </div>')
       
@@ -169,12 +169,12 @@ seoTableForCVPD <- function(id, input_data ){
           cash_value_transfer_f = median(cash_value_of_transfer_per_individual_per_day_female_ugx, na.rm = T),
         )
       
-      div_data <- paste('<div class=\"table\">', glue("<h5> Median cash transfer per individual per day{display_in_title}</h5>"))
+      div_data <- paste('<div class=\"table\">', glue("<h6> Median cash transfer per individual per day{display_in_title}</h6>"))
       thead_data <- paste('<table class=\"table\"> ')
       
-      data_cvpd <- paste('<tr><td>', '<img src="cash_value_transfer_f.png" height="32"></img>', "UGX ", 
+      data_cvpd <- paste('<tr><td>', 'Female: ', "UGX ", 
                          scales::comma_format()(df_data_cvpd %>% pull(cash_value_transfer_f)) ,
-                         '</td> <td>','<img src="cash_value_transfer_m.png" height="32"></img>',  "UGX ",
+                         '</td> <td>','Male: ',  "UGX ",
                          scales::comma_format()(df_data_cvpd %>% pull(cash_value_transfer_m)) ,
                          '</td> </tr>')
 
@@ -201,13 +201,13 @@ seoDefaultMap <- function(id){
     output$seo_map  <-  renderLeaflet({
       leaflet(options = leafletOptions(zoomSnap = 0.25, zoomDelta=0.25)) %>% 
         addProviderTiles(providers$Esri.WorldGrayCanvas, 
-                         options = providerTileOptions(minZoom = 7, maxZoom = 8), 
+                         options = providerTileOptions(minZoom = 6.75, maxZoom = 7.5), 
                          group="Esri Gray Canvas") %>% 
-        setView(lng = 32.2903, lat= 1.3733, zoom = 7.25) %>% 
-        addMiniMap( width = 100, height = 100, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
+        setView(lng = 32.2903, lat= 1.3733, zoom = 6.75) %>% 
+        addMiniMap( width = 80, height = 80, position = "bottomleft", zoomAnimation = TRUE,  toggleDisplay = TRUE) %>% 
         addEasyButton(easyButton(
           icon="fa-globe", title="Home",
-          onClick=JS("function(btn, seo_map){ seo_map.setView(new L.LatLng(1.3733,32.2903), 7.25) }")))
+          onClick=JS("function(btn, seo_map){ seo_map.setView(new L.LatLng(1.3733,32.2903), 6.75) }")))
     })
   })
 }

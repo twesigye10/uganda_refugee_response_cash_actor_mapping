@@ -33,8 +33,8 @@ tabPageUI <- function(
                   ),
                   
                 ),
-                billboarderOutput(ns(outp_hhreceivingcash) ),
-                highchartOutput(ns(outp_plotcashquarter))
+                billboarderOutput(ns(outp_hhreceivingcash), height = 220 ),
+                highchartOutput(ns(outp_plotcashquarter), height = 200)
               ),
               # end side panel
               
@@ -42,15 +42,15 @@ tabPageUI <- function(
               mainPanel(
                 
                 # map
-                leafletOutput(ns(outp_map), height = "60%"),
+                leafletOutput(ns(outp_map), height = "70%"),
                 
                 fluidRow(
                   column(width = 6,
                          # Select Delivery Mechanism
-                         wellPanel(highchartOutput(ns(outp_plotdeliverymechanism)))
+                         highchartOutput(ns(outp_plotdeliverymechanism), height = 200)
                   ),
                   column(width = 6,
-                         wellPanel(highchartOutput(ns(outp_plotcashpartner)))
+                        highchartOutput(ns(outp_plotcashpartner), height = 200)
                   )
                 )
               )

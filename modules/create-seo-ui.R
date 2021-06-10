@@ -33,8 +33,8 @@ tabPageSEOUI <- function(
                              ),
                              
                            ),
-                           billboarderOutput(ns(outp_hhreceivingcash) ),
-                           highchartOutput(ns(outp_plotcashquarter))
+                           billboarderOutput(ns(outp_hhreceivingcash), height = 220 ),
+                           highchartOutput(ns(outp_plotcashquarter), height = 200)
               ),
               # end side panel
               
@@ -42,11 +42,11 @@ tabPageSEOUI <- function(
               mainPanel(width = 8,
                         
                         fluidRow(
-                          column(width = 8,
+                          column(width = 7,
                                  # map
                                  leafletOutput(ns(outp_map), height = "100%")
                           ),
-                          column(width = 4,
+                          column(width = 5,
                                  # table age groups
                                  uiOutput(ns(outp_data)),
                                  # table cash value per day
@@ -57,10 +57,10 @@ tabPageSEOUI <- function(
                         fluidRow(
                           column(width = 6,
                                  # Select Delivery Mechanism
-                                 highchartOutput(ns(outp_plotdeliverymechanism))
+                                 highchartOutput(ns(outp_plotdeliverymechanism), height = 200)
                           ),
                           column(width = 6,
-                                highchartOutput(ns(outp_plotcashpartner))
+                                highchartOutput(ns(outp_plotcashpartner), height = 200)
                           )
                         )
               )

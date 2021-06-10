@@ -202,7 +202,7 @@ server <- function(input, output, session) {
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_amount_of_cash_transfers,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       cbi_beneficiary_types)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
                                       total_amount_of_cash_transfers, Year, Quarter, select_month, 
@@ -255,7 +255,7 @@ server <- function(input, output, session) {
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_amount_of_cash_transfers,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       cbi_beneficiary_types)
         cbiLineChartTotalCashQuarter ("cbipagetab", filter_cash_data_based_on_map, 
                                       total_amount_of_cash_transfers, Year, Quarter, select_month, 
@@ -304,7 +304,7 @@ server <- function(input, output, session) {
                                      df_by_district_cash_data(),
                                      select_beneficiary_type,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
-                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     "% of Total \nCash Transfer by\n population group",
                                      fs_beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", df_by_district_cash_data(), 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
@@ -346,7 +346,7 @@ server <- function(input, output, session) {
                                      filter_cash_data_based_on_map,
                                      select_beneficiary_type,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
-                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     "% of Total \nCash Transfer by\n population group",
                                      fs_beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
@@ -395,7 +395,7 @@ server <- function(input, output, session) {
                                      filter_cash_data_based_on_map,
                                      select_beneficiary_type,
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers,
-                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     "% of Total \nCash Transfer by\n population group",
                                      fs_beneficiary_types)
         fsLineChartTotalCashQuarter ("fspagetab", filter_cash_data_based_on_map, 
                                      fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers, Year, Quarter, select_quarter, 
@@ -449,7 +449,7 @@ server <- function(input, output, session) {
                                       df_by_district_cash_data(),
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       seo_beneficiary_types)
         seoLineChartTotalCashQuarter ("seopagetab", df_by_district_cash_data(), 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
@@ -495,7 +495,7 @@ server <- function(input, output, session) {
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       seo_beneficiary_types)
         seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
@@ -549,7 +549,7 @@ server <- function(input, output, session) {
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       seo_beneficiary_types)
         seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
@@ -598,7 +598,7 @@ server <- function(input, output, session) {
                                       df_by_district_cash_data(),
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       epr_beneficiary_types)
         eprLineChartTotalCashQuarter ("eprpagetab", df_by_district_cash_data(), 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
@@ -640,7 +640,7 @@ server <- function(input, output, session) {
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       epr_beneficiary_types)
         eprLineChartTotalCashQuarter ("eprpagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
@@ -688,7 +688,7 @@ server <- function(input, output, session) {
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_cash_value_of_cash_for_work_ugx,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       epr_beneficiary_types)
         eprLineChartTotalCashQuarter ("eprpagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
@@ -737,7 +737,7 @@ server <- function(input, output, session) {
                                       df_by_district_cash_data(),
                                       select_beneficiary_type,
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       apa_beneficiary_types)
         apaLineChartTotalCashQuarter ("apapagetab", df_by_district_cash_data(), 
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
@@ -779,7 +779,7 @@ server <- function(input, output, session) {
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       apa_beneficiary_types)
         apaLineChartTotalCashQuarter ("apapagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
@@ -827,7 +827,7 @@ server <- function(input, output, session) {
                                       filter_cash_data_based_on_map,
                                       select_beneficiary_type,
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      "% of Total \nCash Transfer\n by Beneficiary Type",
+                                      "% of Total \nCash Transfer by\n population group",
                                       apa_beneficiary_types)
         apaLineChartTotalCashQuarter ("apapagetab", filter_cash_data_based_on_map, 
                                       total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
@@ -875,7 +875,7 @@ server <- function(input, output, session) {
                                      df_by_district_cash_data(),
                                      select_beneficiary_type,
                                      total_cash_value_of_cash_grants_ugx,
-                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     "% of Total \nCash Transfer by\n population group",
                                      ss_beneficiary_types)
         ssLineChartTotalCashQuarter ("sspagetab", df_by_district_cash_data(), 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
@@ -917,7 +917,7 @@ server <- function(input, output, session) {
                                      filter_cash_data_based_on_map,
                                      select_beneficiary_type,
                                      total_cash_value_of_cash_grants_ugx,
-                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     "% of Total \nCash Transfer by\n population group",
                                      ss_beneficiary_types)
         ssLineChartTotalCashQuarter ("sspagetab", filter_cash_data_based_on_map, 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
@@ -966,7 +966,7 @@ server <- function(input, output, session) {
                                      filter_cash_data_based_on_map,
                                      select_beneficiary_type,
                                      total_cash_value_of_cash_grants_ugx,
-                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     "% of Total \nCash Transfer by\n population group",
                                      ss_beneficiary_types)
         ssLineChartTotalCashQuarter ("sspagetab", filter_cash_data_based_on_map, 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
@@ -1013,7 +1013,7 @@ server <- function(input, output, session) {
                                      df_by_district_cash_data(),
                                      select_beneficiary_type,
                                      total_cash_value_of_cash_grants_ugx,
-                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     "% of Total \nCash Transfer by\n population group",
                                      wn_beneficiary_types)
         wnLineChartTotalCashQuarter ("wnpagetab", df_by_district_cash_data(), 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
@@ -1055,7 +1055,7 @@ server <- function(input, output, session) {
                                      filter_cash_data_based_on_map,
                                      select_beneficiary_type,
                                      total_cash_value_of_cash_grants_ugx,
-                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     "% of Total \nCash Transfer by\n population group",
                                      wn_beneficiary_types)
         wnLineChartTotalCashQuarter ("wnpagetab", filter_cash_data_based_on_map, 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 
@@ -1104,7 +1104,7 @@ server <- function(input, output, session) {
                                      filter_cash_data_based_on_map,
                                      select_beneficiary_type,
                                      total_cash_value_of_cash_grants_ugx,
-                                     "% of Total \nCash Transfer\n by Beneficiary Type",
+                                     "% of Total \nCash Transfer by\n population group",
                                      wn_beneficiary_types)
         wnLineChartTotalCashQuarter ("wnpagetab", filter_cash_data_based_on_map, 
                                      total_cash_value_of_cash_grants_ugx, Year, Quarter, select_quarter, 

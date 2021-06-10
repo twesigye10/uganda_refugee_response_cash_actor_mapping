@@ -52,12 +52,12 @@ fsInfoUI <- function(){
 
 wsInfoUI <- function(){
   div(
-    p( "Cash and Voucher Assistance under WASH includes cash-for-work projects 
+    p( "Cash and Voucher Assistance under Water, Sanitation and Hygiene (WASH) includes cash-for-work projects 
        and provision of cash for materials and non-food items. 
        Activities implemented through cash-for-work include, among others; 
        excavation and laying of water distribution pipes to expand water coverage, 
        cleaning of water tanks, construction and rehabilitation of PSN latrines and bathrooms. 
-       Other forms of CVA include e-vouchers to access latrine construction materials and cash to buy WASH NFIs. 
+       Other forms of CVA include e-vouchers to access latrine construction materials and cash to buy WASH Non-Food Items (NFIs). 
        COVID-response projects include training and hiring individuals to produce facemasks.")
   )
 }

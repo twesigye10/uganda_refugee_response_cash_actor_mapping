@@ -26,9 +26,15 @@ seo_beneficiary_types <- all_beneficiary_types
 apa_df_data <-dat$apa_df_data
 apa_beneficiary_types <- all_beneficiary_types
 
-# add data: environmental protection and restoration
+# add data: environmental and energy
 epr_df_data <-dat$epr_df_data
 epr_beneficiary_types <- all_beneficiary_types
+
+aor_df_data <-dat$aor_df_data
+aor_beneficiary_types <- all_beneficiary_types
+
+ecs_df_data <-dat$ecs_df_data
+ecs_beneficiary_types <- all_beneficiary_types
 
 # add data: CBI_approach_in_sanitation_services
 ss_df_data <-dat$ss_df_data

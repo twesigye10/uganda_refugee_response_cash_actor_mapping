@@ -41,10 +41,34 @@ ui <- navbarPage(
             "plotcashquarter", "map", "psndata", "plotdeliverymechanism", "plotcashpartner"
         ),
         # Environmental Protection --------------------------------------------------------------
-        tabPageUI(
-            "eprpagetab", "Environmental Protection", eaeInfoUI(), "epr_yearperiod", epr_df_data$Year,
-            "epr_quarterperiod", "epr_mapreset", "epr_selecteddistrict", "epr_hhreceivingcash",
-            "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
+        # tabPageUI(
+        #     "eprpagetab", "Environmental Protection", eaeInfoUI(), "epr_yearperiod", epr_df_data$Year,
+        #     "epr_quarterperiod", "epr_mapreset", "epr_selecteddistrict", "epr_hhreceivingcash",
+        #     "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
+        # ),
+        # combine Energy and environment components
+        tabPanel("Energy and Environment", eaeInfoUI(),
+                 tabsetPanel(
+                     id = "tabs_energy_environment",
+                     # Forests_wetlands_shorelines_protected_and_restored --------------------------------------------------------------
+                     tabPageUI(
+                         "eprpagetab", "Forests wetlands shorelines protected and restored", NULL, "epr_yearperiod", epr_df_data$Year,
+                         "epr_quarterperiod", "epr_mapreset", "epr_selecteddistrict", "epr_hhreceivingcash",
+                         "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
+                     ),
+                     # Using alternative and or renewable energy --------------------------------------------------------------
+                     tabPageUI(
+                         "aorpagetab", "Using alternative and or renewable energy", NULL, "aor_yearperiod", aor_df_data$Year,
+                         "aor_quarterperiod", "aor_mapreset", "aor_selecteddistrict", "aor_hhreceivingcash",
+                          "aor_plotcashquarter", "aor_map", "aor_plotdeliverymechanism", "aor_plotcashpartner"
+                     ),
+                     # Using fuel efficient cook stove --------------------------------------------------------------
+                     tabPageUI(
+                         "ecspagetab", "Using fuel efficient cook stove", NULL, "ecs_yearperiod", ecs_df_data$Year,
+                         "ecs_quarterperiod", "ecs_mapreset", "ecs_selecteddistrict", "ecs_hhreceivingcash",
+                         "ecs_plotcashquarter", "ecs_map", "ecs_plotdeliverymechanism", "ecs_plotcashpartner"
+                     ) 
+                 )
         ),
         # combine livelihood components
         tabPanel("Emergency Livelihood Support", elsInfoUI(),

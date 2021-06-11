@@ -18,13 +18,15 @@ readmeUI <- function(id){
                   h5("How it works"),
                   
                   div(class="page-text",
-                      p("The tabs at the top of the page allow you to view data on cash-based interventions within that sector. 
-                      Every tab is accompanied by a short text explaining that sector. When you select a tab, the map and graphs change to 
+                      p("The tabs at the top of the page allow you to view data on cash-based interventions within different sectors. 
+                      Every tab is accompanied by a brief text explainer for that sector. When you select a tab, the map and graphs change to 
                       show key indicators within that sector."),
                       p("The central map shows data by total transfer value in Ugandan Shillings (UGX)."),
                       p("By hovering over or clicking on a district, 
                       you are able to view sector data and indicators for that selected district."),
-                      p("You can also filter and view data by year or quarter."),
+                      p("You can also filter and view data by year or quarter. It is recommended to always use this filter to review data on 
+                        the period of your interest. Indicator values may change significantly from year to year as cash assistance in 
+                        Uganda continues to expand and develop."),
                       p("After you have selected a particular district and you wish to return, 
                       click the National Overview button to reset the map and indicators. ")),
                   h5("Contact"),

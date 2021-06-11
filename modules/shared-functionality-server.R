@@ -72,7 +72,7 @@ dynamicMapLayer <- function(id, input_map, input_data){
       palette = "Reds",
       domain = input_data$cash_transfers_by_district,
       bins = 5,
-      na.color = NA
+      na.color = "white"
     )
     # label districts in the map
     labels_v1 <- ~sprintf(
@@ -111,7 +111,7 @@ dynamicMapLayer <- function(id, input_map, input_data){
                 values = ~cash_transfers_by_district,
                 title = "Total cash<br>(UGX '000)",
                 opacity  = 1,
-                na.label = "<span class = \"nowrap\">Not Assessed </span>"
+                na.label = "<span class = \"nowrap\">No Cash Implemented</span>"
       )
   })
 }
@@ -139,7 +139,7 @@ refugeeHostLayer <- function(id, input_map, input_data){
       addLegend(position ="bottomright",
                 pal = pal,
                 values = ~col_legenend_factor,
-                title = "Other Districsts",
+                title = "None refugee<br>hosting Districts",
                 opacity  = 1
       )
   })

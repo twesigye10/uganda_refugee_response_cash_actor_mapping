@@ -56,7 +56,9 @@ cbiDonutChartCashBeneficiary <- function(id, input_data, input_field_group,
           name =  htmlwidgets::JS("function(name, ratio, id, index) {return name;}"),
           value = htmlwidgets::JS("function(value) {return \"UGX('000) \"+ d3.format(',')(value);}")
         )) %>% 
-        bb_donut(title = input_title, padding = list(top = 10, bottom = 10, left = 10, right = 10) , style = list(fontSize = "12px", color = "#EE6768")) %>% 
+        bb_donut(title = input_title , 
+                 label = list( format = JS("function(value, ratio, id) { return d3.format('.0%')(ratio);}"))
+                 ) %>% 
         bb_colors_manual(
           setNames(c('#F69E61','#0067A9','#A5C9A1','#72966E'), c(input_beneficiary_vector))
         )

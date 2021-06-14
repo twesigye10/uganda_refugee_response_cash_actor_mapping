@@ -2,6 +2,10 @@
   background-color: #f2e8e8;
 } */
 
+.control-label{
+    white-space: nowrap;
+}
+
 p {
     font-size: 12px;
     /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
@@ -39,7 +43,7 @@ table {
 }
 
 .nav-tabs {
-    background-color: #3E3E3F;
+    background-color: #58585a;
     color: #EF8687 !important;
     font-size: 15px;
     font-weight: bold;
@@ -104,7 +108,7 @@ table {
 /* entire strip */
 
 .navbar.navbar-default {
-    background-color: #3E3E3F !important;
+    background-color: #58585a !important;
     font-size: 15px;
 }
 
@@ -112,7 +116,7 @@ table {
 /*page header*/
 
 .page-header:hover {
-    background-color: #3E3E3F;
+    background-color: #58585a;
     color: #FFFFFF;
 }
 
@@ -120,7 +124,7 @@ table {
 /*page footer*/
 
 .page-footer {
-    background-color: #3E3E3F !important;
+    background-color: #58585a !important;
     width: 100%;
 }
 
@@ -149,7 +153,7 @@ div.page-text {
 
 .page-partners {
     padding: 5px;
-    background-color: #3E3E3F !important;
+    background-color: #58585a !important;
     width: 100%;
 }
 

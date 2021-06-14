@@ -109,7 +109,7 @@ dynamicMapLayer <- function(id, input_map, input_data){
       addLegend(position ="bottomright", 
                 pal = pal, 
                 values = ~cash_transfers_by_district,
-                title = "Total cash<br>(UGX '000)",
+                title = "Total cash (UGX '000)",
                 opacity  = 1,
                 na.label = "<span class = \"nowrap\">No Cash Implemented</span>"
       )

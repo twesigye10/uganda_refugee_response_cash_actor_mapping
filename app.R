@@ -31,7 +31,7 @@ reach_theme <- bs_theme(
 # Define UI for application -----------------------------------------------
 
 ui <- navbarPage(
-    title = div(class = "page-header", img(height = 40, width = 100, src="reach-logo-informing.png"), "Cash-Based Interventions, Uganda RRP") ,
+    title = div(class = "page-header", img(height = 35, width = 159, src="reach-logo-informing.png"), "Cash-Based Interventions, Uganda RRP") ,
 
     id = "tab_being_displayed",
         # CBI for Basic Needs -----------------------------------------------------

@@ -35,10 +35,10 @@ readmeUI <- function(id){
                       please share them with us at "), strong(a(href= "mailto:uganda@reach-initiative.org", "REACH", style="color:#0f69b6")) )
                   ),
                   div(class = "page-partners", img(height = 50, width = 40, src="LogoOPM.png"),
-                               img(height = 40, width = 100, src="reach-logo-informing.png"),
-                               img(height = 40, width = 100, src="UNHCR-visibility-horizontal-White-CMYK-v2015.png"),
-                               img(height = 40, width = 100, src="USAID logo white.png"),
-                               img(height = 40, width = 100, src="wfp-logo-standard-white-en_transparent.png"))
+                               img(height = 35, width = 159, src="reach-logo-informing.png"),
+                               img(height = 45, width = 147, src="UNHCR-visibility-horizontal-White-CMYK-v2015.png"),
+                               img(height = 55, width = 181, src="USAID logo white.png"),
+                               img(height = 46, width = 105, src="wfp-logo-standard-white-en_transparent.png"))
                   
               )
 

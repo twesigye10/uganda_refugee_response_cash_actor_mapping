@@ -94,13 +94,13 @@ ui <- navbarPage(
         tabPanel("WASH", wsInfoUI(),
                  tabsetPanel(
                      id = "wash_tabs",
-                     # Short term Employment --------------------------------------------------------------
+                     # CBI Approach in Sanitation Services --------------------------------------------------------------
                      tabPageUI(
                          "sspagetab", "CBI Approach in Sanitation Services", NULL, "ss_yearperiod", ss_df_data$Year,
                          "ss_quarterperiod", "ss_mapreset", "ss_selecteddistrict", "ss_hhreceivingcash",
                          "ss_plotcashquarter", "ss_map", "ss_plotdeliverymechanism", "ss_plotcashpartner"
                      ),
-                     # Access to Productive Assets --------------------------------------------------------------
+                     # CBI approach in WASH NFI --------------------------------------------------------------
                      tabPageUI(
                          "wnpagetab", "CBI approach in WASH NFI", NULL, "wn_yearperiod", wn_df_data$Year,
                          "wn_quarterperiod", "wn_mapreset", "wn_selecteddistrict", "wn_hhreceivingcash",
@@ -593,13 +593,13 @@ server <- function(input, output, session) {
             mutate(col_legenend_factor = "None Host" )
         
         ## create all the charts
-        dynamicMapLayer("seopagetab", "seo_map", df_shape_data_map)
-        refugeeHostLayer("seopagetab", "seo_map",df_other_refugee_host_dist)
-        dynamicMapLabels("seopagetab", "seo_map", df_point_data)
-        
         seoTableForEmploy("seopagetab", df_by_district_cash_data())
         
         seoTableForCVPD("seopagetab", df_by_district_cash_data())
+        
+        dynamicMapLayer("seopagetab", "seo_map", df_shape_data_map)
+        refugeeHostLayer("seopagetab", "seo_map",df_other_refugee_host_dist)
+        dynamicMapLabels("seopagetab", "seo_map", df_point_data)
         
         seoDonutChartCashBeneficiary ("seopagetab",
                                       df_by_district_cash_data(),

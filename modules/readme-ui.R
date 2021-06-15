@@ -7,8 +7,8 @@ readmeUI <- function(id){
                   h5("About"),
                   div(class="page-text",
                       p( span("This dashboard offers information on the who, what, when, and where (4Ws) 
-                      of cash-based interventions in Uganda. It was developed by REACH Uganda, in collaboration with 
-                      United Nations High Commissioner for Refugees (UNHCR) and the Uganda Cash Working Group, with funding from United States Agency for International Development (USAID's) Bureau for Humanitarian Assistance. 
+                      of cash-based interventions in Uganda. It was developed by REACH Uganda, in collaboration with the 
+                      United Nations High Commissioner for Refugees (UNHCR) and the Uganda Cash Working Group, with funding from the United States Agency for International Development (USAID's) Bureau for Humanitarian Assistance. 
                       The information presented here is based on partner activities as reported to the Activity Info platform 
                       from the first quarter in 2019 until present. Data and information displayed in the dashboard is updated 
                       on a quarterly basis following the Activity Info reporting cycle. Partners can update or submit new data 

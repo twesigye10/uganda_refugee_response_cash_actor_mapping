@@ -32,83 +32,81 @@ reach_theme <- bs_theme(
 
 ui <- navbarPage(
     title = div(class = "page-header", img(height = 35, width = 159, src="reach-logo-informing.png"), "Cash-Based Interventions, Uganda RRP") ,
-
+    
     id = "tab_being_displayed",
-        # CBI for Basic Needs -----------------------------------------------------
-        tabPageCBIUI(
-            "cbipagetab", "CBI for Basic Needs", cbiInfoUI(), "yearperiod", cbi_df_data$Year,
-            "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
-            "plotcashquarter", "map", "psndata", "plotdeliverymechanism", "plotcashpartner"
-        ),
-        # Environmental Protection --------------------------------------------------------------
-        
-        # combine Energy and environment components
-        tabPanel("Energy and Environment", eaeInfoUI(),
-                 tabsetPanel(
-                     id = "tabs_energy_environment",
-                     # Forests_wetlands_shorelines_protected_and_restored --------------------------------------------------------------
-                     tabPageUI(
-                         "eprpagetab", "Forests wetlands shorelines protected and restored", NULL, "epr_yearperiod", epr_df_data$Year,
-                         "epr_quarterperiod", "epr_mapreset", "epr_selecteddistrict", "epr_hhreceivingcash",
-                         "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
-                     ),
-                     # Using alternative and or renewable energy --------------------------------------------------------------
-                     tabPageUI(
-                         "aorpagetab", "Using alternative and or renewable energy", NULL, "aor_yearperiod", aor_df_data$Year,
-                         "aor_quarterperiod", "aor_mapreset", "aor_selecteddistrict", "aor_hhreceivingcash",
-                          "aor_plotcashquarter", "aor_map", "aor_plotdeliverymechanism", "aor_plotcashpartner"
-                     ),
-                     # Using fuel efficient cook stove --------------------------------------------------------------
-                     tabPageUI(
-                         "ecspagetab", "Using fuel efficient cook stove", NULL, "ecs_yearperiod", ecs_df_data$Year,
-                         "ecs_quarterperiod", "ecs_mapreset", "ecs_selecteddistrict", "ecs_hhreceivingcash",
-                         "ecs_plotcashquarter", "ecs_map", "ecs_plotdeliverymechanism", "ecs_plotcashpartner"
-                     ) 
-                 )
-        ),
-        # combine livelihood components
-        tabPanel("Emergency Livelihood Support", elsInfoUI(),
-                 tabsetPanel(
-                     id = "tabs_livelihood",
-                     # Access to Productive Assets --------------------------------------------------------------
-                     tabPageUI(
-                         "apapagetab", "Access to Productive Assets", NULL, "apa_yearperiod", apa_df_data$Year,
-                         "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
-                         "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
-                     ),
-                     # Short term Employment --------------------------------------------------------------
-                     tabPageSEOUI(
-                         "seopagetab", "Short term Employment", NULL, "seo_yearperiod", seo_df_data$Year,
-                         "seo_quarterperiod", "seo_mapreset", "seo_selecteddistrict", "seo_hhreceivingcash",
-                          "seo_plotcashquarter", "seo_map", "seotable", "seocvpdtable", "seo_plotdeliverymechanism", "seo_plotcashpartner"
-                     )
-                 )
-        ),
-        # Food Security -----------------------------------------------------------
-        tabPageUI(
-            "fspagetab", "Food Security", fsInfoUI(), "fs_yearperiod", fs_df_data$Year,
-            "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
-            "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
-        ),
-        # combine WASH components
-        tabPanel("WASH", wsInfoUI(),
-                 tabsetPanel(
-                     id = "wash_tabs",
-                     # CBI Approach in Sanitation Services --------------------------------------------------------------
-                     tabPageUI(
-                         "sspagetab", "CBI Approach in Sanitation Services", NULL, "ss_yearperiod", ss_df_data$Year,
-                         "ss_quarterperiod", "ss_mapreset", "ss_selecteddistrict", "ss_hhreceivingcash",
-                         "ss_plotcashquarter", "ss_map", "ss_plotdeliverymechanism", "ss_plotcashpartner"
-                     ),
-                     # CBI approach in WASH NFI --------------------------------------------------------------
-                     tabPageUI(
-                         "wnpagetab", "CBI approach in WASH NFI", NULL, "wn_yearperiod", wn_df_data$Year,
-                         "wn_quarterperiod", "wn_mapreset", "wn_selecteddistrict", "wn_hhreceivingcash",
-                         "wn_plotcashquarter", "wn_map", "wn_plotdeliverymechanism", "wn_plotcashpartner"
-                     ) 
-                 )
+    # CBI for Basic Needs -----------------------------------------------------
+    tabPageCBIUI(
+        "cbipagetab", "CBI for Basic Needs", cbiInfoUI(), "yearperiod", cbi_df_data$Year,
+        "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
+        "plotcashquarter", "map", "psndata", "plotdeliverymechanism", "plotcashpartner"
     ),
-    # tabPanel("About"),
+    # combine Energy and environment components --------------------------------------------------------------
+    tabPanel("Energy and Environment", eaeInfoUI(),
+             tabsetPanel(
+                 id = "tabs_energy_environment",
+                 # Forests_wetlands_shorelines_protected_and_restored --------------------------------------------------------------
+                 tabPageUI(
+                     "eprpagetab", "Forests wetlands shorelines protected and restored", NULL, "epr_yearperiod", epr_df_data$Year,
+                     "epr_quarterperiod", "epr_mapreset", "epr_selecteddistrict", "epr_hhreceivingcash",
+                     "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
+                 ),
+                 # Using alternative and or renewable energy --------------------------------------------------------------
+                 tabPageUI(
+                     "aorpagetab", "Using alternative and or renewable energy", NULL, "aor_yearperiod", aor_df_data$Year,
+                     "aor_quarterperiod", "aor_mapreset", "aor_selecteddistrict", "aor_hhreceivingcash",
+                     "aor_plotcashquarter", "aor_map", "aor_plotdeliverymechanism", "aor_plotcashpartner"
+                 ),
+                 # Using fuel efficient cook stove --------------------------------------------------------------
+                 tabPageUI(
+                     "ecspagetab", "Using fuel efficient cook stove", NULL, "ecs_yearperiod", ecs_df_data$Year,
+                     "ecs_quarterperiod", "ecs_mapreset", "ecs_selecteddistrict", "ecs_hhreceivingcash",
+                     "ecs_plotcashquarter", "ecs_map", "ecs_plotdeliverymechanism", "ecs_plotcashpartner"
+                 ) 
+             )
+    ),
+    # combine livelihood components
+    tabPanel("Emergency Livelihood Support", elsInfoUI(),
+             tabsetPanel(
+                 id = "tabs_livelihood",
+                 # Access to Productive Assets --------------------------------------------------------------
+                 tabPageUI(
+                     "apapagetab", "Access to Productive Assets", NULL, "apa_yearperiod", apa_df_data$Year,
+                     "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
+                     "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
+                 ),
+                 # Short term Employment --------------------------------------------------------------
+                 tabPageSEOUI(
+                     "seopagetab", "Short term Employment", NULL, "seo_yearperiod", seo_df_data$Year,
+                     "seo_quarterperiod", "seo_mapreset", "seo_selecteddistrict", "seo_hhreceivingcash",
+                     "seo_plotcashquarter", "seo_map", "seotable", "seocvpdtable", "seo_plotdeliverymechanism", "seo_plotcashpartner"
+                 )
+             )
+    ),
+    # Food Security -----------------------------------------------------------
+    tabPageUI(
+        "fspagetab", "Food Security", fsInfoUI(), "fs_yearperiod", fs_df_data$Year,
+        "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
+        "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
+    ),
+    # combine WASH components
+    tabPanel("WASH", wsInfoUI(),
+             tabsetPanel(
+                 id = "wash_tabs",
+                 # CBI Approach in Sanitation Services --------------------------------------------------------------
+                 tabPageUI(
+                     "sspagetab", "CBI Approach in Sanitation Services", NULL, "ss_yearperiod", ss_df_data$Year,
+                     "ss_quarterperiod", "ss_mapreset", "ss_selecteddistrict", "ss_hhreceivingcash",
+                     "ss_plotcashquarter", "ss_map", "ss_plotdeliverymechanism", "ss_plotcashpartner"
+                 ),
+                 # CBI approach in WASH NFI --------------------------------------------------------------
+                 tabPageUI(
+                     "wnpagetab", "CBI approach in WASH NFI", NULL, "wn_yearperiod", wn_df_data$Year,
+                     "wn_quarterperiod", "wn_mapreset", "wn_selecteddistrict", "wn_hhreceivingcash",
+                     "wn_plotcashquarter", "wn_map", "wn_plotdeliverymechanism", "wn_plotcashpartner"
+                 ) 
+             )
+    ),
+    # readme
     tabPanel("Read Me", readmeUI("rdmpagetab")),
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
@@ -236,7 +234,7 @@ server <- function(input, output, session) {
                                   glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
         cbiTextSelectedDistrict("cbipagetab", click_district)
         
-
+        
         # update year selection
         filter_original_cash_data <- filter_cash_data_based_on_map
         available_year_choices <- unique(as.character(filter_original_cash_data$Year))
@@ -584,7 +582,7 @@ server <- function(input, output, session) {
         df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
             sf::st_centroid() %>% sf::st_transform(4326) %>%
             mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
-       
+        
         df_shape_data_map <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts)
         refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
         

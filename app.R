@@ -111,7 +111,7 @@ ui <- navbarPage(
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
     ),
-    windowTitle = "Cash Based Interventions",
+    windowTitle = "Cash Based Interventions Uganda",
     header = busy_start_up(
         loader = spin_epic("orbit", color = "#FFF"),
         text = "Loading...",
@@ -119,7 +119,6 @@ ui <- navbarPage(
         color = "#FFF",
         background = "#3E3E3F"
     ),
-    # absolutePanel(cbiInfoUI("cbipagetab"), right = 10, top = 10, draggable = TRUE, width = 2000, height = 50),
     theme= reach_theme
 )
 

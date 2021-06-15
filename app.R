@@ -41,11 +41,7 @@ ui <- navbarPage(
             "plotcashquarter", "map", "psndata", "plotdeliverymechanism", "plotcashpartner"
         ),
         # Environmental Protection --------------------------------------------------------------
-        # tabPageUI(
-        #     "eprpagetab", "Environmental Protection", eaeInfoUI(), "epr_yearperiod", epr_df_data$Year,
-        #     "epr_quarterperiod", "epr_mapreset", "epr_selecteddistrict", "epr_hhreceivingcash",
-        #     "epr_plotcashquarter", "epr_map", "epr_plotdeliverymechanism", "epr_plotcashpartner"
-        # ),
+        
         # combine Energy and environment components
         tabPanel("Energy and Environment", eaeInfoUI(),
                  tabsetPanel(
@@ -85,7 +81,7 @@ ui <- navbarPage(
                          "apapagetab", "Access to Productive Assets", NULL, "apa_yearperiod", apa_df_data$Year,
                          "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
                          "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
-                     ) 
+                     )
                  )
         ),
         # Food Security -----------------------------------------------------------

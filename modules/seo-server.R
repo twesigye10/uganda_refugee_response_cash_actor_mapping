@@ -167,17 +167,17 @@ seoTableForCVPD <- function(id, input_data ){
       
       df_data_cvpd <- input_data %>%
         summarise( 
-          cash_value_transfer_m = median(cash_value_of_transfer_per_individual_per_day_male_ugx, na.rm = T),
-          cash_value_transfer_f = median(cash_value_of_transfer_per_individual_per_day_female_ugx, na.rm = T),
+          cash_value_transfer_m = scales::comma(median(cash_value_of_transfer_per_individual_per_day_male_ugx, na.rm = T), scale = 1, big.mark = ","),
+          cash_value_transfer_f = scales::comma(median(cash_value_of_transfer_per_individual_per_day_female_ugx, na.rm = T), scale = 1, big.mark = ",")
         )
       
       div_data <- paste('<div class=\"table\">', glue("<h6> Median cash transfer per individual per day{display_in_title}</h6>"))
       thead_data <- paste('<table class=\"table\"> ')
       
       data_cvpd <- paste('<tr><td>', 'Female: ', "UGX ", 
-                         scales::comma_format()(df_data_cvpd %>% pull(cash_value_transfer_f)) ,
+                         df_data_cvpd %>% pull(cash_value_transfer_f),
                          '</td> <td>','Male: ',  "UGX ",
-                         scales::comma_format()(df_data_cvpd %>% pull(cash_value_transfer_m)) ,
+                         df_data_cvpd %>% pull(cash_value_transfer_m),
                          '</td> </tr>')
 
       tfooter_data <- paste('</table> </div>')

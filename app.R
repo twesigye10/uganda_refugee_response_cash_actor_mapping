@@ -70,17 +70,17 @@ ui <- navbarPage(
         tabPanel("Emergency Livelihood Support", elsInfoUI(),
                  tabsetPanel(
                      id = "tabs_livelihood",
-                     # Short term Employment --------------------------------------------------------------
-                     tabPageSEOUI(
-                         "seopagetab", "Short term Employment", NULL, "seo_yearperiod", seo_df_data$Year,
-                         "seo_quarterperiod", "seo_mapreset", "seo_selecteddistrict", "seo_hhreceivingcash",
-                          "seo_plotcashquarter", "seo_map", "seotable", "seocvpdtable", "seo_plotdeliverymechanism", "seo_plotcashpartner"
-                     ),
                      # Access to Productive Assets --------------------------------------------------------------
                      tabPageUI(
                          "apapagetab", "Access to Productive Assets", NULL, "apa_yearperiod", apa_df_data$Year,
                          "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
                          "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
+                     ),
+                     # Short term Employment --------------------------------------------------------------
+                     tabPageSEOUI(
+                         "seopagetab", "Short term Employment", NULL, "seo_yearperiod", seo_df_data$Year,
+                         "seo_quarterperiod", "seo_mapreset", "seo_selecteddistrict", "seo_hhreceivingcash",
+                          "seo_plotcashquarter", "seo_map", "seotable", "seocvpdtable", "seo_plotdeliverymechanism", "seo_plotcashpartner"
                      )
                  )
         ),
@@ -430,7 +430,143 @@ server <- function(input, output, session) {
         fsTextSelectedDistrict("fspagetab", "")
     })
     
+    # Access to Productive Assets ---------------------------------------------
     
+    apa_year <- apaYearValueServer("apapagetab")
+    apa_quarter <- apaQuarterValueServer("apapagetab")
+    apaDefaultMap("apapagetab")
+    # dynamic charts and map --------------------------------------------------
+    observe({
+        req(input$tab_being_displayed == "Emergency Livelihood Support")
+        req(input$tabs_livelihood == "Access to Productive Assets")
+        # UI selectors to filter shape data
+        df_by_district_cash_data <- reactive({filterCashData("apapagetab", apa_df_data, apa_year(), Year, apa_quarter(), Quarter )})
+        df_shape_data <- dfShapeDefault("apapagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_grants_distributed_for_productive_assets_ugx, "location_district")
+        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
+            sf::st_centroid() %>% sf::st_transform(4326) %>%
+            mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+        
+        df_shape_data_map <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = "None Host" )
+        
+        ## create all the charts
+        dynamicMapLayer("apapagetab", "apa_map", df_shape_data_map)
+        refugeeHostLayer("apapagetab", "apa_map",df_other_refugee_host_dist)
+        dynamicMapLabels("apapagetab", "apa_map", df_point_data)
+        
+        apaDonutChartCashBeneficiary ("apapagetab",
+                                      df_by_district_cash_data(),
+                                      select_beneficiary_type,
+                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
+                                      "% of Total \nCash Transfer by\n population group",
+                                      apa_beneficiary_types)
+        apaLineChartTotalCashQuarter ("apapagetab", df_by_district_cash_data(), 
+                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
+        apaBarChartDeliveryMechanism ("apapagetab", df_by_district_cash_data(),
+                                      delivery_mechanism,
+                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
+        apaBarChartCashByPartner ("apapagetab", df_by_district_cash_data(), partner_name,
+                                  total_cash_value_of_grants_distributed_for_productive_assets_ugx,
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
+        
+    })
+    
+    # observe year change to update quarter -----------------------------------
+    observe({
+        if(apa_year() != "All"){
+            selected_year <- apa_year()
+            filter_cash_data_quarter <- filterYearForQuarters("apapagetab", apa_df_data, Year, selected_year ) 
+            # update quarter selection
+            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+            if(apa_quarter() %in% available_quarter_choices){
+                apaUpdateQuarter("apapagetab", available_quarter_choices, apa_quarter())
+            }else{
+                apaUpdateQuarter("apapagetab", available_quarter_choices, "All")
+            }
+        }else{
+            apaUpdateQuarter("apapagetab", "All", "All")
+        }
+    })
+    
+    # Charts listen to map click ----------------------------------------------
+    observeEvent(apaClickedDistrictValueServer("apapagetab"),{
+        click_district <- apaClickedDistrictValueServer("apapagetab")
+        display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
+        filter_cash_data_based_on_map <- filterCashDataByDistrict("apapagetab", apa_df_data, location_district, click_district)
+        # create all the charts
+        apaDonutChartCashBeneficiary ("apapagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
+                                      "% of Total \nCash Transfer by\n population group",
+                                      apa_beneficiary_types)
+        apaLineChartTotalCashQuarter ("apapagetab", filter_cash_data_based_on_map, 
+                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
+        apaBarChartDeliveryMechanism ("apapagetab", filter_cash_data_based_on_map,
+                                      delivery_mechanism,
+                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
+        apaBarChartCashByPartner ("apapagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_cash_value_of_grants_distributed_for_productive_assets_ugx,
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
+        apaTextSelectedDistrict("apapagetab", click_district)
+        # update year selection
+        filter_original_cash_data <- filter_cash_data_based_on_map
+        available_year_choices <- unique(as.character(filter_original_cash_data$Year))
+        if (apa_year() %in% available_year_choices){
+            apaUpdateYear("apapagetab", available_year_choices, apa_year())
+        }else{
+            apaUpdateYear("apapagetab", available_year_choices, "All")
+        }
+        # update quarter selection based on year and district
+        if(apa_year() != "All"){
+            selected_year <- apa_year()
+            filter_cash_data_quarter <- filterYearDistrictForQuarters ("apapagetab", apa_df_data, Year, selected_year,
+                                                                       location_district, click_district )
+            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+            if(apa_quarter() %in% available_quarter_choices){
+                apaUpdateQuarter("apapagetab", available_quarter_choices, apa_quarter())
+            }else{
+                apaUpdateQuarter("apapagetab", available_quarter_choices, "All")
+            }
+        }
+    })
+    
+    # Map reset button --------------------------------------------------------
+    observeEvent(apaResetMapServer("apapagetab"),{
+        display_in_title <<- " across all Districts"
+        
+        apaUpdateYear("apapagetab", unique(as.character(apa_df_data$Year)), "All")
+        apaUpdateQuarter("apapagetab", "All", "All")
+        
+        filter_cash_data_based_on_map <- apa_df_data
+        
+        apaDonutChartCashBeneficiary ("apapagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
+                                      "% of Total \nCash Transfer by\n population group",
+                                      apa_beneficiary_types)
+        apaLineChartTotalCashQuarter ("apapagetab", filter_cash_data_based_on_map, 
+                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
+        apaBarChartDeliveryMechanism ("apapagetab", filter_cash_data_based_on_map,
+                                      delivery_mechanism,
+                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
+        apaBarChartCashByPartner ("apapagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_cash_value_of_grants_distributed_for_productive_assets_ugx,
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
+        apaTextSelectedDistrict("apapagetab", "")
+        
+    })
     
     
     # Short term Employment -----------------------------------------------------------
@@ -586,143 +722,7 @@ server <- function(input, output, session) {
         
     })
     
-    # Access to Productive Assets ---------------------------------------------
     
-    apa_year <- apaYearValueServer("apapagetab")
-    apa_quarter <- apaQuarterValueServer("apapagetab")
-    apaDefaultMap("apapagetab")
-    # dynamic charts and map --------------------------------------------------
-    observe({
-        req(input$tab_being_displayed == "Emergency Livelihood Support")
-        req(input$tabs_livelihood == "Access to Productive Assets")
-        # UI selectors to filter shape data
-        df_by_district_cash_data <- reactive({filterCashData("apapagetab", apa_df_data, apa_year(), Year, apa_quarter(), Quarter )})
-        df_shape_data <- dfShapeDefault("apapagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_grants_distributed_for_productive_assets_ugx, "location_district")
-        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
-            sf::st_centroid() %>% sf::st_transform(4326) %>%
-            mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
-        
-        df_shape_data_map <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts)
-        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
-        
-        df_other_refugee_host_dist <- df_shape_data %>%
-            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
-            mutate(col_legenend_factor = "None Host" )
-        
-        ## create all the charts
-        dynamicMapLayer("apapagetab", "apa_map", df_shape_data_map)
-        refugeeHostLayer("apapagetab", "apa_map",df_other_refugee_host_dist)
-        dynamicMapLabels("apapagetab", "apa_map", df_point_data)
-        
-        apaDonutChartCashBeneficiary ("apapagetab",
-                                      df_by_district_cash_data(),
-                                      select_beneficiary_type,
-                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      "% of Total \nCash Transfer by\n population group",
-                                      apa_beneficiary_types)
-        apaLineChartTotalCashQuarter ("apapagetab", df_by_district_cash_data(), 
-                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
-        apaBarChartDeliveryMechanism ("apapagetab", df_by_district_cash_data(),
-                                      delivery_mechanism,
-                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
-        apaBarChartCashByPartner ("apapagetab", df_by_district_cash_data(), partner_name,
-                                  total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
-        
-    })
-    
-    # observe year change to update quarter -----------------------------------
-    observe({
-        if(apa_year() != "All"){
-            selected_year <- apa_year()
-            filter_cash_data_quarter <- filterYearForQuarters("apapagetab", apa_df_data, Year, selected_year ) 
-            # update quarter selection
-            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
-            if(apa_quarter() %in% available_quarter_choices){
-                apaUpdateQuarter("apapagetab", available_quarter_choices, apa_quarter())
-            }else{
-                apaUpdateQuarter("apapagetab", available_quarter_choices, "All")
-            }
-        }else{
-            apaUpdateQuarter("apapagetab", "All", "All")
-        }
-    })
-    
-    # Charts listen to map click ----------------------------------------------
-    observeEvent(apaClickedDistrictValueServer("apapagetab"),{
-        click_district <- apaClickedDistrictValueServer("apapagetab")
-        display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
-        filter_cash_data_based_on_map <- filterCashDataByDistrict("apapagetab", apa_df_data, location_district, click_district)
-        # create all the charts
-        apaDonutChartCashBeneficiary ("apapagetab",
-                                      filter_cash_data_based_on_map,
-                                      select_beneficiary_type,
-                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      "% of Total \nCash Transfer by\n population group",
-                                      apa_beneficiary_types)
-        apaLineChartTotalCashQuarter ("apapagetab", filter_cash_data_based_on_map, 
-                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
-        apaBarChartDeliveryMechanism ("apapagetab", filter_cash_data_based_on_map,
-                                      delivery_mechanism,
-                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
-        apaBarChartCashByPartner ("apapagetab", filter_cash_data_based_on_map, partner_name,
-                                  total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
-        apaTextSelectedDistrict("apapagetab", click_district)
-        # update year selection
-        filter_original_cash_data <- filter_cash_data_based_on_map
-        available_year_choices <- unique(as.character(filter_original_cash_data$Year))
-        if (apa_year() %in% available_year_choices){
-            apaUpdateYear("apapagetab", available_year_choices, apa_year())
-        }else{
-            apaUpdateYear("apapagetab", available_year_choices, "All")
-        }
-        # update quarter selection based on year and district
-        if(apa_year() != "All"){
-            selected_year <- apa_year()
-            filter_cash_data_quarter <- filterYearDistrictForQuarters ("apapagetab", apa_df_data, Year, selected_year,
-                                                                       location_district, click_district )
-            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
-            if(apa_quarter() %in% available_quarter_choices){
-                apaUpdateQuarter("apapagetab", available_quarter_choices, apa_quarter())
-            }else{
-                apaUpdateQuarter("apapagetab", available_quarter_choices, "All")
-            }
-        }
-    })
-    
-    # Map reset button --------------------------------------------------------
-    observeEvent(apaResetMapServer("apapagetab"),{
-        display_in_title <<- " across all Districts"
-        
-        apaUpdateYear("apapagetab", unique(as.character(apa_df_data$Year)), "All")
-        apaUpdateQuarter("apapagetab", "All", "All")
-        
-        filter_cash_data_based_on_map <- apa_df_data
-        
-        apaDonutChartCashBeneficiary ("apapagetab",
-                                      filter_cash_data_based_on_map,
-                                      select_beneficiary_type,
-                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      "% of Total \nCash Transfer by\n population group",
-                                      apa_beneficiary_types)
-        apaLineChartTotalCashQuarter ("apapagetab", filter_cash_data_based_on_map, 
-                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
-        apaBarChartDeliveryMechanism ("apapagetab", filter_cash_data_based_on_map,
-                                      delivery_mechanism,
-                                      total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
-        apaBarChartCashByPartner ("apapagetab", filter_cash_data_based_on_map, partner_name,
-                                  total_cash_value_of_grants_distributed_for_productive_assets_ugx,
-                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
-        apaTextSelectedDistrict("apapagetab", "")
-        
-    })
     
     # Environmental Protection Restoration ------------------------------------
     

@@ -153,9 +153,29 @@ seoTableForEmploy <- function(id, input_data ){
       
       tfooter_data <- paste('</table> </div>')
       
+      
+      df_data_cvpd <- input_data %>%
+        summarise( 
+          cash_value_transfer_m = scales::comma(median(cash_value_of_transfer_per_individual_per_day_male_ugx, na.rm = T), scale = 1, big.mark = ","),
+          cash_value_transfer_f = scales::comma(median(cash_value_of_transfer_per_individual_per_day_female_ugx, na.rm = T), scale = 1, big.mark = ",")
+        )
+      
+      div_data_cvpd <- paste('<div class=\"table\">', glue("<h6> Median cash transfer per individual per day{display_in_title}</h6>"))
+      thead_data_cvpd <- paste('<table class=\"table\"> ')
+      
+      data_cvpd <- paste('<tr><td>', 'Female: ', "UGX ", 
+                         df_data_cvpd %>% pull(cash_value_transfer_f),
+                         '</td> <td>','Male: ',  "UGX ",
+                         df_data_cvpd %>% pull(cash_value_transfer_m),
+                         '</td> </tr>')
+      
+      tfooter_data_cvpd <- paste('</table> </div>')
+      
+      HTML(paste(div_data_cvpd, thead_data_cvpd, data_cvpd, tfooter_data_cvpd))
+      
       HTML(paste(div_data, thead_data, data_employ_0_14, data_employ_15_17, 
                  data_employ_18_35, data_employ_36_59,  data_employ_60_plus, 
-                 tfooter_data))
+                 tfooter_data, div_data_cvpd, thead_data_cvpd, data_cvpd, tfooter_data_cvpd))
       
     })
   })

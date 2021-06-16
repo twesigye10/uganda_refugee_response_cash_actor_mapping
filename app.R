@@ -1,6 +1,7 @@
 
 # load packages
 library(shiny)
+library(shinyjs)
 library(shinybusy)
 library(sf)
 library(tidyverse)
@@ -68,17 +69,17 @@ ui <- navbarPage(
     tabPanel("Emergency Livelihood Support", elsInfoUI(),
              tabsetPanel(
                  id = "tabs_livelihood",
-                 # Access to Productive Assets --------------------------------------------------------------
-                 tabPageUI(
-                     "apapagetab", "Access to Productive Assets", NULL, "apa_yearperiod", apa_df_data$Year,
-                     "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
-                     "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
-                 ),
                  # Short term Employment --------------------------------------------------------------
                  tabPageSEOUI(
                      "seopagetab", "Short term Employment", NULL, "seo_yearperiod", seo_df_data$Year,
                      "seo_quarterperiod", "seo_mapreset", "seo_selecteddistrict", "seo_hhreceivingcash",
                      "seo_plotcashquarter", "seo_map", "seotable", "seocvpdtable", "seo_plotdeliverymechanism", "seo_plotcashpartner"
+                 ),
+                 # Access to Productive Assets --------------------------------------------------------------
+                 tabPageUI(
+                     "apapagetab", "Access to Productive Assets", NULL, "apa_yearperiod", apa_df_data$Year,
+                     "apa_quarterperiod", "apa_mapreset", "apa_selecteddistrict", "apa_hhreceivingcash",
+                     "apa_plotcashquarter", "apa_map", "apa_plotdeliverymechanism", "apa_plotcashpartner"
                  )
              )
     ),
@@ -119,6 +120,7 @@ ui <- navbarPage(
         color = "#FFF",
         background = "#3E3E3F"
     ),
+    useShinyjs(),
     theme= reach_theme
 )
 
@@ -427,6 +429,154 @@ server <- function(input, output, session) {
         fsTextSelectedDistrict("fspagetab", "")
     })
     
+    
+    # Short term Employment -----------------------------------------------------------
+    seo_year <- seoYearValueServer("seopagetab")
+    seo_quarter <- seoQuarterValueServer("seopagetab")
+    seoDefaultMap("seopagetab")
+    # dynamic charts and map --------------------------------------------------
+    observe({
+        req(input$tab_being_displayed == "Emergency Livelihood Support")
+        req(input$tabs_livelihood == "Short term Employment")
+        # UI selectors to filter shape data
+        df_by_district_cash_data <- reactive({filterCashData("seopagetab", seo_df_data, seo_year(), Year, seo_quarter(), Quarter )})
+        df_shape_data <- dfShapeDefault("seopagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_for_work_ugx, "location_district")
+        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
+            sf::st_centroid() %>% sf::st_transform(4326) %>%
+            mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+        
+        df_shape_data_map <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = "None Host" )
+        
+        ## create all the charts
+        delay(500, dynamicMapLayer("seopagetab", "seo_map", df_shape_data_map))
+        delay(501, refugeeHostLayer("seopagetab", "seo_map",df_other_refugee_host_dist))
+        delay(502, dynamicMapLabels("seopagetab", "seo_map", df_point_data))
+        
+        seoTableForEmploy("seopagetab", df_by_district_cash_data())
+        
+        seoDonutChartCashBeneficiary ("seopagetab",
+                                      df_by_district_cash_data(),
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer by\n population group",
+                                      seo_beneficiary_types)
+        seoLineChartTotalCashQuarter ("seopagetab", df_by_district_cash_data(), 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
+        seoBarChartDeliveryMechanism ("seopagetab", df_by_district_cash_data(),
+                                      delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
+        seoBarChartCashByPartner ("seopagetab", df_by_district_cash_data(), partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
+        
+    })
+    
+    # observe year change to update quarter -----------------------------------
+    observe({
+        if(seo_year() != "All"){
+            selected_year <- seo_year()
+            filter_cash_data_quarter <- filterYearForQuarters("seopagetab", seo_df_data, Year, selected_year ) 
+            # update quarter selection
+            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+            if(seo_quarter() %in% available_quarter_choices){
+                seoUpdateQuarter("seopagetab", available_quarter_choices, seo_quarter())
+            }else{
+                seoUpdateQuarter("seopagetab", available_quarter_choices, "All")
+            }
+        }else{
+            seoUpdateQuarter("seopagetab", "All", "All")
+        }
+    })
+    
+    # Charts listen to map click ----------------------------------------------
+    observeEvent(seoClickedDistrictValueServer("seopagetab"),{
+        click_district <- seoClickedDistrictValueServer("seopagetab")
+        display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
+        filter_cash_data_based_on_map <- filterCashDataByDistrict("seopagetab", seo_df_data, location_district, click_district)
+        # create all the charts
+        seoTableForEmploy("seopagetab", filter_cash_data_based_on_map)
+        
+        seoDonutChartCashBeneficiary ("seopagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer by\n population group",
+                                      seo_beneficiary_types)
+        seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
+        seoBarChartDeliveryMechanism ("seopagetab", filter_cash_data_based_on_map,
+                                      delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
+        seoBarChartCashByPartner ("seopagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
+        seoTextSelectedDistrict("seopagetab", click_district)
+        
+        
+        # update year selection
+        filter_original_cash_data <- filter_cash_data_based_on_map
+        available_year_choices <- unique(as.character(filter_original_cash_data$Year))
+        if (seo_year() %in% available_year_choices){
+            seoUpdateYear("seopagetab", available_year_choices, seo_year())
+        }else{
+            seoUpdateYear("seopagetab", available_year_choices, "All")
+        }
+        # update quarter selection based on year and district
+        if(seo_year() != "All"){
+            selected_year <- seo_year()
+            filter_cash_data_quarter <- filterYearDistrictForQuarters ("seopagetab", seo_df_data, Year, selected_year,
+                                                                       location_district, click_district )
+            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+            if(seo_quarter() %in% available_quarter_choices){
+                seoUpdateQuarter("seopagetab", available_quarter_choices, seo_quarter())
+            }else{
+                seoUpdateQuarter("seopagetab", available_quarter_choices, "All")
+            }
+        }
+    })
+    
+    # Map reset button --------------------------------------------------------
+    observeEvent(seoResetMapServer("seopagetab"),{
+        display_in_title <<- " across all Districts"
+        
+        seoUpdateYear("seopagetab", unique(as.character(seo_df_data$Year)), "All")
+        seoUpdateQuarter("seopagetab", "All", "All")
+        
+        filter_cash_data_based_on_map <- seo_df_data
+        
+        seoTableForEmploy("seopagetab", filter_cash_data_based_on_map)
+        
+        seoDonutChartCashBeneficiary ("seopagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      "% of Total \nCash Transfer by\n population group",
+                                      seo_beneficiary_types)
+        seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
+                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
+                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
+        seoBarChartDeliveryMechanism ("seopagetab", filter_cash_data_based_on_map,
+                                      delivery_mechanism,
+                                      total_cash_value_of_cash_for_work_ugx,
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
+        seoBarChartCashByPartner ("seopagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_cash_value_of_cash_for_work_ugx,
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
+        seoTextSelectedDistrict("seopagetab", "")
+        
+        
+    })
+
+    
     # Access to Productive Assets ---------------------------------------------
     
     apa_year <- apaYearValueServer("apapagetab")
@@ -564,161 +714,6 @@ server <- function(input, output, session) {
         apaTextSelectedDistrict("apapagetab", "")
         
     })
-    
-    
-    # Short term Employment -----------------------------------------------------------
-    
-    seo_year <- seoYearValueServer("seopagetab")
-    seo_quarter <- seoQuarterValueServer("seopagetab")
-    seoDefaultMap("seopagetab")
-    # dynamic charts and map --------------------------------------------------
-    observe({
-        req(input$tab_being_displayed == "Emergency Livelihood Support")
-        req(input$tabs_livelihood == "Short term Employment")
-        # UI selectors to filter shape data
-        df_by_district_cash_data <- reactive({filterCashData("seopagetab", seo_df_data, seo_year(), Year, seo_quarter(), Quarter )})
-        df_shape_data <- dfShapeDefault("seopagetab", df_shape, df_by_district_cash_data(), location_district, total_cash_value_of_cash_for_work_ugx, "location_district")
-        df_point_data <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
-            sf::st_centroid() %>% sf::st_transform(4326) %>%
-            mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
-        
-        df_shape_data_map <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts)
-        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
-        
-        df_other_refugee_host_dist <- df_shape_data %>%
-            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
-            mutate(col_legenend_factor = "None Host" )
-        
-        ## create all the charts
-        seoTableForEmploy("seopagetab", df_by_district_cash_data())
-        
-        # seoTableForCVPD("seopagetab", df_by_district_cash_data())
-        
-        dynamicMapLayer("seopagetab", "seo_map", df_shape_data_map)
-        refugeeHostLayer("seopagetab", "seo_map",df_other_refugee_host_dist)
-        dynamicMapLabels("seopagetab", "seo_map", df_point_data)
-        
-        seoDonutChartCashBeneficiary ("seopagetab",
-                                      df_by_district_cash_data(),
-                                      select_beneficiary_type,
-                                      total_cash_value_of_cash_for_work_ugx,
-                                      "% of Total \nCash Transfer by\n population group",
-                                      seo_beneficiary_types)
-        seoLineChartTotalCashQuarter ("seopagetab", df_by_district_cash_data(), 
-                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
-        seoBarChartDeliveryMechanism ("seopagetab", df_by_district_cash_data(),
-                                      delivery_mechanism,
-                                      total_cash_value_of_cash_for_work_ugx,
-                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
-        seoBarChartCashByPartner ("seopagetab", df_by_district_cash_data(), partner_name,
-                                  total_cash_value_of_cash_for_work_ugx,
-                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
-        
-    })
-    
-    # observe year change to update quarter -----------------------------------
-    observe({
-        if(seo_year() != "All"){
-            selected_year <- seo_year()
-            filter_cash_data_quarter <- filterYearForQuarters("seopagetab", seo_df_data, Year, selected_year ) 
-            # update quarter selection
-            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
-            if(seo_quarter() %in% available_quarter_choices){
-                seoUpdateQuarter("seopagetab", available_quarter_choices, seo_quarter())
-            }else{
-                seoUpdateQuarter("seopagetab", available_quarter_choices, "All")
-            }
-        }else{
-            seoUpdateQuarter("seopagetab", "All", "All")
-        }
-    })
-    
-    # Charts listen to map click ----------------------------------------------
-    observeEvent(seoClickedDistrictValueServer("seopagetab"),{
-        click_district <- seoClickedDistrictValueServer("seopagetab")
-        display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
-        filter_cash_data_based_on_map <- filterCashDataByDistrict("seopagetab", seo_df_data, location_district, click_district)
-        # create all the charts
-        seoTableForEmploy("seopagetab", filter_cash_data_based_on_map)
-        
-        # seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
-        
-        seoDonutChartCashBeneficiary ("seopagetab",
-                                      filter_cash_data_based_on_map,
-                                      select_beneficiary_type,
-                                      total_cash_value_of_cash_for_work_ugx,
-                                      "% of Total \nCash Transfer by\n population group",
-                                      seo_beneficiary_types)
-        seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
-                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
-        seoBarChartDeliveryMechanism ("seopagetab", filter_cash_data_based_on_map,
-                                      delivery_mechanism,
-                                      total_cash_value_of_cash_for_work_ugx,
-                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
-        seoBarChartCashByPartner ("seopagetab", filter_cash_data_based_on_map, partner_name,
-                                  total_cash_value_of_cash_for_work_ugx,
-                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
-        seoTextSelectedDistrict("seopagetab", click_district)
-        
-        
-        # update year selection
-        filter_original_cash_data <- filter_cash_data_based_on_map
-        available_year_choices <- unique(as.character(filter_original_cash_data$Year))
-        if (seo_year() %in% available_year_choices){
-            seoUpdateYear("seopagetab", available_year_choices, seo_year())
-        }else{
-            seoUpdateYear("seopagetab", available_year_choices, "All")
-        }
-        # update quarter selection based on year and district
-        if(seo_year() != "All"){
-            selected_year <- seo_year()
-            filter_cash_data_quarter <- filterYearDistrictForQuarters ("seopagetab", seo_df_data, Year, selected_year,
-                                                                       location_district, click_district )
-            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
-            if(seo_quarter() %in% available_quarter_choices){
-                seoUpdateQuarter("seopagetab", available_quarter_choices, seo_quarter())
-            }else{
-                seoUpdateQuarter("seopagetab", available_quarter_choices, "All")
-            }
-        }
-    })
-    
-    # Map reset button --------------------------------------------------------
-    observeEvent(seoResetMapServer("seopagetab"),{
-        display_in_title <<- " across all Districts"
-        
-        seoUpdateYear("seopagetab", unique(as.character(seo_df_data$Year)), "All")
-        seoUpdateQuarter("seopagetab", "All", "All")
-        
-        filter_cash_data_based_on_map <- seo_df_data
-        
-        seoTableForEmploy("seopagetab", filter_cash_data_based_on_map)
-        
-        # seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
-        
-        seoDonutChartCashBeneficiary ("seopagetab",
-                                      filter_cash_data_based_on_map,
-                                      select_beneficiary_type,
-                                      total_cash_value_of_cash_for_work_ugx,
-                                      "% of Total \nCash Transfer by\n population group",
-                                      seo_beneficiary_types)
-        seoLineChartTotalCashQuarter ("seopagetab", filter_cash_data_based_on_map, 
-                                      total_cash_value_of_cash_for_work_ugx, Year, Quarter, select_quarter, 
-                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
-        seoBarChartDeliveryMechanism ("seopagetab", filter_cash_data_based_on_map,
-                                      delivery_mechanism,
-                                      total_cash_value_of_cash_for_work_ugx,
-                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
-        seoBarChartCashByPartner ("seopagetab", filter_cash_data_based_on_map, partner_name,
-                                  total_cash_value_of_cash_for_work_ugx,
-                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
-        seoTextSelectedDistrict("seopagetab", "")
-        
-        
-    })
-    
     
     
     # Environmental Protection Restoration ------------------------------------

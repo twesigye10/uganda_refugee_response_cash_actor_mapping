@@ -592,7 +592,7 @@ server <- function(input, output, session) {
         ## create all the charts
         seoTableForEmploy("seopagetab", df_by_district_cash_data())
         
-        seoTableForCVPD("seopagetab", df_by_district_cash_data())
+        # seoTableForCVPD("seopagetab", df_by_district_cash_data())
         
         dynamicMapLayer("seopagetab", "seo_map", df_shape_data_map)
         refugeeHostLayer("seopagetab", "seo_map",df_other_refugee_host_dist)
@@ -642,7 +642,7 @@ server <- function(input, output, session) {
         # create all the charts
         seoTableForEmploy("seopagetab", filter_cash_data_based_on_map)
         
-        seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
+        # seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
         
         seoDonutChartCashBeneficiary ("seopagetab",
                                       filter_cash_data_based_on_map,
@@ -696,7 +696,7 @@ server <- function(input, output, session) {
         
         seoTableForEmploy("seopagetab", filter_cash_data_based_on_map)
         
-        seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
+        # seoTableForCVPD("seopagetab", filter_cash_data_based_on_map)
         
         seoDonutChartCashBeneficiary ("seopagetab",
                                       filter_cash_data_based_on_map,

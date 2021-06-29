@@ -41,6 +41,12 @@ ui <- navbarPage(
         "quarterperiod", "mapreset", "selecteddistrict", "hhreceivingcash",
         "plotcashquarter", "map", "psndata", "plotdeliverymechanism", "plotcashpartner"
     ),
+    # Food Security -----------------------------------------------------------
+    tabPageUI(
+        "fspagetab", "Food Security", fsInfoUI(), "fs_yearperiod", fs_df_data$Year,
+        "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
+        "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
+    ),
     # combine Energy and environment components --------------------------------------------------------------
     tabPanel("Energy and Environment", eaeInfoUI(),
              tabsetPanel(
@@ -83,12 +89,7 @@ ui <- navbarPage(
                  )
              )
     ),
-    # Food Security -----------------------------------------------------------
-    tabPageUI(
-        "fspagetab", "Food Security", fsInfoUI(), "fs_yearperiod", fs_df_data$Year,
-        "fs_quarterperiod", "fs_mapreset", "fs_selecteddistrict", "fs_hhreceivingcash",
-        "fs_plotcashquarter", "fs_map", "fs_plotdeliverymechanism", "fs_plotcashpartner"
-    ),
+    
     # combine WASH components
     tabPanel("WASH", wsInfoUI(),
              tabsetPanel(

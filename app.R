@@ -122,7 +122,8 @@ ui <- navbarPage(
         background = "#3E3E3F"
     ),
     useShinyjs(),
-    theme= reach_theme
+    theme= reach_theme,
+    tags$head(includeHTML("cbi_google_analytics.html"))
 )
 
 # Define server logic required --------------------------------------------

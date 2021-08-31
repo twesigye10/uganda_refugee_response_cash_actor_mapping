@@ -22,7 +22,7 @@ display_in_title <- " For All districts"
 
 # shapefile ---------------------------------------------------------------
 
-df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2020.shp", crs=4326 ) %>% 
+df_shape <- st_read("support_data/data/UGA_Admin/UGA_Admin_2_Districts_2020.shp", crs=4326 ) %>% 
     mutate(ADM2_EN = toupper(ADM2_EN))%>% 
     select(ADM2_EN) %>% st_transform(crs = 32636) %>% 
     st_simplify(dTolerance = 800) %>% st_transform(crs=4326)
@@ -30,7 +30,7 @@ df_shape <- st_read("data/UGA_Admin/UGA_Admin_2_Districts_2020.shp", crs=4326 ) 
 
 # CBI data ----------------------------------------------------------------
 
-cbi_df_data <- read_csv(file = "data/api_cbi_CBI_for_basic_needs.csv")
+cbi_df_data <- read_csv(file = "support_data/data/new_quarter_data/api_cbi_CBI_for_basic_needs.csv")
 cbi_df_data <- janitor::clean_names(cbi_df_data) %>% 
     mutate(
         select_month = ifelse(!is.na(reporting_month), paste0(month(ym(reporting_month), label = T, abbr = T), "-", substr( reporting_month, 3, 4)), select_month)
@@ -59,7 +59,7 @@ cbi_beneficiary_types <- cbi_df_data %>%
 
 # Food security data ------------------------------------------------------
 
-df_food_security <- read_csv("data/api_fs_Food_Security.csv")
+df_food_security <- read_csv("support_data/data/new_quarter_data/api_fs_Food_Security.csv")
 df_food_security <- janitor::clean_names(df_food_security) %>% 
     mutate(
     fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers = ifelse(!is.na(fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers), (fs_i_1_2_refugees_receiving_cash_total_amount_of_cash_transfers/currency_conversion_factor), NA)
@@ -81,7 +81,7 @@ fs_beneficiary_types <- fs_df_data %>%
 # Emergency Livelihood Support --------------------------------------------
 
 # Increased access to short-term employment opportunities data
-seo_df_data <- read_csv("data/api_live_ELS_Increased_access_to_short_term_employment_opportunities.csv")
+seo_df_data <- read_csv("support_data/data/new_quarter_data/api_live_ELS_Increased_access_to_short_term_employment_opportunities.csv")
 seo_df_data <- janitor::clean_names(seo_df_data) %>% 
     mutate(
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA)
@@ -100,7 +100,7 @@ seo_beneficiary_types <- seo_df_data %>%
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
 # Increased Access Productive Assets
-df_access_productive_assets <- read_csv("data/api_live_ELS_Increased_access_to_productive_assetss.csv")
+df_access_productive_assets <- read_csv("support_data/data/new_quarter_data/api_live_ELS_Increased_access_to_productive_assetss.csv")
 df_access_productive_assets <- janitor::clean_names(df_access_productive_assets) %>% 
     mutate(
         total_cash_value_of_grants_distributed_for_productive_assets_ugx = ifelse(!is.na(total_cash_value_of_grants_distributed_for_productive_assets_ugx), (total_cash_value_of_grants_distributed_for_productive_assets_ugx/currency_conversion_factor), NA)
@@ -122,7 +122,7 @@ apa_beneficiary_types <- apa_df_data %>%
 
 # Environment Protection data ---------------------------------------------
 
-df_environment_protection_restoration <- read_csv("data/api_env_Forests_wetlands_shorelines_protected_and_restored.csv")
+df_environment_protection_restoration <- read_csv("support_data/data/new_quarter_data/api_env_Forests_wetlands_shorelines_protected_and_restored.csv")
 df_environment_protection_restoration <- janitor::clean_names(df_environment_protection_restoration) %>% 
     mutate(
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA),
@@ -146,7 +146,7 @@ epr_beneficiary_types <- epr_df_data %>%
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
 # households_using_alternative_and_or_renewable_energy
-df_alternative_and_or_renewable_energy <- read_csv("data/api_env_households_using_alternative_and_or_renewable_energy.csv")
+df_alternative_and_or_renewable_energy <- read_csv("support_data/data/new_quarter_data/api_env_households_using_alternative_and_or_renewable_energy.csv")
 df_alternative_and_or_renewable_energy <- janitor::clean_names(df_alternative_and_or_renewable_energy) %>% 
     mutate(
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA),
@@ -170,7 +170,7 @@ aor_beneficiary_types <- aor_df_data %>%
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
 # using_fuel_efficient_cook_stove
-df_fuel_efficient_cook_stove <- read_csv("data/api_env_households_that_self_report_using_fuel_efficient_cook_stove_to_cook_the_main_meal.csv")
+df_fuel_efficient_cook_stove <- read_csv("support_data/data/new_quarter_data/api_env_households_that_self_report_using_fuel_efficient_cook_stove_to_cook_the_main_meal.csv")
 df_fuel_efficient_cook_stove <- janitor::clean_names(df_fuel_efficient_cook_stove) %>% 
     mutate(
         total_cash_value_of_cash_for_work_ugx = ifelse(!is.na(total_cash_value_of_cash_for_work_ugx), (total_cash_value_of_cash_for_work_ugx/currency_conversion_factor), NA),
@@ -198,7 +198,7 @@ ecs_beneficiary_types <- ecs_df_data %>%
 # WASH data ---------------------------------------------------------------
 
 # CBI approach in sanitation services data
-ss_df_data <- read_csv("data/api_wash_CBI_approach_in_sanitation_services.csv")
+ss_df_data <- read_csv("support_data/data/new_quarter_data/api_wash_CBI_approach_in_sanitation_services.csv")
 ss_df_data <- janitor::clean_names(ss_df_data) %>% 
     separate(end_date, c("Year", "Month"), "-", remove= FALSE, extra = "drop") %>% 
     mutate(
@@ -220,7 +220,7 @@ ss_beneficiary_types <- ss_df_data %>%
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
 # CBI approach in WASH NFI data
-wn_df_data <- read_csv("data/api_wash_CBI_approach_in_WASH_NFI.csv")
+wn_df_data <- read_csv("support_data/data/new_quarter_data/api_wash_CBI_approach_in_WASH_NFI.csv")
 wn_df_data <- janitor::clean_names(wn_df_data) %>% 
     separate(end_date, c("Year", "Month"), "-", remove= FALSE, extra = "drop") %>% 
     mutate(
@@ -255,8 +255,8 @@ data_for_saving$ecs_df_data <- ecs_df_data
 data_for_saving$ss_df_data <- ss_df_data
 data_for_saving$wn_df_data <- wn_df_data
 
-saveRDS(data_for_saving, file = "data/new_data.rds")
+saveRDS(data_for_saving, file = "support_data/data/new_quarter_data/data.rds")
 
-get_new_dat <- read_rds(file = "data/new_data.rds")
+get_new_dat <- read_rds(file = "support_data/data/new_quarter_data/data.rds")
 
 get_new_dat$wn_df_data %>% view()

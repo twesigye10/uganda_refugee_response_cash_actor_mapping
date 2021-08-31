@@ -13,7 +13,7 @@ readmeUI <- function(id){
                       from the first quarter in 2019 until present. Data and information displayed in the dashboard is updated 
                       on a quarterly basis following the Activity Info reporting cycle. Partners can update or submit new data 
                       about cash related activities they have implemented by following this "), strong( a("ActivityInfo.", style="color:#0f69b6", href ="https://www.activityinfo.org/login?page=%23database%2Fd0000010295%2Ff0000022161")), 
-                      span("For inquiries on how to submit data to the platform please contact"), strong(a(href= "mailto:ugakaimug@unhcr.org?cc=adeun@unhcr.org&subject=Inquiry%20about%20activityInfo", "UNHCR", style="color:#0f69b6")))
+                      span("For inquiries on how to submit data to the platform please contact"), strong(a(href= "mailto:ugakaimug@unhcr.org?subject=Inquiry%20about%20activityInfo", "UNHCR", style="color:#0f69b6")))
                   ),
                   h5("How it works"),
                   

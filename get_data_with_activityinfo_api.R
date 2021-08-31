@@ -128,7 +128,7 @@ df_cash_basic_needs <- queryTable("cjtzz3ez62",
                                   "Comments" = "i1547044100")
 
 # write out the dataset
-write_csv(x = df_cash_basic_needs, file = "data/api_cbi_CBI_for_basic_needs.csv")
+write_csv(x = df_cash_basic_needs, file = "support_data/data/new_quarter_data/api_cbi_CBI_for_basic_needs.csv")
 
 # financial_inclusion
 # "Select Month"= "[Select Month]",
@@ -153,7 +153,7 @@ df_financial_inclusion <- queryTable("cjtzyydbt3",
                                      "Comments" = "i0400323812")
 
 # write out the dataset
-write_csv(x = df_financial_inclusion, file = "data/api_cbi_financial_inclusions.csv")
+write_csv(x = df_financial_inclusion, file = "support_data/data/new_quarter_data/api_cbi_financial_inclusions.csv")
 
 # Environment & Energy (Partners) ----------------------------------
 # Environment Protection and Restoration
@@ -210,7 +210,7 @@ df_Forests_wetlands_shorelines_protected_and_restored <- queryTable("cjtzyfy2u2"
                                                         "Comments" = "i1380841620",
                                                         "Record change/comment log (please indicate date, name and comment e.g. 01/07/2019 - John Doe - Record validated)" = "i0463387676")
 # write out the dataset
-write_csv(x = df_Forests_wetlands_shorelines_protected_and_restored, file = "data/api_env_Forests_wetlands_shorelines_protected_and_restored.csv")
+write_csv(x = df_Forests_wetlands_shorelines_protected_and_restored, file = "support_data/data/new_quarter_data/api_env_Forests_wetlands_shorelines_protected_and_restored.csv")
 
 # Access to sufficient & sustainable basic energy - Household
 
@@ -256,7 +256,7 @@ df_households_using_alternative_and_or_renewable_energy <- queryTable("cjtzjlyom
                                                                       "Record change/comment log (please indicate date, name and comment e.g. 01/07/2019 - John Doe - Record validated)" = "i2091544592")
 
 # write out the dataset
-write_csv(x = df_households_using_alternative_and_or_renewable_energy , file = "data/api_env_households_using_alternative_and_or_renewable_energy.csv")
+write_csv(x = df_households_using_alternative_and_or_renewable_energy , file = "support_data/data/new_quarter_data/api_env_households_using_alternative_and_or_renewable_energy.csv")
 
 # households_that_self_report_using_fuel_efficient_cook_stove_to_cook_the_main_meal
 # "Select Month"= "[Select Month]",
@@ -300,7 +300,7 @@ df_households_using_fuel_efficient_cook_stove_to_cook <- queryTable("cjtzjlyoes"
                                                                     "Record change/comment log (please indicate date, name and comment e.g. 01/07/2019 - John Doe - Record validated)" = "i1089351973")
 
 # write out the dataset
-write_csv(x = df_households_using_fuel_efficient_cook_stove_to_cook, file = "data/api_env_households_that_self_report_using_fuel_efficient_cook_stove_to_cook_the_main_meal.csv")
+write_csv(x = df_households_using_fuel_efficient_cook_stove_to_cook, file = "support_data/data/new_quarter_data/api_env_households_that_self_report_using_fuel_efficient_cook_stove_to_cook_the_main_meal.csv")
 
 
 # LIVELIHOODS & RESILIENCE (PARTNERS) --------------------------------------------------------------
@@ -345,7 +345,7 @@ df_increased_access_to_productive_assets <- queryTable("cjtx2djzd4",
 
 
 # write out the dataset
-write_csv(x = df_increased_access_to_productive_assets, file = "data/api_live_ELS_Increased_access_to_productive_assetss.csv")
+write_csv(x = df_increased_access_to_productive_assets, file = "support_data/data/new_quarter_data/api_live_ELS_Increased_access_to_productive_assetss.csv")
 
 
 # increased_access_to_short_term_employment_opportunities
@@ -395,7 +395,7 @@ df_access_to_short_term_employment_opportunities <- queryTable("cjtx2dk056",
 
 
 # write out the dataset
-write_csv(x = df_access_to_short_term_employment_opportunities, file = "data/api_live_ELS_Increased_access_to_short_term_employment_opportunities.csv")
+write_csv(x = df_access_to_short_term_employment_opportunities, file = "support_data/data/new_quarter_data/api_live_ELS_Increased_access_to_short_term_employment_opportunities.csv")
 
 
 # Shelter, Settlement & NFI (Partners) ------------------------------------
@@ -454,7 +454,7 @@ df_refugee_hh_assisted_with_semi_permanent_shelters <- queryTable("ck53qjaq37",
                                                                   "Comments" = "i1976034241")
 
 # write out the dataset
-write_csv(x = df_refugee_hh_assisted_with_semi_permanent_shelters, file = "data/api_shel_refugee_hh_assisted_with_semi_permanent_shelters.csv")
+write_csv(x = df_refugee_hh_assisted_with_semi_permanent_shelters, file = "support_data/data/new_quarter_data/api_shel_refugee_hh_assisted_with_semi_permanent_shelters.csv")
 
 
 # newly_arrived_refugee_households_provided_with_minimum_emergency_shelter_support
@@ -485,7 +485,7 @@ df_newly_arrived_refugee_hh_with_minimum_emergency_shelter <- queryTable("ck53qj
                                                                          "Comments" = "i1954295928")
 
 # write out the dataset
-write_csv(x = df_newly_arrived_refugee_hh_with_minimum_emergency_shelter, file = "data/api_shel_newly_arrived_refugee_hh_with_minimum_emergency_shelter.csv")
+write_csv(x = df_newly_arrived_refugee_hh_with_minimum_emergency_shelter, file = "support_data/data/new_quarter_data/api_shel_newly_arrived_refugee_hh_with_minimum_emergency_shelter.csv")
 
 
 # WASH --------------------------------------------------------------------
@@ -517,7 +517,7 @@ df_CBI_approach_in_sanitation_services <- queryTable("cjtxwsbul8",
 
 
 # write out the dataset
-write_csv(x = df_CBI_approach_in_sanitation_services, file = "data/api_wash_CBI_approach_in_sanitation_services.csv")
+write_csv(x = df_CBI_approach_in_sanitation_services, file = "support_data/data/new_quarter_data/api_wash_CBI_approach_in_sanitation_services.csv")
 
 
 # CBI_approach_in_WASH_NFI
@@ -547,7 +547,7 @@ df_CBI_approach_in_WASH_NFI <- queryTable("cjtxwsbub6",
                                           "Comments" = "i1288973296")
 
 # write out the dataset
-write_csv(x = df_CBI_approach_in_WASH_NFI, file = "data/api_wash_CBI_approach_in_WASH_NFI.csv")
+write_csv(x = df_CBI_approach_in_WASH_NFI, file = "support_data/data/new_quarter_data/api_wash_CBI_approach_in_WASH_NFI.csv")
 
 
 # Food Security -----------------------------------------------------------
@@ -575,5 +575,5 @@ df_food_security <- queryTable("a1695644495",
                                "Comments" = "i0597328130")
 
 # write out the dataset
-write_csv(x = df_food_security, file = "data/api_fs_Food_Security.csv")
+write_csv(x = df_food_security, file = "support_data/data/new_quarter_data/api_fs_Food_Security.csv")
 

@@ -108,6 +108,12 @@ ui <- navbarPage(
                  ) 
              )
     ),
+    # Shelter -----------------------------------------------------------
+    tabPageUI(
+        "shlpagetab", "Shelter", shlInfoUI(), "shl_yearperiod", shl_df_data$Year,
+        "shl_quarterperiod", "shl_mapreset", "shl_selecteddistrict", "shl_hhreceivingcash",
+        "shl_plotcashquarter", "shl_map", "shl_plotdeliverymechanism", "shl_plotcashpartner"
+    ),
     # readme
     tabPanel("Read Me", readmeUI("rdmpagetab")),
     tags$head(

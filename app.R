@@ -72,7 +72,7 @@ ui <- navbarPage(
              )
     ),
     # combine livelihood components
-    tabPanel("Emergency Livelihood Support", elsInfoUI(),
+    tabPanel("Emergency Livelihood", elsInfoUI(),
              tabsetPanel(
                  id = "tabs_livelihood",
                  # Short term Employment --------------------------------------------------------------
@@ -444,7 +444,7 @@ server <- function(input, output, session) {
     seoDefaultMap("seopagetab")
     # dynamic charts and map --------------------------------------------------
     observe({
-        req(input$tab_being_displayed == "Emergency Livelihood Support")
+        req(input$tab_being_displayed == "Emergency Livelihood")
         req(input$tabs_livelihood == "Short term Employment")
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("seopagetab", seo_df_data, seo_year(), Year, seo_quarter(), Quarter )})
@@ -592,7 +592,7 @@ server <- function(input, output, session) {
     apaDefaultMap("apapagetab")
     # dynamic charts and map --------------------------------------------------
     observe({
-        req(input$tab_being_displayed == "Emergency Livelihood Support")
+        req(input$tab_being_displayed == "Emergency Livelihood")
         req(input$tabs_livelihood == "Access to Productive Assets")
         # UI selectors to filter shape data
         df_by_district_cash_data <- reactive({filterCashData("apapagetab", apa_df_data, apa_year(), Year, apa_quarter(), Quarter )})

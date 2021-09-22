@@ -60,7 +60,7 @@ wsInfoUI <- function(){
 
 shlInfoUI <- function(){
   div(
-    p( "Improved & sustainable shelter (incl. shelter for PSN).")
+    p( "Refugee households with specific needs assisted with semi-permanent shelters.")
   )
 }
 

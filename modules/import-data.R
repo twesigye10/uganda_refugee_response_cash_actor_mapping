@@ -43,3 +43,7 @@ ss_beneficiary_types <- all_beneficiary_types
 # add data: CBI_approach_in_WASH_NFI
 wn_df_data <-dat$wn_df_data
 wn_beneficiary_types <- all_beneficiary_types
+
+# add data: shelter
+shl_df_data <-dat$shl_df_data
+shl_beneficiary_types <- all_beneficiary_types

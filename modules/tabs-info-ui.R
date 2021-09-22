@@ -10,7 +10,6 @@ cbiInfoUI <- function(){
   )
 }
 
-
 eaeInfoUI <- function(){
   div(
     p( "Cash Based Interventions (CBI) in energy and environmental sector 
@@ -23,7 +22,6 @@ eaeInfoUI <- function(){
          make briquettes, heat retaining baskets and the provision of energy-saving stoves.")
   )
 }
-
 
 elsInfoUI <- function(){
   div(
@@ -39,7 +37,6 @@ elsInfoUI <- function(){
   )
 }
 
-
 fsInfoUI <- function(){
   div(
     p( "Cash assistance provided to households mainly for the purchasing of food items. 
@@ -48,7 +45,6 @@ fsInfoUI <- function(){
        GFA is delivered in-kind as opposed to cash.")
   )
 }
-
 
 wsInfoUI <- function(){
   div(
@@ -59,6 +55,12 @@ wsInfoUI <- function(){
        cleaning of water tanks, construction and rehabilitation of PSN latrines and bathrooms. 
        Other forms of CVA include e-vouchers to access latrine construction materials and cash to buy WASH Non-Food Items (NFIs). 
        COVID-response projects include training and hiring individuals to produce facemasks.")
+  )
+}
+
+shlInfoUI <- function(){
+  div(
+    p( "Improved & sustainable shelter (incl. shelter for PSN).")
   )
 }
 

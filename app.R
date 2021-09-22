@@ -1417,7 +1417,142 @@ server <- function(input, output, session) {
     })
     
     
+    # Shelter -----------------------------------------------------------
     
+    shl_year <- shlYearValueServer("shlpagetab")
+    shl_quarter <- shlQuarterValueServer("shlpagetab")
+    shlDefaultMap("shlpagetab")
+    # dynamic charts and map --------------------------------------------------
+    observe({
+        req(input$tab_being_displayed == "Shelter")
+        # UI selectors to filter shape data
+        df_by_district_cash_data <- reactive({filterCashData("shlpagetab", shl_df_data, shl_year(), Year, shl_quarter(), Quarter )})
+        df_shape_data <- dfShapeDefault("shlpagetab", df_shape, df_by_district_cash_data(), location_district, total_amount_of_semi_permanent_psn_shelter_cash_transfers, "location_district")
+        df_point_data <- df_shape_data %>%filter(ADM2_EN %in% refugee_districts) %>% sf::st_transform(crs = 32636 ) %>%
+            sf::st_centroid() %>% sf::st_transform(4326) %>%
+            mutate( lat = sf::st_coordinates(.)[,1],  lon = sf::st_coordinates(.)[,2] )
+        
+        df_shape_data_map <- df_shape_data %>% filter(ADM2_EN %in% refugee_districts)
+        refugee_districts_cash <-  df_shape_data_map %>% pull(ADM2_EN)
+        
+        df_other_refugee_host_dist <- df_shape_data %>%
+            filter(!(ADM2_EN %in% refugee_districts_cash) )%>% 
+            mutate(col_legenend_factor = "None Host" )
+        
+        ## create all the charts
+        dynamicMapLayer("shlpagetab", "shl_map", df_shape_data_map)
+        refugeeHostLayer("shlpagetab", "shl_map",df_other_refugee_host_dist)
+        dynamicMapLabels("shlpagetab", "shl_map", df_point_data)
+        
+        shlDonutChartCashBeneficiary ("shlpagetab",
+                                      df_by_district_cash_data(),
+                                      select_beneficiary_type,
+                                      total_amount_of_semi_permanent_psn_shelter_cash_transfers,
+                                      "% of Total \nCash Transfer by\n population group",
+                                      shl_beneficiary_types)
+        shlLineChartTotalCashQuarter ("shlpagetab", df_by_district_cash_data(), 
+                                      total_amount_of_semi_permanent_psn_shelter_cash_transfers, Year, Quarter, select_quarter, 
+                                      glue("Total cash distributed per quarter{display_in_title}  (UGX '000)"))
+        shlBarChartDeliveryMechanism ("shlpagetab", df_by_district_cash_data(),
+                                      select_delivery_mechanism,
+                                      total_amount_of_semi_permanent_psn_shelter_cash_transfers,
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
+        shlBarChartCashByPartner ("shlpagetab", df_by_district_cash_data(), partner_name,
+                                  total_amount_of_semi_permanent_psn_shelter_cash_transfers,
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
+        
+    })
+    
+    # observe year change to update quarter -----------------------------------
+    observe({
+        if(shl_year() != "All"){
+            selected_year <- shl_year()
+            filter_cash_data_quarter <- filterYearForQuarters("shlpagetab", shl_df_data, Year, selected_year ) 
+            # update quarter selection
+            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+            if(shl_quarter() %in% available_quarter_choices){
+                shlUpdateQuarter("shlpagetab", available_quarter_choices, shl_quarter())
+            }else{
+                shlUpdateQuarter("shlpagetab", available_quarter_choices, "All")
+            }
+        }else{
+            shlUpdateQuarter("shlpagetab", "All", "All")
+        }
+    })
+    
+    # Charts listen to map click ----------------------------------------------
+    observeEvent(shlClickedDistrictValueServer("shlpagetab"),{
+        click_district <- shlClickedDistrictValueServer("shlpagetab")
+        display_in_title <<- paste(" for ", stringr::str_to_title(click_district))
+        filter_cash_data_based_on_map <- filterCashDataByDistrict("shlpagetab", shl_df_data, location_district, click_district)
+        # create all the charts
+        shlDonutChartCashBeneficiary ("shlpagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_amount_of_semi_permanent_psn_shelter_cash_transfers,
+                                      "% of Total \nCash Transfer by\n population group",
+                                      shl_beneficiary_types)
+        shlLineChartTotalCashQuarter ("shlpagetab", filter_cash_data_based_on_map, 
+                                      total_amount_of_semi_permanent_psn_shelter_cash_transfers, Year, Quarter, select_quarter, 
+                                      glue("Total cash distributed per quarter{display_in_title}  (UGX '000)"))
+        shlBarChartDeliveryMechanism ("shlpagetab", filter_cash_data_based_on_map,
+                                      select_delivery_mechanism,
+                                      total_amount_of_semi_permanent_psn_shelter_cash_transfers,
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
+        shlBarChartCashByPartner ("shlpagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_amount_of_semi_permanent_psn_shelter_cash_transfers,
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
+        shlTextSelectedDistrict("shlpagetab", click_district)
+        # update year selection
+        filter_original_cash_data <- filter_cash_data_based_on_map
+        available_year_choices <- unique(as.character(filter_original_cash_data$Year))
+        if (shl_year() %in% available_year_choices){
+            shlUpdateYear("shlpagetab", available_year_choices, shl_year())
+        }else{
+            shlUpdateYear("shlpagetab", available_year_choices, "All")
+        }
+        # update quarter selection based on year and district
+        if(shl_year() != "All"){
+            selected_year <- shl_year()
+            filter_cash_data_quarter <- filterYearDistrictForQuarters ("shlpagetab", shl_df_data, Year, selected_year,
+                                                                       location_district, click_district )
+            available_quarter_choices <- unique(as.character(filter_cash_data_quarter$Quarter))
+            if(shl_quarter() %in% available_quarter_choices){
+                shlUpdateQuarter("shlpagetab", available_quarter_choices, shl_quarter())
+            }else{
+                shlUpdateQuarter("shlpagetab", available_quarter_choices, "All")
+            }
+        }
+    })
+    
+    # Map reset button --------------------------------------------------------
+    observeEvent(shlResetMapServer("shlpagetab"),{
+        
+        display_in_title <<- " across all Districts"
+        
+        shlUpdateYear("shlpagetab", unique(as.character(shl_df_data$Year)), "All")
+        shlUpdateQuarter("shlpagetab", "All", "All")
+        
+        filter_cash_data_based_on_map <- shl_df_data
+        
+        shlDonutChartCashBeneficiary ("shlpagetab",
+                                      filter_cash_data_based_on_map,
+                                      select_beneficiary_type,
+                                      total_amount_of_semi_permanent_psn_shelter_cash_transfers,
+                                      "% of Total \nCash Transfer by\n population group",
+                                      shl_beneficiary_types)
+        shlLineChartTotalCashQuarter ("shlpagetab", filter_cash_data_based_on_map, 
+                                      total_amount_of_semi_permanent_psn_shelter_cash_transfers, Year, Quarter, select_quarter, 
+                                      glue("Total cash distributed per quarter{display_in_title} (UGX '000)"))
+        shlBarChartDeliveryMechanism ("shlpagetab", filter_cash_data_based_on_map,
+                                      select_delivery_mechanism,
+                                      total_amount_of_semi_permanent_psn_shelter_cash_transfers,
+                                      glue("Total cash transfer value by delivery mechanism{display_in_title}"))
+        shlBarChartCashByPartner ("shlpagetab", filter_cash_data_based_on_map, partner_name,
+                                  total_amount_of_semi_permanent_psn_shelter_cash_transfers,
+                                  glue("Total cash transfer value by partner{display_in_title} (UGX '000)"))
+        shlTextSelectedDistrict("shlpagetab", "")
+    })
     
 }
 

@@ -241,6 +241,30 @@ wn_df_data <- janitor::clean_names(wn_df_data) %>%
 wn_beneficiary_types <- wn_df_data %>% 
     filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
 
+# Shelter data ------------------------------------------------------
+
+df_shelter_semi_permanent <- read_csv("support_data/data/new_quarter_data/api_shel_refugee_hh_assisted_with_semi_permanent_shelters.csv")
+df_shelter_semi_permanent <- janitor::clean_names(df_shelter_semi_permanent) %>% 
+    mutate(
+        total_amount_of_semi_permanent_psn_shelter_cash_transfers = ifelse(!is.na(total_amount_of_semi_permanent_psn_shelter_cash_transfers), (total_amount_of_semi_permanent_psn_shelter_cash_transfers/currency_conversion_factor), NA),
+        select_quarter = ifelse(is.na(select_quarter), case_when(substr(select_month, 1, 3) %in% c("Jan", "Feb", "Mar") ~ paste0("Q1 20", substr(select_month, 5, 6)),
+                                                                 substr(select_month, 1, 3) %in% c("Apr", "May", "Jun")~ paste0("Q2 20", substr(select_month, 5, 6)),
+                                                                 substr(select_month, 1, 3) %in% c("Jul", "Aug", "Sep")~ paste0("Q3 20", substr(select_month, 5, 6)),
+                                                                 substr(select_month, 1, 3) %in% c("Oct", "Nov", "Dec")~ paste0("Q4 20", substr(select_month, 5, 6))  ), select_quarter)
+    )%>% 
+    filter(!is.na(select_quarter) & !is.na(select_delivery_mechanism) & !is.na(partner_name)) %>% 
+    filter(
+        !grepl("^[0-9]", select_delivery_mechanism,  ignore.case = FALSE) & 
+            !grepl("^[0-9]", partner_name,  ignore.case = FALSE) & 
+            total_amount_of_semi_permanent_psn_shelter_cash_transfers > 0
+    )
+
+shl_df_data <- df_shelter_semi_permanent %>% 
+    separate(select_quarter, c("Quarter", "Year"), " ", remove= FALSE, extra = "drop")
+
+shl_beneficiary_types <- shl_df_data %>% 
+    filter(!is.na(select_beneficiary_type)) %>% pull(select_beneficiary_type) %>% unique()
+
 # saving several data objects into an RDS object --------------------------
 
 data_for_saving <- list()
@@ -260,3 +284,6 @@ saveRDS(data_for_saving, file = "support_data/data/new_quarter_data/data.rds")
 get_new_dat <- read_rds(file = "support_data/data/new_quarter_data/data.rds")
 
 get_new_dat$wn_df_data %>% view()
+
+# clean text using janitor
+my_text <- janitor::make_clean_names("Total.amount.of.semi.permanent.PSN.shelter.cash.transfers")

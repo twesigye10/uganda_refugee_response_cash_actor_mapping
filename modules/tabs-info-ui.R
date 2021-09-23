@@ -60,7 +60,11 @@ wsInfoUI <- function(){
 
 shlInfoUI <- function(){
   div(
-    p( "Refugee households with specific needs assisted with semi-permanent shelters.")
+    p( "Refugee households with specific needs assisted with semi-permanent shelters.
+       Cash in this sector is intended to assist beneficiaries in meeting their 
+       housing needs through the construction and repairs of semi-permanent PSN shelters, 
+       rental support for urban refugees, improvement of settlement roads, 
+       lighting & other infrastructure among other things.")
   )
 }
 
